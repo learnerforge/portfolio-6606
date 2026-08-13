@@ -1,25 +1,22 @@
 {
   "name": "ganesh-bakkera-portfolio",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "smoke": "vite build --outDir dist-smoke --emptyOutDir && node smoke.mjs"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.1",
-    "framer-motion": "^12.42.0",
-    "lucide-react": "^0.475.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "tailwindcss": "^4.3.1"
+    "@theatre/core": "^0.7.2",
+    "gsap": "^3.15.0",
+    "three": "^0.185.1",
+    "vue": "^3.5.41"
   },
   "devDependencies": {
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.2",
-    "vite": "^8.1.0"
+    "@vitejs/plugin-vue": "^6.0.8",
+    "vite": "^8.2.1"
   }
 }
