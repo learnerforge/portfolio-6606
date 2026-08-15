@@ -10,7 +10,7 @@ const checks = [
   { name: 'build output exists', ok: fs.existsSync(dist) },
   { name: 'boot overlay present', ok: html.includes('id="boot"') },
   { name: 'app mount point present', ok: html.includes('id="app"') },
-  { name: 'fonts wired', ok: html.includes('Space+Grotesk') && html.includes('JetBrains+Mono') },
+  { name: 'fonts wired', ok: html.includes('family=Sora') && html.includes('family=Manrope') && html.includes('family=IBM+Plex+Mono') },
   { name: 'title set', ok: html.includes('Ganesh Bakkera | AI & ML Engineer') }
 ]
 

@@ -5,6 +5,21 @@ import { getProject, types } from '@theatre/core'
  * HeroScene — a Three.js "holographic core" scene driven by a Theatre.js
  * intro sequence, with continuous idle drift and mouse parallax afterwards.
  */
+
+// Soft radial glow texture used for the ambient orbs (no external asset).
+function makeOrbTexture() {
+  const c = document.createElement('canvas')
+  c.width = c.height = 256
+  const ctx = c.getContext('2d')
+  const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128)
+  g.addColorStop(0, 'rgba(255, 255, 255, 0.6)')
+  g.addColorStop(0.28, 'rgba(255, 255, 255, 0.2)')
+  g.addColorStop(1, 'rgba(255, 255, 255, 0)')
+  ctx.fillStyle = g
+  ctx.fillRect(0, 0, 256, 256)
+  return new THREE.CanvasTexture(c)
+}
+
 export function createHeroScene(canvas) {
   let raf = 0
   let disposed = false
@@ -66,6 +81,25 @@ export function createHeroScene(canvas) {
   })
   const stars = new THREE.Points(starGeo, starMat)
   scene.add(stars)
+
+  // ---------- luminous ambient orbs ----------
+  const orbTex = makeOrbTexture()
+  const ORB_SPECS = [
+    { x: -6.2, y: 2.4, z: -4, s: 9, color: 0x22d3ee, opacity: 0.5 },
+    { x: 6.4, y: -2.2, z: -5, s: 10, color: 0x8b5cf6, opacity: 0.55 },
+    { x: 0.4, y: -3.6, z: -7, s: 12, color: 0xe879f9, opacity: 0.4 }
+  ]
+  const orbs = ORB_SPECS.map((o, i) => {
+    const mat = new THREE.SpriteMaterial({
+      map: orbTex, color: o.color, transparent: true, opacity: 0,
+      blending: THREE.AdditiveBlending, depthWrite: false
+    })
+    const orb = new THREE.Sprite(mat)
+    orb.position.set(o.x, o.y, o.z)
+    orb.scale.setScalar(o.s)
+    scene.add(orb)
+    return orb
+  })
 
   // ---------- holographic core ----------
   const core = new THREE.Group()
@@ -202,6 +236,14 @@ export function createHeroScene(canvas) {
     galaxy.rotation.y = t * 0.015 + 0.2
     stars.rotation.y = -t * 0.008
 
+    for (let i = 0; i < orbs.length; i++) {
+      const o = orbs[i]
+      const spec = ORB_SPECS[i]
+      o.material.opacity = props.particleAlpha * spec.opacity * 0.85
+      o.position.y = spec.y + Math.sin(t * 0.12 + i * 2.1) * 0.7
+      o.position.x = spec.x + Math.cos(t * 0.09 + i * 1.7) * 0.6
+    }
+
     const introFade = reducedMotion ? 1 : Math.min(1, Math.max(0, (t - 0.4) / 0.6))
     galaxyMat.opacity = props.particleAlpha * 0.9
     starMat.opacity = props.particleAlpha * 0.55
@@ -284,6 +326,8 @@ export function createHeroScene(canvas) {
       inner.geometry.dispose(); inner.material.dispose()
       ring1.geometry.dispose(); ring1.material.dispose()
       ring2.geometry.dispose(); ring2.material.dispose()
+      orbs.forEach((o) => o.material.dispose())
+      orbTex.dispose()
       renderer.dispose()
     }
   }

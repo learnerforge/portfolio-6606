@@ -12,7 +12,7 @@ export const portfolio = {
     linkedinHandle: 'ganesh-bakkera-898a0331b',
     github: 'https://github.com/learnerforge',
     githubHandle: 'learnerforge',
-    avatar: './images/profile/ganesh-profile.png'
+    avatar: './images/profile/ganesh-avatar.svg'
   },
 
   about: {
