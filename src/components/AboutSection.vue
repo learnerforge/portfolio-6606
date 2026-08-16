@@ -1,24 +1,61 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { useReveal } from '../composables/useReveal.js'
+import IconSet from './IconSet.vue'
 
 const root = ref(null)
 useReveal(root)
 const { about } = portfolio
+
+const statsRoot = ref(null)
+const shown = about.stats.map((s) => {
+  const m = String(s.value).match(/^(\d+)(.*)$/)
+  return { num: ref(m ? Number(m[1]) : 0), suffix: m ? m[2] : '' }
+})
+let statsIO = null
+
+onMounted(() => {
+  statsIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return
+        statsIO.disconnect()
+        shown.forEach((r, i) => {
+          const target = Number(String(about.stats[i].value).match(/\d+/)?.[0] || 0)
+          const dur = 1500
+          const start = performance.now()
+          const step = (now) => {
+            const t = Math.min(1, (now - start) / dur)
+            const eased = 1 - Math.pow(1 - t, 3)
+            r.num.value = Math.round(target * eased)
+            if (t < 1) requestAnimationFrame(step)
+          }
+          requestAnimationFrame(step)
+        })
+      })
+    },
+    { threshold: 0.4 }
+  )
+  if (statsRoot.value) statsIO.observe(statsRoot.value)
+})
+
+onBeforeUnmount(() => {
+  if (statsIO) statsIO.disconnect()
+})
 </script>
 
 <template>
   <section id="about" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index">01 // ABOUT</div>
+        <div class="index"><IconSet name="user" :size="14" />01 // ABOUT</div>
         <h2>Turning curiosity<br>into <span class="text-gradient">shipped software</span></h2>
         <p class="sub">{{ about.paragraphs[0] }}</p>
       </div>
 
       <div class="about-grid">
-        <div class="about-visual reveal" data-dir="left">
+        <div class="about-visual reveal" data-reveal data-dir="left">
           <div class="avatar-ring">
             <img :src="portfolio.profile.avatar" :alt="portfolio.profile.name" />
           </div>
@@ -27,18 +64,18 @@ const { about } = portfolio
         </div>
 
         <div class="about-body">
-          <p class="reveal" data-delay="0.1">{{ about.paragraphs[1] }}</p>
+          <p class="reveal" data-reveal data-delay="0.1">{{ about.paragraphs[1] }}</p>
 
           <div class="about-focus">
-            <h4 class="reveal" data-delay="0.15">Focus areas</h4>
-            <div class="chip-row reveal" data-delay="0.2">
+            <h4 class="reveal" data-reveal data-delay="0.15">Focus areas</h4>
+            <div class="chip-row reveal" data-reveal data-delay="0.2" data-stack>
               <span v-for="f in about.focus" :key="f" class="chip">{{ f }}</span>
             </div>
           </div>
 
-          <div class="stats reveal" data-delay="0.25">
-            <div v-for="s in about.stats" :key="s.label" class="stat">
-              <div class="value">{{ s.value }}</div>
+          <div class="stats reveal" data-reveal data-delay="0.25" ref="statsRoot">
+            <div v-for="(s, i) in about.stats" :key="s.label" class="stat">
+              <div class="value">{{ shown[i].num.value }}{{ shown[i].suffix }}</div>
               <div class="label">{{ s.label }}</div>
             </div>
           </div>

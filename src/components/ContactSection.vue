@@ -7,16 +7,17 @@ import { useReveal } from '../composables/useReveal.js'
 const root = ref(null)
 useReveal(root)
 const { profile } = portfolio
+const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(profile.email)}&su=${encodeURIComponent('Hello Ganesh — from your portfolio')}`
 </script>
 
 <template>
   <section id="contact" class="section" ref="root">
     <div class="container">
-      <div class="contact-card reveal" data-dir="scale">
+      <div class="contact-card reveal" data-reveal data-dir="scale">
         <div class="orb orb-cyan" style="width: 340px; height: 340px; top: -140px; left: -120px;"></div>
         <div class="orb orb-violet" style="width: 380px; height: 380px; bottom: -160px; right: -100px;"></div>
 
-        <div class="contact-index font-mono">08 // CONTACT</div>
+        <div class="contact-index font-mono"><IconSet name="send" :size="14" />08 // CONTACT</div>
         <h2 class="contact-title font-display">
           Let's build<br>something <span class="text-gradient">intelligent</span>
         </h2>
@@ -26,7 +27,7 @@ const { profile } = portfolio
         </p>
 
         <div class="contact-actions">
-          <a href="mailto:bakkeraganesh@gmail.com" class="btn btn-primary"><IconSet name="mail" :size="15" />bakkeraganesh@gmail.com</a>
+          <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-primary"><IconSet name="mail" :size="15" />bakkeraganesh@gmail.com</a>
           <a :href="profile.github" target="_blank" rel="noopener" class="btn btn-ghost"><IconSet name="github" :size="15" />GitHub</a>
           <a :href="profile.linkedin" target="_blank" rel="noopener" class="btn btn-ghost"><IconSet name="linkedin" :size="15" />LinkedIn</a>
         </div>
@@ -51,6 +52,10 @@ const { profile } = portfolio
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008));
 }
 .contact-index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   font-size: 11px;
   letter-spacing: 0.42em;
   color: var(--cyan);

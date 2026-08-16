@@ -13,13 +13,13 @@ const { certifications, codingProfiles } = portfolio
   <section id="certifications" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index">06 // CREDENTIALS</div>
+        <div class="index"><IconSet name="check-circle" :size="14" />06 // CREDENTIALS</div>
         <h2>Certifications &amp;<br><span class="text-gradient">platforms</span></h2>
       </div>
 
       <div class="cert-grid">
         <div class="cert-col">
-          <div v-for="(c, i) in certifications" :key="c.name" class="cert-row glass reveal" data-dir="left" :data-delay="i * 0.06">
+          <div v-for="(c, i) in certifications" :key="c.name" class="cert-row glass reveal" data-reveal data-dir="left" :data-delay="i * 0.06">
             <div class="cert-badge">{{ c.issuer.slice(0, 1) }}</div>
             <div>
               <div class="cert-name">{{ c.name }}</div>
@@ -30,7 +30,7 @@ const { certifications, codingProfiles } = portfolio
         </div>
 
         <div class="cert-col">
-          <div v-for="(p, i) in codingProfiles" :key="p.name" class="cert-row glass reveal" data-dir="right" :data-delay="i * 0.06">
+          <div v-for="(p, i) in codingProfiles" :key="p.name" class="cert-row glass reveal" data-reveal data-dir="right" :data-delay="i * 0.06">
             <div class="cert-badge"><IconSet name="code" :size="18" /></div>
             <div class="cert-name">{{ p.name }}</div>
             <a class="cert-link link" :href="p.url" target="_blank" rel="noopener">open<IconSet name="arrow-up-right" :size="13" /></a>

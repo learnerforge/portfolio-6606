@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { useReveal } from '../composables/useReveal.js'
+import IconSet from './IconSet.vue'
 
 const root = ref(null)
 useReveal(root)
@@ -12,7 +13,7 @@ const { experience, openTo } = portfolio
   <section id="experience" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index">02 // EXPERIENCE</div>
+        <div class="index"><IconSet name="briefcase" :size="14" />02 // EXPERIENCE</div>
         <h2>Where I've<br>been <span class="text-gradient">building</span></h2>
       </div>
 
@@ -21,6 +22,7 @@ const { experience, openTo } = portfolio
           v-for="(job, i) in experience"
           :key="i"
           class="tl-item glass tl-card reveal"
+          data-reveal
           data-dir="up"
         >
           <div class="tl-head">
@@ -33,17 +35,17 @@ const { experience, openTo } = portfolio
               <span class="tl-type">{{ job.type }}</span>
             </div>
           </div>
-          <p class="tl-summary">{{ job.summary }}</p>
-          <ul class="tl-points">
+          <p v-if="job.summary" class="tl-summary">{{ job.summary }}</p>
+          <ul v-if="job.points && job.points.length" class="tl-points">
             <li v-for="pt in job.points" :key="pt">{{ pt }}</li>
           </ul>
-          <div class="tl-tags">
+          <div v-if="job.tags && job.tags.length" class="tl-tags">
             <span v-for="t in job.tags" :key="t" class="tag">{{ t }}</span>
           </div>
         </div>
       </div>
 
-      <div class="open-box reveal" data-dir="up">
+      <div class="open-box reveal" data-reveal data-dir="up">
         <span class="open-label">Open to</span>
         <span v-for="o in openTo" :key="o" class="chip">{{ o }}</span>
       </div>
@@ -54,6 +56,7 @@ const { experience, openTo } = portfolio
 <style scoped>
 .timeline { display: grid; gap: 36px; }
 .tl-card { padding: clamp(22px, 3.5vw, 36px); }
+.tl-card.tl-item { padding-left: 44px; }
 .tl-head {
   display: flex;
   justify-content: space-between;

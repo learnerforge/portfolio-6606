@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { useReveal } from '../composables/useReveal.js'
+import IconSet from './IconSet.vue'
 
 const root = ref(null)
 useReveal(root)
@@ -12,12 +13,12 @@ const { achievements } = portfolio
   <section id="achievements" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index">05 // TRACK RECORD</div>
+        <div class="index"><IconSet name="award" :size="14" />05 // TRACK RECORD</div>
         <h2>Proof of<br><span class="text-gradient">momentum</span></h2>
       </div>
 
       <div class="ach-grid">
-        <div v-for="(a, i) in achievements" :key="a.title" class="ach-card reveal" data-dir="up" :data-delay="i * 0.08">
+        <div v-for="(a, i) in achievements" :key="a.title" class="ach-card reveal" data-reveal data-dir="up" :data-delay="i * 0.08">
           <div class="ach-tag">{{ a.tag }}</div>
           <h3 class="ach-title">{{ a.title }}</h3>
           <div class="ach-org">{{ a.org }}</div>

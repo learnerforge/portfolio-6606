@@ -109,7 +109,7 @@ export function ask(rawQuery) {
   if (/\b(currently working|working on|current work|what is he doing|right now|current project)\b/.test(q)) {
     const e = portfolio.experience[0]
     const line = e
-      ? `${e.role} @ ${e.company} (${e.period}) — ${e.summary}`
+      ? `${e.role} @ ${e.company}${e.period ? ` (${e.period})` : ''}${e.summary ? ` — ${e.summary}` : '.'}`
       : 'Ganesh is currently building full-stack AI products end to end.'
     return {
       text: `${line}\n\nFlagship: ${portfolio.projects[0].title} — ${portfolio.projects[0].subtitle}.`,
@@ -153,7 +153,12 @@ export function ask(rawQuery) {
   if (nav && nav.id === 'experience') {
     const e = portfolio.experience
     if (e.length === 0) return { text: 'No experience entries yet.', action: null }
-    const text = e.map((x) => `${x.role} @ ${x.company} (${x.period})\n${x.summary}\n${x.points.map((pt) => `· ${pt}`).join('\n')}`).join('\n\n')
+    const text = e.map((x) => {
+      const head = `${x.role} @ ${x.company}${x.period ? ` (${x.period})` : ''}`
+      const body = x.summary ? `\n${x.summary}` : ''
+      const points = x.points && x.points.length ? `\n${x.points.map((pt) => `· ${pt}`).join('\n')}` : ''
+      return `${head}${body}${points}`
+    }).join('\n\n')
     return { text, action: null }
   }
 

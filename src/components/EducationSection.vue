@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { useReveal } from '../composables/useReveal.js'
+import IconSet from './IconSet.vue'
 
 const root = ref(null)
 useReveal(root)
@@ -12,12 +13,12 @@ const edu = portfolio.education[0]
   <section id="education" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index">03 // EDUCATION</div>
+        <div class="index"><IconSet name="book-open" :size="14" />03 // EDUCATION</div>
         <h2>Foundations &amp;<br><span class="text-gradient">systems thinking</span></h2>
       </div>
 
       <div class="edu-grid">
-        <div class="edu-card glass reveal" data-dir="left">
+        <div class="edu-card glass reveal" data-reveal data-dir="left">
           <div class="edu-head">
             <div class="edu-badge font-display">{{ edu.degree }}</div>
             <div>
@@ -35,7 +36,7 @@ const edu = portfolio.education[0]
           </div>
         </div>
 
-        <div class="edu-note glass reveal" data-dir="right">
+        <div class="edu-note glass reveal" data-reveal data-dir="right">
           <h4 class="font-display">Currently leveling up</h4>
           <ul class="note-list">
             <li><span class="note-dot"></span>Advanced deep learning &amp; model deployment</li>

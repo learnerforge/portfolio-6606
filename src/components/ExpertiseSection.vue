@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { useReveal } from '../composables/useReveal.js'
+import IconSet from './IconSet.vue'
 
 const root = ref(null)
 useReveal(root)
@@ -20,12 +21,12 @@ const icons = {
   <section id="expertise" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index">04 // EXPERTISE</div>
+        <div class="index"><IconSet name="cpu" :size="14" />04 // EXPERTISE</div>
         <h2>Deep in the<br><span class="text-gradient">AI stack</span></h2>
       </div>
 
       <div class="exp-grid">
-        <div v-for="(e, i) in expertise" :key="e.domain" class="exp-card glass reveal" data-dir="up" :data-delay="i * 0.08">
+        <div v-for="(e, i) in expertise" :key="e.domain" class="exp-card glass reveal" data-reveal data-dir="up" :data-delay="i * 0.08">
           <div class="exp-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path :d="icons[e.icon]" />
@@ -60,8 +61,8 @@ const icons = {
   margin-bottom: 20px;
 }
 .exp-icon svg { width: 22px; height: 22px; }
-.exp-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.exp-domain { font-size: 1.2rem; font-weight: 600; }
+.exp-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.exp-domain { font-size: 1.2rem; font-weight: 600; flex: 1 1 auto; min-width: 0; }
 .exp-level {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -71,6 +72,9 @@ const icons = {
   border: 1px solid var(--line);
   padding: 4px 10px;
   border-radius: 999px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  margin-left: auto;
 }
 .exp-level.hl { color: var(--cyan); border-color: rgba(34, 211, 238, 0.4); }
 .exp-detail { color: var(--text-dim); font-size: 14px; margin-top: 12px; line-height: 1.7; }

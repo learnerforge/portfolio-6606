@@ -4,6 +4,7 @@ import { portfolio } from '../data/portfolio.js'
 import IconSet from './IconSet.vue'
 
 const p = portfolio.profile
+const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(p.email)}&su=${encodeURIComponent('Hello Ganesh — from your portfolio')}`
 const sections = [
   { id: 'about', label: 'About', num: '01' },
   { id: 'experience', label: 'Experience', num: '02' },
@@ -95,7 +96,7 @@ onBeforeUnmount(() => {
           :href="`#${s.id}`"
           :class="{ active: active === s.id }"
         >{{ s.label }}</a>
-        <a href="mailto:bakkeraganesh@gmail.com" class="btn btn-ghost nav-cta">Hire Me</a>
+        <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-ghost nav-cta">Hire Me</a>
       </div>
 
       <button class="nav-burger" :class="{ active: open }" @click="toggle" aria-label="Menu">
@@ -117,7 +118,7 @@ onBeforeUnmount(() => {
             <span class="menu-num">{{ s.num }}</span>{{ s.label }}
           </a>
           <div class="menu-divider"></div>
-          <a class="menu-cta" href="mailto:bakkeraganesh@gmail.com" @click="go()">
+          <a class="menu-cta" :href="emailUrl" target="_blank" rel="noopener" @click="go()">
             <IconSet name="mail" :size="15" />Hire Me
           </a>
         </div>
@@ -233,7 +234,7 @@ onBeforeUnmount(() => {
 .nav-menu {
   position: fixed;
   inset: 0;
-  z-index: 90;
+  z-index: 250;
   background: rgba(7, 7, 12, 0.97);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

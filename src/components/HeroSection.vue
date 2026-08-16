@@ -1,13 +1,16 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { portfolio } from '../data/portfolio.js'
+import IconSet from './IconSet.vue'
 
 const p = portfolio.profile
+const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(p.email)}&su=${encodeURIComponent('Hello Ganesh — from your portfolio')}`
 const canvas = ref(null)
 const root = ref(null)
 let destroyScene = null
 let typedTimer = null
 let introTl = null
+let scrollTl = null
 
 const roleIndex = ref(0)
 const typed = ref('')
@@ -58,6 +61,21 @@ onMounted(async () => {
         i * 0.12
       )
     })
+
+    const st = await import('gsap/ScrollTrigger')
+    gsap.registerPlugin(st.ScrollTrigger)
+    const heroCanvas = canvas.value.closest('.hero-canvas')
+    const content = root.value.querySelector('.hero-content')
+    const scrollHint = root.value.querySelector('.hero-scroll')
+    scrollTl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: { trigger: root.value, start: 'top top', end: 'bottom top', scrub: true }
+    })
+    scrollTl
+      .to(heroCanvas, { yPercent: 16 }, 0)
+      .to(content, { yPercent: -10, opacity: 0.1 }, 0)
+      .to(scrollHint, { opacity: 0 }, 0)
+
     typeRole()
   } else {
     typed.value = p.roles[0]
@@ -77,6 +95,10 @@ onBeforeUnmount(() => {
   if (destroyScene) destroyScene()
   if (typedTimer) clearTimeout(typedTimer)
   if (introTl) introTl.kill()
+  if (scrollTl) {
+    scrollTl.scrollTrigger && scrollTl.scrollTrigger.kill()
+    scrollTl.kill()
+  }
 })
 </script>
 
@@ -104,8 +126,8 @@ onBeforeUnmount(() => {
       </p>
 
       <div class="hero-cta" data-hero style="opacity: 0">
-        <a href="#projects" class="btn btn-primary">View Work</a>
-        <a href="mailto:bakkeraganesh@gmail.com" class="btn btn-ghost">Get in Touch</a>
+        <a href="#projects" class="btn btn-primary">View Work <IconSet name="arrow-up-right" :size="15" /></a>
+        <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-ghost">Get in Touch <IconSet name="arrow-right" :size="15" /></a>
       </div>
     </div>
 

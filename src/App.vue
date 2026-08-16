@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, onMounted, onBeforeUnmount } from 'vue'
+import { defineAsyncComponent, ref, onMounted, onBeforeUnmount } from 'vue'
 import NavBar from './components/NavBar.vue'
 import HeroSection from './components/HeroSection.vue'
 import MarqueeStrip from './components/MarqueeStrip.vue'
@@ -13,13 +13,40 @@ import CertificationsSection from './components/CertificationsSection.vue'
 import SkillsSection from './components/SkillsSection.vue'
 import ContactSection from './components/ContactSection.vue'
 import Footer from './components/Footer.vue'
+import FloatingDock from './components/FloatingDock.vue'
+import IconSet from './components/IconSet.vue'
+import { portfolio } from './data/portfolio.js'
 
 const AiAssistant = defineAsyncComponent(() => import('./components/AiAssistant.vue'))
+
+const dockItems = [
+  { icon: 'home', label: 'Home', href: '#top' },
+  { icon: 'user', label: 'About', href: '#about' },
+  { icon: 'briefcase', label: 'Experience', href: '#experience' },
+  { icon: 'rocket', label: 'Projects', href: '#projects' },
+  { icon: 'cpu', label: 'Expertise', href: '#expertise' },
+  { icon: 'award', label: 'Achievements', href: '#achievements' },
+  { icon: 'check-circle', label: 'Credentials', href: '#certifications' },
+  { icon: 'terminal', label: 'Toolbox', href: '#skills' },
+  { icon: 'send', label: 'Contact', href: '#contact' },
+  { icon: 'github', label: 'GitHub', href: portfolio.profile.github }
+]
 
 let gsap
 let ScrollTrigger
 
+const showTop = ref(false)
+let onScroll = null
+const toTop = () => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
+}
+
 onMounted(async () => {
+  onScroll = () => { showTop.value = window.scrollY > 560 }
+  window.addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+
   const gmod = await import('gsap')
   const stmod = await import('gsap/ScrollTrigger')
   gsap = gmod.gsap
@@ -54,6 +81,7 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   if (window.__glowCleanup) window.__glowCleanup()
+  if (onScroll) window.removeEventListener('scroll', onScroll)
   document.body.style.overflow = ''
 })
 </script>
@@ -78,6 +106,10 @@ onBeforeUnmount(() => {
       <ContactSection />
     </main>
     <Footer />
+    <FloatingDock :items="dockItems" />
+    <button class="back-top" :class="{ show: showTop }" @click="toTop" aria-label="Back to top">
+      <IconSet name="chevron-up" :size="16" />
+    </button>
     <AiAssistant />
   </div>
 </template>
@@ -93,5 +125,35 @@ onBeforeUnmount(() => {
   transform-origin: 0 50%;
   transform: scaleX(0);
   z-index: 200;
+}
+
+.back-top {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 110;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: rgba(11, 11, 20, 0.85);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.back-top:hover {
+  color: var(--cyan);
+  border-color: rgba(34, 211, 238, 0.5);
+  transform: translateY(-2px);
+}
+.back-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+@media (max-width: 768px) {
+  .back-top { display: none; }
 }
 </style>

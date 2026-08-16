@@ -32,7 +32,11 @@ function execAction(action) {
     const el = document.getElementById(action.id)
     if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
   } else if (action.type === 'mailto') {
-    window.location.href = `mailto:${portfolio.profile.email}?subject=Hello Ganesh — from your portfolio`
+    window.open(
+      `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(portfolio.profile.email)}&su=${encodeURIComponent('Hello Ganesh — from your portfolio')}`,
+      '_blank',
+      'noopener'
+    )
   } else if (action.type === 'link') {
     window.open(action.url, '_blank', 'noopener')
   }
@@ -108,8 +112,9 @@ onBeforeUnmount(() => {
               aria-label="Ask the assistant"
               autocomplete="off"
             />
-            <button class="ai-send" type="submit" aria-label="Send">
-              <IconSet name="arrow-right" :size="16" />
+            <button class="ai-send" type="submit" aria-label="Send" :disabled="typing">
+              <span v-if="typing" class="spinner"></span>
+              <IconSet v-else name="arrow-right" :size="16" />
             </button>
           </form>
         </div>
@@ -289,6 +294,7 @@ onBeforeUnmount(() => {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .ai-send:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(34, 211, 238, 0.6); }
+.ai-send:disabled { opacity: 0.75; cursor: default; transform: none; box-shadow: none; }
 
 /* ---- floating button ---- */
 .ai-fab {
@@ -331,8 +337,11 @@ onBeforeUnmount(() => {
 .ai-panel-enter-active, .ai-panel-leave-active { transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
 .ai-panel-enter-from, .ai-panel-leave-to { opacity: 0; transform: translateY(12px) scale(0.97); }
 
+@media (max-width: 768px) {
+  .ai-assistant { right: 16px; bottom: 78px; }
+  .ai-panel { bottom: 86px; }
+}
 @media (max-width: 480px) {
-  .ai-assistant { right: 16px; bottom: 16px; }
-  .ai-panel { bottom: 64px; }
+  .ai-assistant { right: 12px; }
 }
 </style>

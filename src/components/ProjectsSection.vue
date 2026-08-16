@@ -140,5 +140,5 @@ onBeforeUnmount(() => {
 .pc-desc { color: var(--text-dim); margin: 18px 0; max-width: 640px; line-height: 1.7; }
 .pc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .pc-links { display: flex; gap: 22px; margin-top: 22px; align-items: center; }
-.pc-links button.link { background: none; padding: 0; cursor: pointer; }
+.pc-links button.link { background: none; padding: 0; cursor: pointer; border: none; border-bottom: 1px solid rgba(34, 211, 238, 0.35); border-radius: 0; }
 </style>

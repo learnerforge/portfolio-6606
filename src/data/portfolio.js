@@ -38,14 +38,7 @@ export const portfolio = {
       role: 'Research Intern',
       period: 'Oct 2024 — Present',
       type: 'Remote',
-      current: true,
-      summary: 'Researching AI agent ecosystems, agent memory, and agentic workflows while building full-stack AI tooling and applying ML/NLP models to real research problems.',
-      points: [
-        'Researched AI agents, agent memory, and agentic workflows',
-        'Built full-stack AI tooling with ML/NLP models applied to real problems',
-        'Practiced production engineering — APIs, testing, and documentation'
-      ],
-      tags: ['Python', 'LLMs', 'NLP', 'FastAPI', 'Research']
+      current: true
     }
   ],
 

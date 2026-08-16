@@ -8,7 +8,10 @@ import { onMounted, onUnmounted } from 'vue'
  *   useReveal(root)
  *
  * Any element inside root with [data-reveal] fades/slides in when scrolled
- * into view. Optional data-dir="up|down|left|right|scale" and data-delay="0.2".
+ * into view. Optional data-dir="up|down|left|right|scale", data-delay="0.2"
+ * (staggered children get data-delay="i * 0.08"). Add data-stack to stagger a
+ * container's direct children instead of the container itself. A subtle blur-in
+ * is applied by default and disabled under prefers-reduced-motion.
  */
 let gsapPromise = null
 function getGsap() {
@@ -29,6 +32,21 @@ export function useReveal(root) {
   let gsap = null
   let ctx = null
   const animated = new WeakSet()
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  const makeFrom = (el) => {
+    const dir = el.dataset.dir || 'up'
+    const dist = reduced ? 0 : 46
+    const blur = reduced ? 0 : 6
+    return {
+      opacity: 0,
+      filter: `blur(${blur}px)`,
+      y: dir === 'up' ? dist : dir === 'down' ? -dist : 0,
+      x: dir === 'left' ? dist : dir === 'right' ? -dist : 0,
+      scale: dir === 'scale' ? 0.92 : 1
+    }
+  }
+  const to = { opacity: 1, filter: 'blur(0px)', y: 0, x: 0, scale: 1 }
 
   const apply = () => {
     if (!gsap || !root.value) return
@@ -38,20 +56,28 @@ export function useReveal(root) {
       els.forEach((el) => {
         if (animated.has(el)) return
         animated.add(el)
-        const dir = el.dataset.dir || 'up'
-        const dist = 46
-        const from = {
-          opacity: 0,
-          y: dir === 'up' ? dist : dir === 'down' ? -dist : 0,
-          x: dir === 'left' ? dist : dir === 'right' ? -dist : 0,
-          scale: dir === 'scale' ? 0.92 : 1
-        }
         const delay = parseFloat(el.dataset.delay || 0)
-        gsap.fromTo(el, from, {
-          opacity: 1, y: 0, x: 0, scale: 1,
+
+        if (el.dataset.stack) {
+          Array.from(el.children).forEach((kid, i) => {
+            gsap.fromTo(kid, makeFrom(kid), {
+              ...to,
+              duration: 0.8,
+              delay: delay + i * 0.07,
+              ease: 'power3.out',
+              clearProps: 'filter',
+              scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+            })
+          })
+          return
+        }
+
+        gsap.fromTo(el, makeFrom(el), {
+          ...to,
           duration: 0.9,
           delay,
           ease: 'power3.out',
+          clearProps: 'filter',
           scrollTrigger: { trigger: el, start: 'top 88%', once: true }
         })
       })

@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { useReveal } from '../composables/useReveal.js'
+import IconSet from './IconSet.vue'
 
 const root = ref(null)
 useReveal(root)
@@ -20,7 +21,7 @@ const cells = [
   <section id="skills" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index">07 // TOOLBOX</div>
+        <div class="index"><IconSet name="layers" :size="14" />07 // TOOLBOX</div>
         <h2>The stack I<br><span class="text-gradient">reach for</span></h2>
       </div>
 
@@ -29,6 +30,7 @@ const cells = [
           v-for="cell in cells"
           :key="cell.key"
           class="bento-cell reveal"
+          data-reveal
           data-dir="up"
           :style="{ gridColumn: `span ${cell.span}` }"
         >
