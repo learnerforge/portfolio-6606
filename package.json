@@ -10,7 +10,6 @@
     "smoke": "vite build --outDir dist-smoke --emptyOutDir && node smoke.mjs"
   },
   "dependencies": {
-    "@theatre/core": "^0.7.2",
     "gsap": "^3.15.0",
     "three": "^0.185.1",
     "vue": "^3.5.41"

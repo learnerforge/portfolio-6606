@@ -13,4 +13,4 @@ window.addEventListener('load', () => {
     boot.style.transform = 'scale(1.05)'
     setTimeout(() => boot.remove(), 900)
   }
-})
+}, { once: true })

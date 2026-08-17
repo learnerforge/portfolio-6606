@@ -59,6 +59,7 @@ const edu = portfolio.education[0]
 }
 .edu-card, .edu-note { padding: clamp(24px, 3.5vw, 40px); }
 .edu-head { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 26px; }
+.edu-head > div { min-width: 0; }
 .edu-badge {
   flex-shrink: 0;
   width: 64px; height: 64px;

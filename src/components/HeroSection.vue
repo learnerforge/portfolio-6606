@@ -8,6 +8,7 @@ const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURICompo
 const canvas = ref(null)
 const root = ref(null)
 let destroyScene = null
+let disposed = false
 let typedTimer = null
 let introTl = null
 let scrollTl = null
@@ -86,12 +87,15 @@ onMounted(async () => {
 
   // Defer 3D init so the text intro paints smoothly on first load.
   window.setTimeout(async () => {
+    if (disposed) return
     const { createHeroScene } = await import('../three/heroScene.js')
+    if (disposed) return
     destroyScene = createHeroScene(canvas.value)
   }, reduced ? 0 : 400)
 })
 
 onBeforeUnmount(() => {
+  disposed = true
   if (destroyScene) destroyScene()
   if (typedTimer) clearTimeout(typedTimer)
   if (introTl) introTl.kill()

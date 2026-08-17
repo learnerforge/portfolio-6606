@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
   animation: ai-pulse 2.4s ease-in-out infinite;
 }
 .ai-close {
-  width: 30px; height: 30px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   border: 1px solid var(--line-strong);
   background: transparent;
@@ -249,7 +249,8 @@ onBeforeUnmount(() => {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--line-strong);
   border-radius: 999px;
-  padding: 7px 12px;
+  padding: 10px 14px;
+  min-height: 44px;
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -282,7 +283,7 @@ onBeforeUnmount(() => {
 .ai-input input:focus { border-color: rgba(34, 211, 238, 0.5); }
 .ai-input input::placeholder { color: var(--text-faint); }
 .ai-send {
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   border-radius: 50%;
   border: none;
   background: var(--grad);
@@ -338,8 +339,8 @@ onBeforeUnmount(() => {
 .ai-panel-enter-from, .ai-panel-leave-to { opacity: 0; transform: translateY(12px) scale(0.97); }
 
 @media (max-width: 768px) {
-  .ai-assistant { right: 16px; bottom: 78px; }
-  .ai-panel { bottom: 86px; }
+  .ai-assistant { right: 16px; bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+  .ai-panel { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (max-width: 480px) {
   .ai-assistant { right: 12px; }

@@ -20,9 +20,14 @@ const active = ref('')
 let spyIo = null
 let mq = null
 let scrollCleanup = null
+let scrollRaf = null
 
 function onScroll() {
-  scrolled.value = window.scrollY > 30
+  if (scrollRaf) return
+  scrollRaf = requestAnimationFrame(() => {
+    scrollRaf = null
+    scrolled.value = window.scrollY > 30
+  })
 }
 
 function toggle() {
@@ -74,6 +79,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  if (scrollRaf) cancelAnimationFrame(scrollRaf)
   window.removeEventListener('scroll', onScroll)
   if (spyIo) spyIo.disconnect()
   if (scrollCleanup) scrollCleanup()
@@ -198,11 +204,12 @@ onBeforeUnmount(() => {
 
 /* compact CTA so it matches the link row height */
 .nav-cta {
-  padding: 9px 18px;
+  padding: 12px 18px;
   font-size: 11px;
   line-height: 1;
   margin-left: 6px;
   white-space: nowrap;
+  min-height: 44px;
 }
 
 /* burger matches the 34px row so nav height stays constant across breakpoints */
@@ -211,8 +218,8 @@ onBeforeUnmount(() => {
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--line-strong);
   border-radius: 10px;
   background: transparent;
@@ -236,8 +243,8 @@ onBeforeUnmount(() => {
   inset: 0;
   z-index: 250;
   background: rgba(7, 7, 12, 0.97);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   align-items: center;

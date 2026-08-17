@@ -133,7 +133,7 @@ onBeforeUnmount(() => {
   gap: 8px;
   background: none; border: 1px solid var(--line-strong); color: var(--text-dim);
   font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
-  padding: 10px 18px; border-radius: 999px; cursor: pointer;
+  padding: 10px 18px; min-height: 44px; border-radius: 999px; cursor: pointer;
   transition: all 0.3s ease; white-space: nowrap;
 }
 .pc-case:hover { border-color: var(--cyan); color: var(--cyan); }

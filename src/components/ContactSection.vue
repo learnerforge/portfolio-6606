@@ -13,26 +13,26 @@ const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURICompo
 <template>
   <section id="contact" class="section" ref="root">
     <div class="container">
-      <div class="contact-card reveal" data-reveal data-dir="scale">
+      <div class="contact-card">
         <div class="orb orb-cyan" style="width: 340px; height: 340px; top: -140px; left: -120px;"></div>
         <div class="orb orb-violet" style="width: 380px; height: 380px; bottom: -160px; right: -100px;"></div>
 
-        <div class="contact-index font-mono"><IconSet name="send" :size="14" />08 // CONTACT</div>
-        <h2 class="contact-title font-display">
+        <div class="contact-index font-mono" data-reveal data-delay="0"><IconSet name="send" :size="14" />08 // CONTACT</div>
+        <h2 class="contact-title font-display" data-reveal data-delay="0.08">
           Let's build<br>something <span class="text-gradient">intelligent</span>
         </h2>
-        <p class="contact-sub">
+        <p class="contact-sub" data-reveal data-delay="0.16">
           I'm open to AI/ML internships, research collaborations, and full-stack
           engineering roles. If you have an idea worth shipping — I want to hear it.
         </p>
 
-        <div class="contact-actions">
+        <div class="contact-actions" data-reveal data-dir="up" data-delay="0.24">
           <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-primary"><IconSet name="mail" :size="15" />bakkeraganesh@gmail.com</a>
           <a :href="profile.github" target="_blank" rel="noopener" class="btn btn-ghost"><IconSet name="github" :size="15" />GitHub</a>
           <a :href="profile.linkedin" target="_blank" rel="noopener" class="btn btn-ghost"><IconSet name="linkedin" :size="15" />LinkedIn</a>
         </div>
 
-        <div class="contact-meta font-mono">
+        <div class="contact-meta font-mono" data-reveal data-delay="0.32">
           <span><IconSet name="location" :size="14" />{{ profile.location }}</span>
           <span><IconSet name="bolt" :size="14" />Responds within 24h</span>
         </div>
@@ -78,6 +78,10 @@ const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURICompo
   justify-content: center;
   gap: 14px;
   margin-top: 38px;
+}
+@media (max-width: 480px) {
+  .contact-actions .btn-primary { font-size: 11px; padding: 13px 16px; }
+  .contact-actions .btn-primary svg:first-child { display: none; }
 }
 .contact-meta {
   display: flex;

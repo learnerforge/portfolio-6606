@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { getProject, types } from '@theatre/core'
+import { gsap } from 'gsap'
 
 /**
  * HeroScene — a Three.js "holographic core" scene driven by a Theatre.js
@@ -139,50 +139,17 @@ export function createHeroScene(canvas) {
   ring2.rotation.y = 0.6
   core.add(ring2)
 
-  // ---------- Theatre.js intro sequence ----------
+  // ---------- intro sequence (GSAP timeline) ----------
   const props = { cameraZ: 14, camY: 0, spin: 0, scale: 0, particleAlpha: 0, coreAlpha: 0 }
-  let project, sheet, obj, seq
-  try {
-    project = getProject('GBK-PORTFOLIO')
-    sheet = project.sheet('HeroIntro')
-    obj = sheet.object('hero', {
-      cameraZ: types.number(14, { range: [5, 16] }),
-      camY: types.number(0, { range: [-2, 2] }),
-      spin: types.number(0),
-      scale: types.number(0, { range: [0, 1.2] }),
-      particleAlpha: types.number(0, { range: [0, 1] }),
-      coreAlpha: types.number(0, { range: [0, 1] })
-    })
-    seq = sheet.sequence
-    const record = (position, values) => {
-      seq.position = position
-      Object.assign(obj.value, values)
-    }
-    record(0, { cameraZ: 14, camY: 0.5, spin: 0, scale: 0, particleAlpha: 0, coreAlpha: 0 })
-    record(0.6, { cameraZ: 12, camY: 0.3, spin: 0.1, scale: 0.15, particleAlpha: 0.35, coreAlpha: 0.15 })
-    record(1.4, { cameraZ: 9, camY: 0.2, spin: 0.5, scale: 0.8, particleAlpha: 0.8, coreAlpha: 0.6 })
-    record(2.0, { cameraZ: 7.6, camY: 0.18, spin: 0.9, scale: 1.05, particleAlpha: 1, coreAlpha: 0.9 })
-    record(2.5, { cameraZ: 7.4, camY: 0.18, spin: 1, scale: 1, particleAlpha: 1, coreAlpha: 1 })
-    if (!reducedMotion) {
-      seq.play({ range: [0, 3.2], rate: 1 })
-    } else {
-      seq.position = 2.5
-    }
-  } catch (e) {
-    // fall back to static final state
+  let introTl = null
+  if (!reducedMotion) {
+    introTl = gsap.timeline()
+      .to(props, { duration: 0.6, cameraZ: 12, camY: 0.3, spin: 0.1, scale: 0.15, particleAlpha: 0.35, coreAlpha: 0.15, ease: 'none' })
+      .to(props, { duration: 0.8, cameraZ: 9, camY: 0.2, spin: 0.5, scale: 0.8, particleAlpha: 0.8, coreAlpha: 0.6, ease: 'none' })
+      .to(props, { duration: 0.6, cameraZ: 7.6, camY: 0.18, spin: 0.9, scale: 1.05, particleAlpha: 1, coreAlpha: 0.9, ease: 'none' })
+      .to(props, { duration: 0.5, cameraZ: 7.4, camY: 0.18, spin: 1, scale: 1, particleAlpha: 1, coreAlpha: 1, ease: 'power2.out' })
+  } else {
     props.cameraZ = 7.4; props.camY = 0.18; props.spin = 1; props.scale = 1; props.particleAlpha = 1; props.coreAlpha = 1
-  }
-
-  // read live Theatre values (updates during sequence playback)
-  const readProps = () => {
-    if (obj) {
-      props.cameraZ = obj.value.cameraZ
-      props.camY = obj.value.camY
-      props.spin = obj.value.spin
-      props.scale = obj.value.scale
-      props.particleAlpha = obj.value.particleAlpha
-      props.coreAlpha = obj.value.coreAlpha
-    }
   }
 
   // ---------- input ----------
@@ -216,7 +183,6 @@ export function createHeroScene(canvas) {
     rafRunning = false
     if (disposed || !visible) return
     const t = clock.getElapsedTime()
-    readProps()
     mouse.x += (target.x - mouse.x) * 0.06
     mouse.y += (target.y - mouse.y) * 0.06
 
@@ -318,7 +284,7 @@ export function createHeroScene(canvas) {
       visIO.disconnect()
       document.removeEventListener('visibilitychange', onVisChange)
       window.removeEventListener('mousemove', onMouse)
-      if (seq && seq.isPlaying) seq.pause()
+      if (introTl) introTl.kill()
       galaxyGeo.dispose(); starGeo.dispose()
       galaxyMat.dispose(); starMat.dispose()
       wire.geometry.dispose(); wire.material.dispose()

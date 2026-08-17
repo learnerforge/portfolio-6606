@@ -78,7 +78,6 @@ body {
   border-radius: 9999px;
   filter: blur(120px);
   pointer-events: none;
-  will-change: transform;
 }
 .orb-cyan { background: rgba(34, 211, 238, 0.16); }
 .orb-violet { background: rgba(139, 92, 246, 0.16); }
@@ -374,7 +373,7 @@ body {
   border-radius: 18px;
   padding: 22px;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008));
-  transition: all 0.4s ease;
+  transition: border-color 0.4s ease, transform 0.4s ease, background 0.4s ease;
 }
 .bento-cell:hover {
   border-color: rgba(139, 92, 246, 0.45);
@@ -599,6 +598,7 @@ body {
   z-index: 200;
   background: rgba(4, 4, 8, 0.78);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: grid;
   place-items: center;
   padding: 20px;
@@ -647,4 +647,9 @@ footer { border-top: 1px solid var(--line); background: var(--bg-2); padding: 40
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto !important; }
+}
+
+@media (max-width: 1024px) {
+  .modal-overlay { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 }

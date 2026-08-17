@@ -18,7 +18,7 @@ const { achievements } = portfolio
       </div>
 
       <div class="ach-grid">
-        <div v-for="(a, i) in achievements" :key="a.title" class="ach-card reveal" data-reveal data-dir="up" :data-delay="i * 0.08">
+        <div v-for="(a, i) in achievements" :key="a.title" class="ach-card reveal" data-reveal :data-dir="i % 2 === 0 ? 'left' : 'right'" :data-delay="i * 0.08">
           <div class="ach-tag">{{ a.tag }}</div>
           <h3 class="ach-title">{{ a.title }}</h3>
           <div class="ach-org">{{ a.org }}</div>

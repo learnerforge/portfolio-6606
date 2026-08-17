@@ -14,8 +14,10 @@ const shown = about.stats.map((s) => {
   return { num: ref(m ? Number(m[1]) : 0), suffix: m ? m[2] : '' }
 })
 let statsIO = null
+const rafIds = []
 
 onMounted(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   statsIO = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {
@@ -23,15 +25,16 @@ onMounted(() => {
         statsIO.disconnect()
         shown.forEach((r, i) => {
           const target = Number(String(about.stats[i].value).match(/\d+/)?.[0] || 0)
+          if (reduced) { r.num.value = target; return }
           const dur = 1500
           const start = performance.now()
           const step = (now) => {
             const t = Math.min(1, (now - start) / dur)
             const eased = 1 - Math.pow(1 - t, 3)
             r.num.value = Math.round(target * eased)
-            if (t < 1) requestAnimationFrame(step)
+            if (t < 1) rafIds.push(requestAnimationFrame(step))
           }
-          requestAnimationFrame(step)
+          rafIds.push(requestAnimationFrame(step))
         })
       })
     },
@@ -41,6 +44,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  rafIds.forEach((id) => cancelAnimationFrame(id))
   if (statsIO) statsIO.disconnect()
 })
 </script>
@@ -57,7 +61,7 @@ onBeforeUnmount(() => {
       <div class="about-grid">
         <div class="about-visual reveal" data-reveal data-dir="left">
           <div class="avatar-ring">
-            <img :src="portfolio.profile.avatar" :alt="portfolio.profile.name" />
+            <img :src="portfolio.profile.avatar" :alt="portfolio.profile.name" loading="eager" decoding="async" width="320" height="320" />
           </div>
           <div class="float-chip chip chip-a">Hyderabad, IN</div>
           <div class="float-chip chip chip-b">B.Tech · AI &amp; ML</div>

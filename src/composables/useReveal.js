@@ -33,11 +33,12 @@ export function useReveal(root) {
   let ctx = null
   const animated = new WeakSet()
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const isMobile = window.matchMedia('(max-width: 768px)').matches
 
   const makeFrom = (el) => {
     const dir = el.dataset.dir || 'up'
     const dist = reduced ? 0 : 46
-    const blur = reduced ? 0 : 6
+    const blur = reduced ? 0 : isMobile ? 3 : 6
     return {
       opacity: 0,
       filter: `blur(${blur}px)`,
@@ -51,6 +52,7 @@ export function useReveal(root) {
   const apply = () => {
     if (!gsap || !root.value) return
     if (ctx) ctx.revert()
+    animated.clear()
     ctx = gsap.context(() => {
       const els = gsap.utils.toArray('[data-reveal]', root.value)
       els.forEach((el) => {

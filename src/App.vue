@@ -34,6 +34,7 @@ const dockItems = [
 
 let gsap
 let ScrollTrigger
+let progressST = null
 
 const showTop = ref(false)
 let onScroll = null
@@ -42,8 +43,15 @@ const toTop = () => {
   window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
 }
 
+let scrollRaf = null
 onMounted(async () => {
-  onScroll = () => { showTop.value = window.scrollY > 560 }
+  onScroll = () => {
+    if (scrollRaf) return
+    scrollRaf = requestAnimationFrame(() => {
+      scrollRaf = null
+      showTop.value = window.scrollY > 560
+    })
+  }
   window.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
 
@@ -71,15 +79,18 @@ onMounted(async () => {
   const bar = document.querySelector('.scroll-progress')
   if (bar && !bar.__gsapBound) {
     bar.__gsapBound = true
-    gsap.to(bar, {
+    const tween = gsap.to(bar, {
       scaleX: 1,
       ease: 'none',
       scrollTrigger: { start: 0, end: 'max', scrub: 0.4 }
     })
+    progressST = tween.scrollTrigger
   }
 })
 
 onBeforeUnmount(() => {
+  if (progressST) progressST.kill()
+  if (scrollRaf) cancelAnimationFrame(scrollRaf)
   if (window.__glowCleanup) window.__glowCleanup()
   if (onScroll) window.removeEventListener('scroll', onScroll)
   document.body.style.overflow = ''

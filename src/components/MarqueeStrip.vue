@@ -1,12 +1,15 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useReveal } from '../composables/useReveal.js'
 
 const items = ref([
   'AI / ML', 'Full Stack', 'LLM Engineering', 'NLP', 'Prompt Engineering',
   'Agentic Systems', 'Python', 'Vue', 'React', 'FastAPI', 'PostgreSQL',
-  'Docker', 'Three.js', 'GSAP', 'Theatre.js'
+  'Docker', 'Three.js', 'GSAP'
 ])
 const track = ref(null)
+const root = ref(null)
+useReveal(root)
 let gsap = null
 let tween = null
 let io = null
@@ -46,7 +49,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="marquee">
+  <div class="marquee" data-reveal data-dir="left" ref="root">
     <div class="marquee-track" ref="track">
       <template v-for="n in 2" :key="n">
         <span v-for="(it, i) in items" :key="`${n}-${i}`" class="marquee-item">
