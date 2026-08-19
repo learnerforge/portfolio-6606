@@ -204,12 +204,14 @@ onBeforeUnmount(() => {
 
 /* compact CTA so it matches the link row height */
 .nav-cta {
-  padding: 12px 18px;
+  padding: 10px 18px;
   font-size: 11px;
   line-height: 1;
   margin-left: 6px;
   white-space: nowrap;
-  min-height: 44px;
+}
+@media (pointer: coarse) {
+  .nav-cta { min-height: 44px; padding: 12px 18px; }
 }
 
 /* burger matches the 34px row so nav height stays constant across breakpoints */
