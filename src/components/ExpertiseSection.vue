@@ -76,6 +76,6 @@ const icons = {
   white-space: nowrap;
   margin-left: auto;
 }
-.exp-level.hl { color: var(--cyan); border-color: rgba(34, 211, 238, 0.4); }
+.exp-level.hl { color: var(--cyan); border-color: rgba(8, 145, 178, 0.4); }
 .exp-detail { color: var(--text-dim); font-size: 14px; margin-top: 12px; line-height: 1.7; }
 </style>

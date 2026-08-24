@@ -69,7 +69,7 @@ const { experience, openTo } = portfolio
 .tl-period { color: var(--text); font-family: var(--font-mono); font-size: 12px; }
 .tl-type {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
-  padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(34, 211, 238, 0.4);
+  padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(8, 145, 178, 0.4);
   color: var(--cyan); text-transform: uppercase;
 }
 .tl-summary { color: var(--text-dim); margin: 16px 0; line-height: 1.7; }

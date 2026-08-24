@@ -69,8 +69,8 @@ const edu = portfolio.education[0]
   place-items: center;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #07070c;
-  box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.6);
+  color: var(--panel);
+  box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.3);
 }
 .edu-program { font-size: 1.35rem; font-weight: 600; line-height: 1.2; }
 .edu-institution { color: var(--cyan); margin-top: 8px; }

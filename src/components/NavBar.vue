@@ -164,7 +164,7 @@ onBeforeUnmount(() => {
   place-items: center;
   border-radius: 10px;
   background: var(--grad);
-  color: #07070c;
+  color: var(--panel);
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 700;
@@ -244,7 +244,7 @@ onBeforeUnmount(() => {
   position: fixed;
   inset: 0;
   z-index: 250;
-  background: rgba(7, 7, 12, 0.97);
+  background: rgba(248, 249, 252, 0.97);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;

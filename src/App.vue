@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
   height: 46px;
   border-radius: 50%;
   border: 1px solid var(--line-strong);
-  background: rgba(11, 11, 20, 0.85);
+  background: rgba(248, 249, 252, 0.92);
   color: var(--text-dim);
   cursor: pointer;
   display: grid;
@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
 }
 .back-top:hover {
   color: var(--cyan);
-  border-color: rgba(34, 211, 238, 0.5);
+  border-color: rgba(8, 145, 178, 0.5);
   transform: translateY(-2px);
 }
 .back-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }

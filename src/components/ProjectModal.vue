@@ -88,7 +88,7 @@ function onBackdrop(e) {
   display: grid;
   place-items: center;
 }
-.modal-close:hover { color: #07070c; background: var(--grad); border-color: transparent; }
+.modal-close:hover { color: var(--panel); background: var(--grad); border-color: transparent; }
 .modal-tags { display: flex; gap: 10px; margin-bottom: 18px; }
 .modal-title { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 600; letter-spacing: -0.02em; }
 .modal-subtitle { color: var(--cyan); font-family: var(--font-mono); font-size: 13px; margin-top: 8px; letter-spacing: 0.12em; }
@@ -116,7 +116,7 @@ function onBackdrop(e) {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 14px 18px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 0, 0, 0.015);
 }
 .modal-actions { display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap; }
 </style>

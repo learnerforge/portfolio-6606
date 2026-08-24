@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
   border-radius: 999px;
   background: var(--panel);
   backdrop-filter: blur(10px);
-  box-shadow: 0 12px 34px -12px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 12px 34px -12px rgba(0, 0, 0, 0.1);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.1em;

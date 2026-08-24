@@ -43,11 +43,11 @@ const { achievements } = portfolio
   padding: 26px;
   overflow: hidden;
   background:
-    radial-gradient(120% 120% at 100% 0%, rgba(139, 92, 246, 0.12), transparent 45%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008));
+    radial-gradient(120% 120% at 100% 0%, rgba(124, 58, 237, 0.06), transparent 45%),
+    linear-gradient(160deg, rgba(0, 0, 0, 0.015), rgba(0, 0, 0, 0.005));
   transition: border-color 0.4s ease, transform 0.4s ease;
 }
-.ach-card:hover { border-color: rgba(232, 121, 249, 0.45); transform: translateY(-4px); }
+.ach-card:hover { border-color: rgba(192, 38, 211, 0.35); transform: translateY(-4px); }
 .ach-tag {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -63,7 +63,7 @@ const { achievements } = portfolio
   top: -30px; right: -30px;
   width: 80px; height: 80px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.14), transparent 70%);
+  background: radial-gradient(circle, rgba(8, 145, 178, 0.08), transparent 70%);
   pointer-events: none;
 }
 </style>

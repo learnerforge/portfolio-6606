@@ -21,8 +21,8 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.45 } =
   const geo = new THREE.BufferGeometry()
   const pos = new Float32Array(count * 3)
   const col = new Float32Array(count * 3)
-  const cA = new THREE.Color(0x22d3ee)
-  const cB = new THREE.Color(0xe879f9)
+  const cA = new THREE.Color(0x0891b2)
+  const cB = new THREE.Color(0xc026d3)
   for (let i = 0; i < count; i++) {
     const r = 3 + Math.pow(Math.random(), 0.8) * 4.5
     const theta = Math.random() * Math.PI * 2
@@ -39,7 +39,7 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.45 } =
   geo.setAttribute('color', new THREE.BufferAttribute(col, 3))
   const mat = new THREE.PointsMaterial({
     size: 0.045, vertexColors: true, transparent: true, opacity,
-    blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
+    blending: THREE.NormalBlending, depthWrite: false, sizeAttenuation: true
   })
   const points = new THREE.Points(geo, mat)
   scene.add(points)

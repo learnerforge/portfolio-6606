@@ -49,7 +49,7 @@ const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURICompo
   border-radius: 28px;
   padding: clamp(48px, 8vw, 96px) clamp(24px, 5vw, 72px);
   overflow: hidden;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.008));
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.015), rgba(0, 0, 0, 0.005));
 }
 .contact-index {
   display: flex;

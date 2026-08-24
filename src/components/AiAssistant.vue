@@ -143,7 +143,7 @@ onBeforeUnmount(() => {
   background: var(--panel);
   border: 1px solid var(--line-strong);
   border-radius: 18px;
-  box-shadow: 0 24px 80px -20px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 24px 80px -20px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
 
@@ -153,14 +153,14 @@ onBeforeUnmount(() => {
   gap: 12px;
   padding: 14px 16px;
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 0, 0, 0.015);
 }
 .ai-avatar {
   width: 36px;
   height: 36px;
   border-radius: 11px;
   background: var(--grad);
-  color: #07070c;
+  color: var(--panel);
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -179,7 +179,7 @@ onBeforeUnmount(() => {
 }
 .ai-live {
   width: 6px; height: 6px; border-radius: 50%;
-  background: #34d399;
+  background: var(--emerald);
   animation: ai-pulse 2.4s ease-in-out infinite;
 }
 .ai-close {
@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
   place-items: center;
   transition: all 0.3s ease;
 }
-.ai-close:hover { color: #07070c; background: var(--grad); border-color: transparent; }
+.ai-close:hover { color: var(--panel); background: var(--grad); border-color: transparent; }
 
 .ai-body {
   flex: 1;
@@ -216,14 +216,14 @@ onBeforeUnmount(() => {
   word-break: break-word;
 }
 .ai-msg.ai .ai-bubble {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.025);
   border: 1px solid var(--line);
   color: var(--text);
   border-bottom-left-radius: 4px;
 }
 .ai-msg.user .ai-bubble {
   background: var(--grad);
-  color: #07070c;
+  color: var(--panel);
   border-bottom-right-radius: 4px;
 }
 .ai-typing { display: inline-flex; gap: 5px; padding: 14px 16px; align-items: center; }
@@ -246,7 +246,7 @@ onBeforeUnmount(() => {
   font-size: 11px;
   letter-spacing: 0.04em;
   color: var(--text-dim);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   padding: 10px 14px;
@@ -256,8 +256,8 @@ onBeforeUnmount(() => {
 }
 .ai-chip:hover {
   color: var(--cyan);
-  border-color: rgba(34, 211, 238, 0.5);
-  background: rgba(34, 211, 238, 0.08);
+  border-color: rgba(8, 145, 178, 0.5);
+  background: rgba(8, 145, 178, 0.05);
 }
 
 .ai-input {
@@ -270,7 +270,7 @@ onBeforeUnmount(() => {
 .ai-input input {
   flex: 1;
   min-width: 0;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   padding: 11px 16px;
@@ -280,21 +280,21 @@ onBeforeUnmount(() => {
   outline: none;
   transition: border-color 0.25s ease;
 }
-.ai-input input:focus { border-color: rgba(34, 211, 238, 0.5); }
+.ai-input input:focus { border-color: rgba(8, 145, 178, 0.5); }
 .ai-input input::placeholder { color: var(--text-faint); }
 .ai-send {
   width: 44px; height: 44px;
   border-radius: 50%;
   border: none;
   background: var(--grad);
-  color: #07070c;
+  color: var(--panel);
   cursor: pointer;
   display: grid;
   place-items: center;
   flex-shrink: 0;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.ai-send:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(34, 211, 238, 0.6); }
+.ai-send:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(8, 145, 178, 0.4); }
 .ai-send:disabled { opacity: 0.75; cursor: default; transform: none; box-shadow: none; }
 
 /* ---- floating button ---- */
@@ -305,11 +305,11 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   border: none;
   background: var(--grad);
-  color: #07070c;
+  color: var(--panel);
   cursor: pointer;
   display: grid;
   place-items: center;
-  box-shadow: 0 14px 40px -12px rgba(139, 92, 246, 0.7);
+  box-shadow: 0 14px 40px -12px rgba(124, 58, 237, 0.35);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 .ai-fab:hover { transform: translateY(-3px) scale(1.04); }
@@ -321,14 +321,14 @@ onBeforeUnmount(() => {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #34d399;
-  border: 2px solid #0b0b14;
+  background: var(--emerald);
+  border: 2px solid var(--panel);
   animation: ai-pulse 2.4s ease-in-out infinite;
 }
 
 @keyframes ai-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.45); }
-  50% { box-shadow: 0 0 0 5px rgba(52, 211, 153, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.45); }
+  50% { box-shadow: 0 0 0 5px rgba(5, 150, 105, 0); }
 }
 @keyframes ai-bounce {
   0%, 60%, 100% { transform: translateY(0); }

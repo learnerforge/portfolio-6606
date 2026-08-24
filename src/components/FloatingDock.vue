@@ -135,9 +135,9 @@ onBeforeUnmount(() => {
   gap: 8px;
   padding: 9px 14px;
   border-radius: 999px;
-  background: rgba(11, 11, 20, 0.92);
+  background: rgba(248, 249, 252, 0.92);
   border: 1px solid var(--line-strong);
-  box-shadow: 0 22px 60px -20px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 22px 60px -20px rgba(0, 0, 0, 0.1);
 }
 
 .dock-item {
@@ -170,9 +170,9 @@ onBeforeUnmount(() => {
   border-radius: 14px;
   transition: background 0.25s ease, color 0.25s ease;
 }
-.dock-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
+.dock-btn:hover { color: var(--text); background: rgba(0, 0, 0, 0.04); }
 .dock-item.active { color: var(--cyan); }
-.dock-item.active .dock-btn { background: rgba(34, 211, 238, 0.1); }
+.dock-item.active .dock-btn { background: rgba(8, 145, 178, 0.08); }
 
 .dock-dot {
   position: absolute;
@@ -194,7 +194,7 @@ onBeforeUnmount(() => {
   transform: translateX(-50%) translateY(4px);
   opacity: 0;
   pointer-events: none;
-  background: rgba(11, 11, 20, 0.96);
+  background: rgba(248, 249, 252, 0.96);
   border: 1px solid var(--line-strong);
   color: var(--text);
   font-family: var(--font-mono);
