@@ -55,7 +55,14 @@ onMounted(async () => {
     const gmod = await import('gsap')
     const gsap = gmod.gsap
     const els = gsap.utils.toArray('[data-hero]', root.value)
-    introTl = gsap.timeline({ delay: 0.2 })
+    introTl = gsap.timeline({
+      delay: 0.2,
+      onComplete: () => {
+        if (disposed || !heroSplits) return
+        heroSplits.forEach((s) => s.revert())
+        heroSplits = null
+      }
+    })
     els.forEach((el, i) => {
       introTl.fromTo(el,
         { opacity: 0, y: 26 },

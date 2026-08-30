@@ -9,9 +9,12 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.3 } = 
   let raf = 0
   let disposed = false
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const isMobile = window.matchMedia('(pointer: coarse)').matches
+  const deviceMem = navigator.deviceMemory || 8
+  if (isMobile) count = Math.min(count, 280)
 
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25))
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'high-performance' })
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : (deviceMem >= 8 ? 1.25 : 1)))
   renderer.setClearColor(0x000000, 0)
 
   const scene = new THREE.Scene()
@@ -46,13 +49,12 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.3 } = 
 
   const clock = new THREE.Clock()
   let rafRunning = false
-  let needsFrame = false
+  let contextLost = false
   let visible = true
   let driftUntil = 0
 
   const requestFrame = () => {
-    if (!visible || disposed || reducedMotion) return
-    needsFrame = true
+    if (!visible || disposed || reducedMotion || contextLost) return
     if (!rafRunning) {
       rafRunning = true
       raf = requestAnimationFrame(renderOnce)
@@ -62,16 +64,13 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.3 } = 
   function renderOnce() {
     raf = 0
     rafRunning = false
-    if (disposed || !visible) return
+    if (disposed || !visible || contextLost) return
     const t = clock.getElapsedTime()
     points.rotation.y = t * 0.03
     points.rotation.x = Math.sin(t * 0.02) * 0.1
     renderer.render(scene, camera)
     if (performance.now() < driftUntil) {
-      needsFrame = true
       requestFrame()
-    } else {
-      needsFrame = false
     }
   }
 
@@ -92,13 +91,26 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.3 } = 
       cancelAnimationFrame(raf)
       raf = 0
       rafRunning = false
-      needsFrame = false
     } else {
       visible = true
       wake()
     }
   }
   document.addEventListener('visibilitychange', onVisChange)
+
+  const onCtxLost = (e) => {
+    e.preventDefault()
+    contextLost = true
+    cancelAnimationFrame(raf)
+    raf = 0
+    rafRunning = false
+  }
+  const onCtxRestored = () => {
+    contextLost = false
+    if (visible && !disposed) renderer.render(scene, camera)
+  }
+  canvas.addEventListener('webglcontextlost', onCtxLost)
+  canvas.addEventListener('webglcontextrestored', onCtxRestored)
 
   const resize = () => {
     const w = canvas.clientWidth || canvas.parentElement.clientWidth
@@ -127,13 +139,17 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.3 } = 
       disposed = true
       visible = false
       rafRunning = false
-      needsFrame = false
       cancelAnimationFrame(raf)
       ro.disconnect()
       visIO.disconnect()
       document.removeEventListener('visibilitychange', onVisChange)
+      canvas.removeEventListener('webglcontextlost', onCtxLost)
+      canvas.removeEventListener('webglcontextrestored', onCtxRestored)
       geo.dispose(); mat.dispose()
       renderer.dispose()
+      try {
+        renderer.getContext().getExtension('WEBGL_lose_context')?.loseContext()
+      } catch { /* context already released */ }
     }
   }
 }

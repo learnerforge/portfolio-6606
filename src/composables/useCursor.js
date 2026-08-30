@@ -33,16 +33,40 @@ export function useCursor() {
   let scale = 1
   let targetScale = 1
   let raf = null
+  let looping = false
+  let lastMove = 0
+
+  // Loop only while the pointer recently moved or the ring/scale still needs to
+  // converge; otherwise cancel the rAF and sit at ~0 CPU.
+  const start = () => {
+    if (looping || document.hidden) return
+    looping = true
+    raf = requestAnimationFrame(loop)
+  }
+  const stop = () => {
+    looping = false
+    if (raf) cancelAnimationFrame(raf)
+    raf = null
+  }
 
   const onMove = (e) => {
     mx = e.clientX
     my = e.clientY
+    lastMove = performance.now()
+    start()
   }
   const onOver = (e) => {
     targetScale = e.target.closest ? (e.target.closest(HOVER) ? 1.9 : 1) : 1
+    lastMove = performance.now()
+    start()
   }
   const onLeave = () => {
     targetScale = 1
+    start()
+  }
+  const onVis = () => {
+    if (document.hidden) stop()
+    else start()
   }
 
   const loop = () => {
@@ -51,19 +75,27 @@ export function useCursor() {
     scale += (targetScale - scale) * 0.18
     dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`
     ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%) scale(${scale.toFixed(3)})`
-    raf = requestAnimationFrame(loop)
+    const idle = performance.now() - lastMove > 150
+    const moving = Math.abs(rx - mx) > 1 || Math.abs(ry - my) > 1 || Math.abs(scale - targetScale) > 0.02
+    if (idle && !moving) {
+      stop()
+    } else {
+      raf = requestAnimationFrame(loop)
+    }
   }
 
   window.addEventListener('mousemove', onMove, { passive: true })
   window.addEventListener('mouseover', onOver, { passive: true })
   document.documentElement.addEventListener('mouseleave', onLeave)
-  raf = requestAnimationFrame(loop)
+  document.addEventListener('visibilitychange', onVis)
+  start()
 
   cleanup = () => {
-    if (raf) cancelAnimationFrame(raf)
+    stop()
     window.removeEventListener('mousemove', onMove)
     window.removeEventListener('mouseover', onOver)
     document.documentElement.removeEventListener('mouseleave', onLeave)
+    document.removeEventListener('visibilitychange', onVis)
     dot.remove()
     ring.remove()
     document.documentElement.classList.remove('has-cursor')

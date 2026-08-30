@@ -2,7 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { useReveal } from '../composables/useReveal.js'
-import IconSet from './IconSet.vue'
+import SectionHeader from './ui/SectionHeader.vue'
 
 const root = ref(null)
 useReveal(root)
@@ -52,11 +52,7 @@ onBeforeUnmount(() => {
 <template>
   <section id="about" class="section" ref="root">
     <div class="container">
-      <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="user" :size="14" />01 — About</div>
-        <h2>Turning curiosity<br>into <span class="text-gradient">shipped software</span></h2>
-        <p class="sub">{{ about.paragraphs[0] }}</p>
-      </div>
+      <SectionHeader icon="user" eyebrow="01 — About" title1="Turning curiosity" titleGrad="shipped software" :sub="about.paragraphs[0]" />
 
       <div class="about-grid">
         <div class="about-visual reveal" data-reveal data-dir="left">

@@ -330,7 +330,7 @@ body {
 .aurora .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
+  filter: blur(44px);
   will-change: transform;
 }
 .aurora .orb-a {
@@ -379,7 +379,7 @@ body {
 .orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(80px);
+  filter: blur(44px);
   pointer-events: none;
 }
 .orb-cyan    { background: var(--orb-a); }
@@ -1218,6 +1218,30 @@ footer {
   height: 30px;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- mobile / coarse-pointer GPU budget ---------- */
+@media (max-width: 768px), (pointer: coarse) {
+  :root {
+    /* lighter blur surfaces (compositing cost scales with blur radius) */
+    --blur-nav:       10px;
+    --glass-blur-sm:  6px;
+    --glass-blur-md:  10px;
+    --glass-blur-lg:  12px;
+    --material-sat:   1.1;
+  }
+
+  /* smaller, lighter aurora orbs — tiny GPU memory on phones */
+  .aurora .orb { filter: blur(30px); }
+  .aurora .orb-a { width: 34vw; height: 34vw; }
+  .aurora .orb-b { width: 30vw; height: 30vw; }
+  .aurora .orb-c { width: 32vw; height: 32vw; }
+  .orb { filter: blur(30px); }
+
+  .material {
+    -webkit-backdrop-filter: blur(var(--glass-blur-md)) saturate(var(--material-sat));
+    backdrop-filter: blur(var(--glass-blur-md)) saturate(var(--material-sat));
+  }
 }
 
 /* ---------- reduced motion ---------- */

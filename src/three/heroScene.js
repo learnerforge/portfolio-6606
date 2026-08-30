@@ -24,9 +24,11 @@ export function createHeroScene(canvas) {
   let raf = 0
   let disposed = false
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const isMobile = window.matchMedia('(pointer: coarse)').matches
+  const deviceMem = navigator.deviceMemory || 8
 
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25))
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'high-performance' })
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : (deviceMem >= 8 ? 1.25 : 1)))
   renderer.setClearColor(0x000000, 0)
 
   const scene = new THREE.Scene()
@@ -34,7 +36,7 @@ export function createHeroScene(canvas) {
   camera.position.set(0, 0, 14)
 
   // ---------- particle galaxy ----------
-  const GALAXY_COUNT = 1100
+  const GALAXY_COUNT = isMobile ? 760 : 1100
   const galaxyGeo = new THREE.BufferGeometry()
   const gPos = new Float32Array(GALAXY_COUNT * 3)
   const gCol = new Float32Array(GALAXY_COUNT * 3)
@@ -62,7 +64,7 @@ export function createHeroScene(canvas) {
   scene.add(galaxy)
 
   // ---------- distant stars ----------
-  const STAR_COUNT = 400
+  const STAR_COUNT = isMobile ? 260 : 400
   const starGeo = new THREE.BufferGeometry()
   const sPos = new Float32Array(STAR_COUNT * 3)
   for (let i = 0; i < STAR_COUNT; i++) {
@@ -166,12 +168,11 @@ export function createHeroScene(canvas) {
   // ---------- loop (render on demand — ~0% CPU when idle) ----------
   const clock = new THREE.Clock()
   let rafRunning = false
-  let needsFrame = false
+  let contextLost = false
   let lastMove = 0
 
   const requestFrame = () => {
-    if (!visible || disposed || reducedMotion) return
-    needsFrame = true
+    if (!visible || disposed || reducedMotion || contextLost) return
     if (!rafRunning) {
       rafRunning = true
       raf = requestAnimationFrame(renderOnce)
@@ -181,7 +182,7 @@ export function createHeroScene(canvas) {
   function renderOnce() {
     raf = 0
     rafRunning = false
-    if (disposed || !visible) return
+    if (disposed || !visible || contextLost) return
     const t = clock.getElapsedTime()
     mouse.x += (target.x - mouse.x) * 0.06
     mouse.y += (target.y - mouse.y) * 0.06
@@ -224,10 +225,7 @@ export function createHeroScene(canvas) {
     // interaction; otherwise stop the loop entirely (near-zero CPU)
     const active = t < 5 || (performance.now() - lastMove) < 2000
     if (active) {
-      needsFrame = true
       requestFrame()
-    } else {
-      needsFrame = false
     }
   }
 
@@ -245,13 +243,26 @@ export function createHeroScene(canvas) {
       cancelAnimationFrame(raf)
       raf = 0
       rafRunning = false
-      needsFrame = false
     } else {
       visible = true
       requestFrame()
     }
   }
   document.addEventListener('visibilitychange', onVisChange)
+
+  const onCtxLost = (e) => {
+    e.preventDefault()
+    contextLost = true
+    cancelAnimationFrame(raf)
+    raf = 0
+    rafRunning = false
+  }
+  const onCtxRestored = () => {
+    contextLost = false
+    if (visible && !disposed) renderer.render(scene, camera)
+  }
+  canvas.addEventListener('webglcontextlost', onCtxLost)
+  canvas.addEventListener('webglcontextrestored', onCtxRestored)
 
   // ---------- sizing ----------
   const resize = () => {
@@ -278,11 +289,12 @@ export function createHeroScene(canvas) {
       disposed = true
       visible = false
       rafRunning = false
-      needsFrame = false
       cancelAnimationFrame(raf)
       ro.disconnect()
       visIO.disconnect()
       document.removeEventListener('visibilitychange', onVisChange)
+      canvas.removeEventListener('webglcontextlost', onCtxLost)
+      canvas.removeEventListener('webglcontextrestored', onCtxRestored)
       window.removeEventListener('mousemove', onMouse)
       if (introTl) introTl.kill()
       galaxyGeo.dispose(); starGeo.dispose()
@@ -295,6 +307,9 @@ export function createHeroScene(canvas) {
       orbs.forEach((o) => o.material.dispose())
       orbTex.dispose()
       renderer.dispose()
+      try {
+        renderer.getContext().getExtension('WEBGL_lose_context')?.loseContext()
+      } catch { /* context already released */ }
     }
   }
 }
