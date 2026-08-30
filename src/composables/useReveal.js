@@ -8,10 +8,11 @@ import { onMounted, onUnmounted } from 'vue'
  *   useReveal(root)
  *
  * Any element inside root with [data-reveal] fades/slides in when scrolled
- * into view. Optional data-dir="up|down|left|right|scale", data-delay="0.2"
+ * into view. Optional data-dir="up|down|left|right|scale|tilt", data-delay="0.2"
  * (staggered children get data-delay="i * 0.08"). Add data-stack to stagger a
- * container's direct children instead of the container itself. A subtle blur-in
- * is applied by default and disabled under prefers-reduced-motion.
+ * container's direct children instead of the container itself. Elements with
+ * [data-parallax="n"] scrub-drift vertically while crossing the viewport.
+ * A subtle blur-in is applied by default and disabled under prefers-reduced-motion.
  */
 let gsapPromise = null
 function getGsap() {
@@ -37,23 +38,38 @@ export function useReveal(root) {
 
   const makeFrom = (el) => {
     const dir = el.dataset.dir || 'up'
-    const dist = reduced ? 0 : 46
-    const blur = reduced ? 0 : isMobile ? 3 : 6
+    const dist = reduced ? 0 : isMobile ? 34 : 60
+    const blur = reduced ? 0 : isMobile ? 4 : 8
+    const tilt = dir === 'tilt' ? 8 : 0
     return {
       opacity: 0,
       filter: `blur(${blur}px)`,
       y: dir === 'up' ? dist : dir === 'down' ? -dist : 0,
       x: dir === 'left' ? dist : dir === 'right' ? -dist : 0,
-      scale: dir === 'scale' ? 0.92 : 1
+      scale: dir === 'scale' ? 0.9 : 1,
+      rotate: tilt
     }
   }
-  const to = { opacity: 1, filter: 'blur(0px)', y: 0, x: 0, scale: 1 }
+  const to = { opacity: 1, filter: 'blur(0px)', y: 0, x: 0, scale: 1, rotate: 0 }
 
   const apply = () => {
     if (!gsap || !root.value) return
     if (ctx) ctx.revert()
     animated.clear()
     ctx = gsap.context(() => {
+      // scrub parallax: any [data-parallax] element drifts as it crosses the viewport
+      gsap.utils.toArray('[data-parallax]', root.value).forEach((el) => {
+        const amt = parseFloat(el.dataset.parallax || 14)
+        gsap.fromTo(el,
+          { yPercent: amt },
+          {
+            yPercent: -amt,
+            ease: 'none',
+            scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true }
+          }
+        )
+      })
+
       const els = gsap.utils.toArray('[data-reveal]', root.value)
       els.forEach((el) => {
         if (animated.has(el)) return
@@ -64,11 +80,11 @@ export function useReveal(root) {
           Array.from(el.children).forEach((kid, i) => {
             gsap.fromTo(kid, makeFrom(kid), {
               ...to,
-              duration: 0.8,
-              delay: delay + i * 0.07,
+              duration: reduced ? 0 : 1,
+              delay: delay + i * 0.09,
               ease: 'power3.out',
               clearProps: 'filter',
-              scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+              scrollTrigger: { trigger: el, start: 'top 86%', once: true }
             })
           })
           return
@@ -76,11 +92,11 @@ export function useReveal(root) {
 
         gsap.fromTo(el, makeFrom(el), {
           ...to,
-          duration: 0.9,
+          duration: reduced ? 0 : 1,
           delay,
           ease: 'power3.out',
           clearProps: 'filter',
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+          scrollTrigger: { trigger: el, start: 'top 86%', once: true }
         })
       })
     }, root.value)

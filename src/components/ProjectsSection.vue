@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
   <section id="projects" class="section" ref="root">
     <div class="projects-banner">
       <canvas ref="banner"></canvas>
-      <div class="banner-label font-mono">// SELECTED WORK</div>
+      <div class="banner-label">Selected work</div>
       <h2 class="banner-title font-display">Things I've <span class="text-gradient">built</span></h2>
     </div>
 
@@ -81,10 +81,10 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="pc-links">
-              <a :href="p.github" target="_blank" rel="noopener" class="link font-mono">
+              <a :href="p.github" target="_blank" rel="noopener" class="link">
                 <IconSet name="github" :size="14" />GitHub
               </a>
-              <button class="link font-mono" @click="open(p)">Details<IconSet name="arrow-right" :size="14" /></button>
+              <button class="link" @click="open(p)">Details<IconSet name="arrow-right" :size="14" /></button>
             </div>
           </div>
         </article>
@@ -98,47 +98,69 @@ onBeforeUnmount(() => {
 <style scoped>
 .projects-banner {
   position: relative;
-  min-height: 34vh;
+  min-height: 30vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: clamp(32px, 5vw, 56px);
+  margin-bottom: clamp(40px, 6vw, 72px);
   overflow: hidden;
 }
-.projects-banner canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.projects-banner canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.5; }
 .banner-label {
   position: relative;
-  font-size: 11px;
-  letter-spacing: 0.42em;
-  color: var(--cyan);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
 }
 .banner-title {
   position: relative;
-  font-size: clamp(2.8rem, 8vw, 6rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  margin-top: 10px;
+  font-size: clamp(2.8rem, 8vw, 4rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.02em;
+  margin-top: 12px;
   text-align: center;
 }
 
-.projects-list { display: grid; gap: 28px; }
+.projects-list { display: grid; gap: 20px; }
 .pc-body { position: relative; z-index: 1; }
 .pc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; flex-wrap: wrap; }
-.pc-title { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 600; margin-top: 10px; }
-.pc-subtitle { color: var(--cyan); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; margin-top: 6px; }
+.pc-title { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: var(--fw-semibold); margin-top: 10px; letter-spacing: -0.01em; }
+.pc-subtitle { color: var(--accent); font-size: 12px; letter-spacing: 0.02em; margin-top: 6px; }
 .pc-case {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: none; border: 1px solid var(--line-strong); color: var(--text-dim);
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
-  padding: 10px 18px; min-height: 44px; border-radius: 999px; cursor: pointer;
-  transition: all 0.3s ease; white-space: nowrap;
+  background: var(--fill-sunken);
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 0 18px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
 }
-.pc-case:hover { border-color: var(--cyan); color: var(--cyan); }
-.pc-desc { color: var(--text-dim); margin: 18px 0; max-width: 640px; line-height: 1.7; }
+.pc-case:hover { background: var(--fill-hover); color: var(--accent); }
+.pc-desc { color: var(--text-secondary); margin: 18px 0; max-width: 640px; line-height: 1.7; }
 .pc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .pc-links { display: flex; gap: 22px; margin-top: 22px; align-items: center; }
-.pc-links button.link { background: none; padding: 0; cursor: pointer; border: none; border-bottom: 1px solid rgba(8, 145, 178, 0.35); border-radius: 0; }
+.pc-links button.link {
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  border-bottom: 1px solid var(--accent-hair);
+  border-radius: 0;
+  color: var(--accent-link);
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+.pc-links button.link:hover { color: var(--accent-link-hover); border-color: var(--accent-link-hover); }
+.pc-links a.link { font-family: var(--font-body); font-size: 13px; }
 </style>

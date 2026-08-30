@@ -1,8 +1,16 @@
 <script setup>
-import { ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import IconSet from './IconSet.vue'
-import { ask, SUGGESTIONS } from '../ai/assistant.js'
+import { ask, SUGGESTIONS, matchThemeIntent } from '../ai/assistant.js'
 import { portfolio } from '../data/portfolio.js'
+import { theme, themeName, setTheme, initTheme } from '../composables/useTheme.js'
+import { scrollToTarget } from '../composables/useSmoothScroll.js'
+
+initTheme()
+
+const statusText = computed(() =>
+  `online — theme: ${themeName.value} (${theme.value})`
+)
 
 const open = ref(false)
 const typing = ref(false)
@@ -10,6 +18,23 @@ const input = ref('')
 const field = ref(null)
 const list = ref(null)
 let timer = null
+
+// ---- interaction logging (console + localStorage) ----
+const LOG_KEY = 'portfolio-ai.logs'
+const LOG_MAX = 300
+const SESSION = Math.random().toString(36).slice(2, 10)
+
+function logEntry(entry) {
+  const e = { t: Date.now(), s: SESSION, v: 1, ...entry }
+  if (import.meta.env.DEV) console.debug(`%c[AI]${e.i ? ` ${e.i}` : ''}`, 'color:#7c3aed', e.q ? `"${e.q}"` : '', e.a ? `→ ${e.a}` : '')
+  try {
+    let list = JSON.parse(localStorage.getItem(LOG_KEY) || '[]')
+    if (!Array.isArray(list)) list = []
+    list.push(e)
+    if (list.length > LOG_MAX) list.splice(0, list.length - LOG_MAX)
+    localStorage.setItem(LOG_KEY, JSON.stringify(list))
+  } catch (err) { /* storage unavailable — logs are best-effort */ }
+}
 
 const messages = ref([
   {
@@ -27,10 +52,8 @@ function scrollBottom() {
 
 function execAction(action) {
   if (!action) return
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (action.type === 'goto') {
-    const el = document.getElementById(action.id)
-    if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
+    scrollToTarget(action.id)
   } else if (action.type === 'mailto') {
     window.open(
       `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(portfolio.profile.email)}&su=${encodeURIComponent('Hello Ganesh — from your portfolio')}`,
@@ -39,7 +62,13 @@ function execAction(action) {
     )
   } else if (action.type === 'link') {
     window.open(action.url, '_blank', 'noopener')
+  } else if (action.type === 'theme') {
+    setTheme(action.theme)
   }
+}
+
+function onThemeChip() {
+  send(theme.value === 'dark' ? 'Switch to light theme' : 'Switch to dark theme')
 }
 
 function send(raw) {
@@ -49,16 +78,19 @@ function send(raw) {
   messages.value.push({ role: 'user', text })
   typing.value = true
   scrollBottom()
+  logEntry({ q: text })
   timer = window.setTimeout(() => {
     typing.value = false
     const res = ask(text)
     messages.value.push({ role: 'ai', text: res.text })
     scrollBottom()
+    logEntry({ i: res.intent, a: res.action ? res.action.type : null })
     execAction(res.action)
   }, 500 + Math.random() * 300)
 }
 
 watch(open, (v) => {
+  logEntry({ i: v ? 'open' : 'close' })
   if (v) {
     nextTick(() => field.value && field.value.focus())
   }
@@ -83,7 +115,7 @@ onBeforeUnmount(() => {
             <div class="ai-avatar"><IconSet name="sparkles" :size="15" /></div>
             <div class="ai-head-text">
               <div class="ai-title font-display">Portfolio Assistant</div>
-              <div class="ai-status font-mono"><span class="ai-live"></span>online — knows his full profile</div>
+              <div class="ai-status" :title="`Theme: ${themeName} (${theme})`"><span class="ai-live"></span>{{ statusText }}</div>
             </div>
             <button class="ai-close" @click="open = false" aria-label="Close assistant">
               <IconSet name="close" :size="14" />
@@ -101,6 +133,9 @@ onBeforeUnmount(() => {
 
           <div v-if="messages.length <= 1" class="ai-suggest">
             <button v-for="s in SUGGESTIONS" :key="s" class="ai-chip" @click="send(s)">{{ s }}</button>
+            <button class="ai-chip" @click="onThemeChip">
+              Switch to {{ theme === 'dark' ? 'light' : 'dark' }} theme
+            </button>
           </div>
 
           <form class="ai-input" @submit.prevent="send()">
@@ -131,19 +166,19 @@ onBeforeUnmount(() => {
 <style scoped>
 .ai-assistant { position: fixed; z-index: 130; right: 24px; bottom: 24px; }
 
-/* ---- panel ---- */
+/* ---- panel (HIG material) ---- */
 .ai-panel {
   position: absolute;
   right: 0;
-  bottom: 68px;
+  bottom: 72px;
   width: min(380px, calc(100vw - 32px));
   height: min(540px, calc(100dvh - 120px));
   display: flex;
   flex-direction: column;
-  background: var(--panel);
-  border: 1px solid var(--line-strong);
-  border-radius: 18px;
-  box-shadow: 0 24px 80px -20px rgba(0, 0, 0, 0.12);
+  background: var(--canvas-raised);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
 }
 
@@ -152,26 +187,26 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(0, 0, 0, 0.015);
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface-card);
 }
 .ai-avatar {
   width: 36px;
   height: 36px;
-  border-radius: 11px;
+  border-radius: 10px;
   background: var(--grad);
-  color: var(--panel);
+  color: var(--text-on-accent);
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  box-shadow: 0 8px 20px -8px var(--glow);
 }
 .ai-head-text { flex: 1; min-width: 0; }
-.ai-title { font-size: 14px; font-weight: 600; letter-spacing: 0.02em; }
+.ai-title { font-size: 15px; font-weight: var(--fw-semibold); letter-spacing: -0.01em; }
 .ai-status {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-faint);
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-tertiary);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -179,21 +214,21 @@ onBeforeUnmount(() => {
 }
 .ai-live {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--emerald);
+  background: var(--sys-green);
   animation: ai-pulse 2.4s ease-in-out infinite;
 }
 .ai-close {
   width: 40px; height: 40px;
   border-radius: 50%;
-  border: 1px solid var(--line-strong);
-  background: transparent;
-  color: var(--text-dim);
+  border: none;
+  background: var(--fill-sunken);
+  color: var(--text-secondary);
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: all 0.3s ease;
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
 }
-.ai-close:hover { color: var(--panel); background: var(--grad); border-color: transparent; }
+.ai-close:hover { background: var(--fill-hover); color: var(--accent); }
 
 .ai-body {
   flex: 1;
@@ -209,27 +244,26 @@ onBeforeUnmount(() => {
 .ai-bubble {
   max-width: 86%;
   padding: 10px 14px;
-  border-radius: 14px;
+  border-radius: 16px;
   font-size: 13.5px;
   line-height: 1.55;
   white-space: pre-line;
   word-break: break-word;
 }
 .ai-msg.ai .ai-bubble {
-  background: rgba(0, 0, 0, 0.025);
-  border: 1px solid var(--line);
-  color: var(--text);
+  background: var(--fill-sunken);
+  color: var(--text-primary);
   border-bottom-left-radius: 4px;
 }
 .ai-msg.user .ai-bubble {
   background: var(--grad);
-  color: var(--panel);
+  color: var(--text-on-accent);
   border-bottom-right-radius: 4px;
 }
 .ai-typing { display: inline-flex; gap: 5px; padding: 14px 16px; align-items: center; }
 .ai-typing span {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--text-dim);
+  background: var(--text-tertiary);
   animation: ai-bounce 1.2s ease-in-out infinite;
 }
 .ai-typing span:nth-child(2) { animation-delay: 0.15s; }
@@ -242,22 +276,23 @@ onBeforeUnmount(() => {
   padding: 0 14px 12px;
 }
 .ai-chip {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--text-dim);
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 10px 14px;
-  min-height: 44px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  min-height: 36px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
 }
 .ai-chip:hover {
-  color: var(--cyan);
-  border-color: rgba(8, 145, 178, 0.5);
-  background: rgba(8, 145, 178, 0.05);
+  color: var(--accent);
+  border-color: var(--accent-hair);
+  background: var(--accent-tint-soft);
 }
 
 .ai-input {
@@ -265,36 +300,38 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--hairline);
+  background: var(--surface-card);
 }
 .ai-input input {
   flex: 1;
   min-width: 0;
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  background: var(--fill-sunken);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
   padding: 11px 16px;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 12px;
+  color: var(--text-primary);
+  font-size: 14px;
   outline: none;
-  transition: border-color 0.25s ease;
+  transition: border-color var(--duration-fast) var(--ease-out);
 }
-.ai-input input:focus { border-color: rgba(8, 145, 178, 0.5); }
-.ai-input input::placeholder { color: var(--text-faint); }
+.ai-input input:focus { border-color: var(--accent-hair); box-shadow: 0 0 0 4px var(--accent-tint-soft); }
+.ai-input input::placeholder { color: var(--text-placeholder); }
 .ai-send {
   width: 44px; height: 44px;
   border-radius: 50%;
   border: none;
   background: var(--grad);
-  color: var(--panel);
+  color: var(--text-on-accent);
   cursor: pointer;
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform var(--duration-fast) var(--ease-out),
+    filter var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
-.ai-send:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(8, 145, 178, 0.4); }
+.ai-send:hover { transform: translateY(-2px); filter: brightness(1.12); box-shadow: 0 10px 26px -10px var(--glow); }
 .ai-send:disabled { opacity: 0.75; cursor: default; transform: none; box-shadow: none; }
 
 /* ---- floating button ---- */
@@ -305,14 +342,16 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   border: none;
   background: var(--grad);
-  color: var(--panel);
+  color: var(--text-on-accent);
   cursor: pointer;
   display: grid;
   place-items: center;
-  box-shadow: 0 14px 40px -12px rgba(124, 58, 237, 0.35);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  box-shadow: 0 18px 44px -14px var(--glow), var(--shadow-md);
+  transition: transform var(--duration-base) var(--ease-spring),
+    filter var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
-.ai-fab:hover { transform: translateY(-3px) scale(1.04); }
+.ai-fab:hover { filter: brightness(1.12); transform: translateY(-3px) scale(1.04); }
 .ai-fab.active { transform: rotate(180deg) scale(0.94); }
 .ai-fab-dot {
   position: absolute;
@@ -321,21 +360,21 @@ onBeforeUnmount(() => {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: var(--emerald);
-  border: 2px solid var(--panel);
+  background: var(--sys-green);
+  border: 2px solid var(--canvas);
   animation: ai-pulse 2.4s ease-in-out infinite;
 }
 
 @keyframes ai-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.45); }
-  50% { box-shadow: 0 0 0 5px rgba(5, 150, 105, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.45); }
+  50% { box-shadow: 0 0 0 5px rgba(52, 199, 89, 0); }
 }
 @keyframes ai-bounce {
   0%, 60%, 100% { transform: translateY(0); }
   30% { transform: translateY(-4px); }
 }
 
-.ai-panel-enter-active, .ai-panel-leave-active { transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.ai-panel-enter-active, .ai-panel-leave-active { transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out); }
 .ai-panel-enter-from, .ai-panel-leave-to { opacity: 0; transform: translateY(12px) scale(0.97); }
 
 @media (max-width: 768px) {

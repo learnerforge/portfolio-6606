@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
   <section id="about" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="user" :size="14" />01 // ABOUT</div>
+        <div class="index"><IconSet name="user" :size="14" />01 — About</div>
         <h2>Turning curiosity<br>into <span class="text-gradient">shipped software</span></h2>
         <p class="sub">{{ about.paragraphs[0] }}</p>
       </div>
@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
       <div class="about-grid">
         <div class="about-visual reveal" data-reveal data-dir="left">
           <div class="avatar-ring">
-            <img :src="portfolio.profile.avatar" :alt="portfolio.profile.name" loading="eager" decoding="async" width="320" height="320" />
+            <img :src="portfolio.profile.avatar" :alt="portfolio.profile.name" loading="eager" decoding="async" width="320" height="320" data-parallax="16" />
           </div>
           <div class="float-chip chip chip-a">Hyderabad, IN</div>
           <div class="float-chip chip chip-b">B.Tech · AI &amp; ML</div>
@@ -93,38 +93,40 @@ onBeforeUnmount(() => {
 .about-grid {
   display: grid;
   grid-template-columns: minmax(260px, 0.9fr) 1.4fr;
-  gap: clamp(32px, 5vw, 72px);
+  gap: clamp(40px, 6vw, 88px);
   align-items: start;
 }
 .about-visual { position: relative; max-width: 340px; }
 .avatar-ring { width: min(100%, 320px); }
 .float-chip {
   position: absolute;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: var(--panel);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 34px -12px rgba(0, 0, 0, 0.1);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  color: var(--text-dim);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--canvas-raised);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  white-space: nowrap;
 }
-.chip-a { top: 12%; right: -8px; }
-.chip-b { bottom: 14%; left: -12px; }
+.chip-a { top: 10%; right: -6px; }
+.chip-b { bottom: 12%; left: -8px; }
 
 .about-body > p {
-  color: var(--text-dim);
-  font-size: 17px;
-  line-height: 1.8;
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1.7;
   margin-bottom: 28px;
 }
 .about-focus h4 {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.28em;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--text-tertiary);
   margin-bottom: 14px;
 }
 .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -134,7 +136,7 @@ onBeforeUnmount(() => {
   gap: 20px;
   margin-top: 40px;
   padding-top: 32px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--hairline);
 }
 
 @media (max-width: 820px) {

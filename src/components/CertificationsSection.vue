@@ -13,7 +13,7 @@ const { certifications, codingProfiles } = portfolio
   <section id="certifications" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="check-circle" :size="14" />06 // CREDENTIALS</div>
+        <div class="index"><IconSet name="check-circle" :size="14" />06 — Credentials</div>
         <h2>Certifications &amp;<br><span class="text-gradient">platforms</span></h2>
       </div>
 
@@ -52,19 +52,19 @@ const { certifications, codingProfiles } = portfolio
 }
 .cert-badge {
   flex-shrink: 0;
-  width: 42px; height: 42px;
-  border-radius: 12px;
-  background: var(--grad-soft);
-  border: 1px solid var(--line-strong);
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--fill-sunken);
+  border: 1px solid var(--hairline);
   display: grid;
   place-items: center;
   font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--cyan);
+  font-weight: var(--fw-semibold);
+  color: var(--accent);
 }
-.cert-name { font-weight: 600; font-size: 15px; }
-.cert-issuer { color: var(--text-faint); font-family: var(--font-mono); font-size: 11px; margin-top: 3px; }
-.cert-check { margin-left: auto; color: var(--emerald); }
+.cert-name { font-weight: var(--fw-semibold); font-size: 15px; }
+.cert-issuer { color: var(--text-tertiary); font-size: 12px; margin-top: 3px; }
+.cert-check { margin-left: auto; color: var(--accent); }
 .cert-link { margin-left: auto; font-size: 12px; }
 
 @media (max-width: 760px) {

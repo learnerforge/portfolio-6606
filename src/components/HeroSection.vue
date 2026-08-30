@@ -12,6 +12,7 @@ let disposed = false
 let typedTimer = null
 let introTl = null
 let scrollTl = null
+let heroSplits = null
 
 const roleIndex = ref(0)
 const typed = ref('')
@@ -57,25 +58,54 @@ onMounted(async () => {
     introTl = gsap.timeline({ delay: 0.2 })
     els.forEach((el, i) => {
       introTl.fromTo(el,
-        { opacity: 0, y: 44 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' },
+        { opacity: 0, y: 26 },
+        { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' },
         i * 0.12
       )
     })
+
+    // kinetic char reveal: split each title line into chars, cascade like a type fire
+    const title = root.value.querySelector('.hero-title')
+    if (title) {
+      const { SplitText } = await import('gsap/SplitText')
+      gsap.registerPlugin(SplitText)
+      heroSplits = Array.from(title.querySelectorAll('.line')).map((line) => new SplitText(line, { type: 'chars' }))
+      const chars = heroSplits.flatMap((s) => s.chars || [])
+      if (chars.length) {
+        introTl.fromTo(
+          chars,
+          { y: '0.35em', opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power3.out',
+            stagger: { each: 0.03, from: 'start' }
+          },
+          1.1
+        )
+      }
+    }
 
     const st = await import('gsap/ScrollTrigger')
     gsap.registerPlugin(st.ScrollTrigger)
     const heroCanvas = canvas.value.closest('.hero-canvas')
     const content = root.value.querySelector('.hero-content')
     const scrollHint = root.value.querySelector('.hero-scroll')
+    const isMobile = window.innerWidth <= 768
     scrollTl = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: { trigger: root.value, start: 'top top', end: 'bottom top', scrub: true }
     })
-    scrollTl
-      .to(heroCanvas, { yPercent: 16 }, 0)
-      .to(content, { yPercent: -10, opacity: 0.1 }, 0)
-      .to(scrollHint, { opacity: 0 }, 0)
+    if (isMobile) {
+      // mobile: fade only — no big transforms (avoid jank on 100svh sections)
+      scrollTl.to(content, { opacity: 0.12 }, 0)
+    } else {
+      scrollTl
+        .to(heroCanvas, { yPercent: 10 }, 0)
+        .to(content, { yPercent: -8, opacity: 0.12 }, 0)
+    }
+    scrollTl.to(scrollHint, { opacity: 0 }, 0)
 
     typeRole()
   } else {
@@ -96,6 +126,10 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   disposed = true
+  if (heroSplits) {
+    heroSplits.forEach((s) => s.revert())
+    heroSplits = null
+  }
   if (destroyScene) destroyScene()
   if (typedTimer) clearTimeout(typedTimer)
   if (introTl) introTl.kill()
@@ -130,7 +164,7 @@ onBeforeUnmount(() => {
       </p>
 
       <div class="hero-cta" data-hero style="opacity: 0">
-        <a href="#projects" class="btn btn-primary">View Work <IconSet name="arrow-up-right" :size="15" /></a>
+        <a href="#projects" class="btn">View Work <IconSet name="arrow-up-right" :size="15" /></a>
         <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-ghost">Get in Touch <IconSet name="arrow-right" :size="15" /></a>
       </div>
     </div>

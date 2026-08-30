@@ -21,7 +21,7 @@ const icons = {
   <section id="expertise" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="cpu" :size="14" />04 // EXPERTISE</div>
+        <div class="index"><IconSet name="cpu" :size="14" />04 — Expertise</div>
         <h2>Deep in the<br><span class="text-gradient">AI stack</span></h2>
       </div>
 
@@ -51,31 +51,30 @@ const icons = {
 }
 .exp-card { padding: 28px; }
 .exp-icon {
-  width: 46px; height: 46px;
-  border-radius: 14px;
-  background: var(--grad-soft);
-  border: 1px solid var(--line-strong);
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--fill-sunken);
+  border: 1px solid var(--hairline);
   display: grid;
   place-items: center;
-  color: var(--cyan);
+  color: var(--accent);
   margin-bottom: 20px;
 }
 .exp-icon svg { width: 22px; height: 22px; }
 .exp-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-.exp-domain { font-size: 1.2rem; font-weight: 600; flex: 1 1 auto; min-width: 0; }
+.exp-domain { font-size: 1.2rem; font-weight: var(--fw-semibold); flex: 1 1 auto; min-width: 0; }
 .exp-level {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  border: 1px solid var(--line);
-  padding: 4px 10px;
-  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-secondary);
+  border: 1px solid var(--hairline);
+  background: var(--canvas-raised);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
   flex-shrink: 0;
   white-space: nowrap;
   margin-left: auto;
 }
-.exp-level.hl { color: var(--cyan); border-color: rgba(8, 145, 178, 0.4); }
-.exp-detail { color: var(--text-dim); font-size: 14px; margin-top: 12px; line-height: 1.7; }
+.exp-level.hl { color: var(--accent); border-color: transparent; background: var(--accent-tint); }
+.exp-detail { color: var(--text-secondary); font-size: 14px; margin-top: 12px; line-height: 1.7; }
 </style>

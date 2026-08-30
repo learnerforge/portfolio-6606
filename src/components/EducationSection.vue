@@ -13,7 +13,7 @@ const edu = portfolio.education[0]
   <section id="education" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="book-open" :size="14" />03 // EDUCATION</div>
+        <div class="index"><IconSet name="book-open" :size="14" />03 — Education</div>
         <h2>Foundations &amp;<br><span class="text-gradient">systems thinking</span></h2>
       </div>
 
@@ -62,35 +62,36 @@ const edu = portfolio.education[0]
 .edu-head > div { min-width: 0; }
 .edu-badge {
   flex-shrink: 0;
-  width: 64px; height: 64px;
-  border-radius: 16px;
-  background: var(--grad);
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: var(--accent);
   display: grid;
   place-items: center;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--panel);
-  box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.3);
+  font-size: 1rem;
+  font-weight: var(--fw-semibold);
+  color: var(--text-on-accent);
 }
-.edu-program { font-size: 1.35rem; font-weight: 600; line-height: 1.2; }
-.edu-institution { color: var(--cyan); margin-top: 8px; }
-.edu-meta { color: var(--text-faint); font-family: var(--font-mono); font-size: 12px; margin-top: 6px; }
+.edu-program { font-size: 1.4rem; font-weight: var(--fw-semibold); line-height: 1.2; letter-spacing: -0.01em; }
+.edu-institution { color: var(--accent); margin-top: 8px; font-size: 15px; }
+.edu-meta { color: var(--text-tertiary); font-size: 12px; margin-top: 6px; }
 .edu-sub {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px;
-  letter-spacing: 0.24em;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  color: var(--text-tertiary);
   margin: 26px 0 14px;
 }
 .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
 
-.edu-note h4 { font-size: 1.3rem; margin-bottom: 18px; }
+.edu-note { background: var(--fill-sunken); }
+.edu-note h4 { font-size: 1.35rem; margin-bottom: 18px; }
 .note-list { list-style: none; margin: 0 0 26px; padding: 0; display: grid; gap: 12px; }
-.note-list li { color: var(--text-dim); display: flex; align-items: center; gap: 10px; }
+.note-list li { color: var(--text-secondary); display: flex; align-items: center; gap: 10px; }
 .note-dot {
   width: 7px; height: 7px; border-radius: 50%;
-  background: var(--grad); flex-shrink: 0;
+  background: var(--accent); flex-shrink: 0;
 }
 
 @media (max-width: 820px) {

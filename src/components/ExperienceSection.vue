@@ -13,7 +13,7 @@ const { experience, openTo } = portfolio
   <section id="experience" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="briefcase" :size="14" />02 // EXPERIENCE</div>
+        <div class="index"><IconSet name="briefcase" :size="14" />02 — Experience</div>
         <h2>Where I've<br>been <span class="text-gradient">building</span></h2>
       </div>
 
@@ -54,7 +54,7 @@ const { experience, openTo } = portfolio
 </template>
 
 <style scoped>
-.timeline { display: grid; gap: 36px; }
+.timeline { display: grid; gap: 20px; }
 .tl-card { padding: clamp(22px, 3.5vw, 36px); }
 .tl-card.tl-item { padding-left: 44px; }
 .tl-head {
@@ -63,36 +63,42 @@ const { experience, openTo } = portfolio
   gap: 16px;
   flex-wrap: wrap;
 }
-.tl-company { font-size: 1.6rem; font-weight: 600; }
-.tl-role { color: var(--cyan); font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.12em; margin-top: 6px; }
+.tl-company { font-size: 1.45rem; font-weight: var(--fw-semibold); letter-spacing: -0.01em; }
+.tl-role { color: var(--accent); font-family: var(--font-body); font-size: 13px; margin-top: 6px; }
 .tl-meta { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
-.tl-period { color: var(--text); font-family: var(--font-mono); font-size: 12px; }
+.tl-period { color: var(--text-tertiary); font-size: 12px; }
 .tl-type {
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
-  padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(8, 145, 178, 0.4);
-  color: var(--cyan); text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--hairline);
+  background: var(--canvas-raised);
+  color: var(--text-secondary);
 }
-.tl-summary { color: var(--text-dim); margin: 16px 0; line-height: 1.7; }
-.tl-points { margin: 0 0 18px; padding-left: 18px; display: grid; gap: 8px; color: var(--text-dim); }
-.tl-points li::marker { color: var(--cyan); }
+.tl-summary { color: var(--text-secondary); margin: 16px 0; line-height: 1.7; }
+.tl-points { margin: 0 0 18px; padding-left: 18px; display: grid; gap: 8px; color: var(--text-secondary); }
+.tl-points li::marker { color: var(--accent); }
 .tl-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .open-box {
-  margin-top: 40px;
-  padding: 26px;
-  border-radius: 18px;
-  border: 1px dashed var(--line-strong);
+  margin-top: 32px;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--fill-sunken);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
 }
 .open-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px;
-  letter-spacing: 0.24em;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  color: var(--text-tertiary);
   margin-right: 8px;
 }
 </style>

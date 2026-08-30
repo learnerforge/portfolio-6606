@@ -78,45 +78,45 @@ function onBackdrop(e) {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid var(--line-strong);
-  background: var(--panel);
-  color: var(--text);
+  border: none;
+  background: var(--fill-sunken);
+  color: var(--text-primary);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
   z-index: 2;
   display: grid;
   place-items: center;
 }
-.modal-close:hover { color: var(--panel); background: var(--grad); border-color: transparent; }
+.modal-close:hover { background: var(--fill-hover); color: var(--accent); }
 .modal-tags { display: flex; gap: 10px; margin-bottom: 18px; }
-.modal-title { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 600; letter-spacing: -0.02em; }
-.modal-subtitle { color: var(--cyan); font-family: var(--font-mono); font-size: 13px; margin-top: 8px; letter-spacing: 0.12em; }
-.modal-lead { color: var(--text-dim); margin: 24px 0; line-height: 1.8; }
+.modal-title { font-size: clamp(2rem, 5vw, 2.75rem); font-weight: var(--fw-semibold); letter-spacing: -0.02em; }
+.modal-subtitle { color: var(--accent); font-size: 13px; margin-top: 8px; letter-spacing: 0.02em; }
+.modal-lead { color: var(--text-secondary); margin: 24px 0; line-height: 1.8; }
 .modal-section { margin-bottom: 24px; }
 .modal-head {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px;
-  letter-spacing: 0.26em;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--text-tertiary);
   margin-bottom: 10px;
 }
-.modal-text { color: var(--text-dim); line-height: 1.7; }
+.modal-text { color: var(--text-secondary); line-height: 1.7; }
 .modal-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.modal-list li { color: var(--text-dim); display: flex; gap: 12px; align-items: baseline; }
+.modal-list li { color: var(--text-secondary); display: flex; gap: 12px; align-items: baseline; }
 .list-dot {
   width: 6px; height: 6px; border-radius: 50%;
-  background: var(--grad); flex-shrink: 0; transform: translateY(-1px);
+  background: var(--accent); flex-shrink: 0; transform: translateY(-1px);
 }
 .modal-stack {
-  font-family: var(--font-mono);
   font-size: 13px;
-  color: var(--text);
-  border: 1px solid var(--line);
+  color: var(--text-primary);
+  border: 1px solid var(--hairline);
   border-radius: 12px;
   padding: 14px 18px;
-  background: rgba(0, 0, 0, 0.015);
+  background: var(--fill-sunken);
 }
 .modal-actions { display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap; }
 </style>

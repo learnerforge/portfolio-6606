@@ -16,6 +16,8 @@ import Footer from './components/Footer.vue'
 import FloatingDock from './components/FloatingDock.vue'
 import IconSet from './components/IconSet.vue'
 import { portfolio } from './data/portfolio.js'
+import { useSmoothScroll, scrollToTarget } from './composables/useSmoothScroll.js'
+import { useCursor } from './composables/useCursor.js'
 
 const AiAssistant = defineAsyncComponent(() => import('./components/AiAssistant.vue'))
 
@@ -39,11 +41,43 @@ let progressST = null
 const showTop = ref(false)
 let onScroll = null
 const toTop = () => {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
+  scrollToTarget(0, { offset: 0 })
 }
 
 let scrollRaf = null
+let smoothCleanup = null
+let cursorCleanup = null
+let magneticCleanup = null
+
+function initMagnetic() {
+  if (!gsap) return
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const fine = window.matchMedia('(pointer: fine)').matches
+  if (reduced || !fine) return
+
+  const cleanups = gsap.utils.toArray('.btn, .pill-btn').map((b) => {
+    const dx = gsap.quickTo(b, 'x', { duration: 0.4, ease: 'power3.out' })
+    const dy = gsap.quickTo(b, 'y', { duration: 0.4, ease: 'power3.out' })
+    const onMove = (e) => {
+      const r = b.getBoundingClientRect()
+      dx((e.clientX - (r.left + r.width / 2)) * 0.32)
+      dy((e.clientY - (r.top + r.height / 2)) * 0.32)
+    }
+    const onLeave = () => {
+      dx(0)
+      dy(0)
+    }
+    b.addEventListener('mousemove', onMove)
+    b.addEventListener('mouseleave', onLeave)
+    return () => {
+      b.removeEventListener('mousemove', onMove)
+      b.removeEventListener('mouseleave', onLeave)
+      gsap.set(b, { x: 0, y: 0 })
+    }
+  })
+  magneticCleanup = () => cleanups.forEach((fn) => fn())
+}
+
 onMounted(async () => {
   onScroll = () => {
     if (scrollRaf) return
@@ -61,19 +95,9 @@ onMounted(async () => {
   ScrollTrigger = stmod.ScrollTrigger
   gsap.registerPlugin(ScrollTrigger)
 
-  // cursor glow (bind once so dev/HMR remounts never stack listeners)
-  const glow = document.querySelector('.cursor-glow')
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (!glow || reduced || window.matchMedia('(pointer: coarse)').matches) return
-  if (!window.__glowBound) {
-    window.__glowBound = true
-    const onMove = (e) => {
-      glow.style.setProperty('--mx', `${e.clientX}px`)
-      glow.style.setProperty('--my', `${e.clientY}px`)
-    }
-    window.addEventListener('mousemove', onMove, { passive: true })
-    window.__glowCleanup = () => window.removeEventListener('mousemove', onMove)
-  }
+  smoothCleanup = (await useSmoothScroll()) || undefined
+  cursorCleanup = useCursor() || undefined
+  initMagnetic()
 
   // scroll progress bar (create once)
   const bar = document.querySelector('.scroll-progress')
@@ -91,15 +115,23 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   if (progressST) progressST.kill()
   if (scrollRaf) cancelAnimationFrame(scrollRaf)
-  if (window.__glowCleanup) window.__glowCleanup()
   if (onScroll) window.removeEventListener('scroll', onScroll)
+  if (magneticCleanup) magneticCleanup()
+  if (cursorCleanup) cursorCleanup()
+  if (smoothCleanup) smoothCleanup()
   document.body.style.overflow = ''
 })
 </script>
 
 <template>
   <div>
-    <div class="cursor-glow"></div>
+    <div class="aurora" aria-hidden="true">
+      <span class="orb orb-a"></span>
+      <span class="orb orb-b"></span>
+      <span class="orb orb-c"></span>
+    </div>
+    <div class="grain" aria-hidden="true"></div>
+
     <div class="scroll-progress"></div>
 
     <NavBar />
@@ -133,6 +165,7 @@ onBeforeUnmount(() => {
   right: 0;
   height: 3px;
   background: var(--grad);
+  box-shadow: 0 0 12px var(--glow);
   transform-origin: 0 50%;
   transform: scaleX(0);
   z-index: 200;
@@ -143,24 +176,29 @@ onBeforeUnmount(() => {
   left: 24px;
   bottom: 24px;
   z-index: 110;
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--line-strong);
-  background: rgba(248, 249, 252, 0.92);
-  color: var(--text-dim);
+  border: none;
+  background: var(--canvas-raised);
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--material-sat));
+  backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--material-sat));
+  box-shadow: var(--shadow-sm);
+  color: var(--text-secondary);
   cursor: pointer;
   display: grid;
   place-items: center;
   opacity: 0;
   transform: translateY(14px);
   pointer-events: none;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
 }
 .back-top:hover {
-  color: var(--cyan);
-  border-color: rgba(8, 145, 178, 0.5);
-  transform: translateY(-2px);
+  color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(0);
 }
 .back-top.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
 

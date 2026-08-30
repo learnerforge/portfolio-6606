@@ -5,7 +5,7 @@ import * as THREE from 'three'
  * projects banner. Exposes setProgress() so GSAP can scrub opacity/rotation
  * as the user scrolls past it.
  */
-export function createParticleBackdrop(canvas, { count = 400, opacity = 0.45 } = {}) {
+export function createParticleBackdrop(canvas, { count = 400, opacity = 0.3 } = {}) {
   let raf = 0
   let disposed = false
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -21,8 +21,8 @@ export function createParticleBackdrop(canvas, { count = 400, opacity = 0.45 } =
   const geo = new THREE.BufferGeometry()
   const pos = new Float32Array(count * 3)
   const col = new Float32Array(count * 3)
-  const cA = new THREE.Color(0x0891b2)
-  const cB = new THREE.Color(0xc026d3)
+  const cA = new THREE.Color(0x86868b)
+  const cB = new THREE.Color(0x5ac8fa)
   for (let i = 0; i < count; i++) {
     const r = 3 + Math.pow(Math.random(), 0.8) * 4.5
     const theta = Math.random() * Math.PI * 2

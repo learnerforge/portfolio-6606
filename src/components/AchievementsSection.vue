@@ -13,7 +13,7 @@ const { achievements } = portfolio
   <section id="achievements" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="award" :size="14" />05 // TRACK RECORD</div>
+        <div class="index"><IconSet name="award" :size="14" />05 — Track record</div>
         <h2>Proof of<br><span class="text-gradient">momentum</span></h2>
       </div>
 
@@ -38,32 +38,28 @@ const { achievements } = portfolio
 }
 .ach-card {
   position: relative;
-  border: 1px solid var(--line);
-  border-radius: 18px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
   padding: 26px;
-  overflow: hidden;
-  background:
-    radial-gradient(120% 120% at 100% 0%, rgba(124, 58, 237, 0.06), transparent 45%),
-    linear-gradient(160deg, rgba(0, 0, 0, 0.015), rgba(0, 0, 0, 0.005));
-  transition: border-color 0.4s ease, transform 0.4s ease;
+  background: var(--surface-card);
+  transition: border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
 }
-.ach-card:hover { border-color: rgba(192, 38, 211, 0.35); transform: translateY(-4px); }
+.ach-card:hover {
+  border-color: var(--accent-hair);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
 .ach-tag {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  color: var(--fuchsia);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
   text-transform: uppercase;
 }
-.ach-title { font-size: 1.25rem; font-weight: 600; margin-top: 14px; }
-.ach-org { color: var(--cyan); font-family: var(--font-mono); font-size: 12px; margin-top: 6px; }
-.ach-desc { color: var(--text-dim); font-size: 14px; line-height: 1.65; margin-top: 14px; }
-.ach-corner {
-  position: absolute;
-  top: -30px; right: -30px;
-  width: 80px; height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(8, 145, 178, 0.08), transparent 70%);
-  pointer-events: none;
-}
+.ach-title { font-size: 1.25rem; font-weight: var(--fw-semibold); margin-top: 14px; }
+.ach-org { color: var(--accent); font-size: 13px; margin-top: 6px; }
+.ach-desc { color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin-top: 14px; }
 </style>

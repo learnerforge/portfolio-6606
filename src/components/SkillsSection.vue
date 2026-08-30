@@ -21,7 +21,7 @@ const cells = [
   <section id="skills" class="section" ref="root">
     <div class="container">
       <div class="section-head" data-reveal>
-        <div class="index"><IconSet name="layers" :size="14" />07 // TOOLBOX</div>
+        <div class="index"><IconSet name="layers" :size="14" />07 — Toolbox</div>
         <h2>The stack I<br><span class="text-gradient">reach for</span></h2>
       </div>
 

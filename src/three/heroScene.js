@@ -38,8 +38,8 @@ export function createHeroScene(canvas) {
   const galaxyGeo = new THREE.BufferGeometry()
   const gPos = new Float32Array(GALAXY_COUNT * 3)
   const gCol = new Float32Array(GALAXY_COUNT * 3)
-  const cIn = new THREE.Color(0x0891b2)
-  const cOut = new THREE.Color(0x7c3aed)
+  const cIn = new THREE.Color(0x5ac8fa)
+  const cOut = new THREE.Color(0x0071e3)
   for (let i = 0; i < GALAXY_COUNT; i++) {
     const dist = 2 + Math.pow(Math.random(), 0.6) * 9
     const angle = Math.random() * Math.PI * 2 + dist * 0.55
@@ -76,7 +76,7 @@ export function createHeroScene(canvas) {
   }
   starGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3))
   const starMat = new THREE.PointsMaterial({
-    size: 0.03, color: 0x9a9ab0, transparent: true, opacity: 0,
+    size: 0.03, color: 0xaeaeb2, transparent: true, opacity: 0,
     blending: THREE.NormalBlending, depthWrite: false, sizeAttenuation: true
   })
   const stars = new THREE.Points(starGeo, starMat)
@@ -85,9 +85,9 @@ export function createHeroScene(canvas) {
   // ---------- luminous ambient orbs ----------
   const orbTex = makeOrbTexture()
   const ORB_SPECS = [
-    { x: -6.2, y: 2.4, z: -4, s: 9, color: 0x0891b2, opacity: 0.2 },
-    { x: 6.4, y: -2.2, z: -5, s: 10, color: 0x7c3aed, opacity: 0.22 },
-    { x: 0.4, y: -3.6, z: -7, s: 12, color: 0xc026d3, opacity: 0.16 }
+    { x: -6.2, y: 2.4, z: -4, s: 9, color: 0x5ac8fa, opacity: 0.2 },
+    { x: 6.4, y: -2.2, z: -5, s: 10, color: 0x0071e3, opacity: 0.18 },
+    { x: 0.4, y: -3.6, z: -7, s: 12, color: 0x8acbff, opacity: 0.14 }
   ]
   const orbs = ORB_SPECS.map((o, i) => {
     const mat = new THREE.SpriteMaterial({
@@ -107,33 +107,33 @@ export function createHeroScene(canvas) {
 
   const wire = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1.35, 1),
-    new THREE.MeshBasicMaterial({ color: 0x0891b2, wireframe: true, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
+    new THREE.MeshBasicMaterial({ color: 0x5ac8fa, wireframe: true, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
   )
   core.add(wire)
 
   const shellGeo = new THREE.IcosahedronGeometry(1.55, 2)
   const shell = new THREE.Points(
     shellGeo,
-    new THREE.PointsMaterial({ size: 0.05, color: 0xc026d3, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false, sizeAttenuation: true })
+    new THREE.PointsMaterial({ size: 0.05, color: 0x9ecbff, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false, sizeAttenuation: true })
   )
   core.add(shell)
 
   const inner = new THREE.Mesh(
     new THREE.SphereGeometry(0.6, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
+    new THREE.MeshBasicMaterial({ color: 0x0071e3, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
   )
   core.add(inner)
 
   const ring1 = new THREE.Mesh(
     new THREE.TorusGeometry(2.2, 0.015, 8, 120),
-    new THREE.MeshBasicMaterial({ color: 0x0891b2, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
+    new THREE.MeshBasicMaterial({ color: 0x5ac8fa, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
   )
   ring1.rotation.x = Math.PI / 2.2
   core.add(ring1)
 
   const ring2 = new THREE.Mesh(
     new THREE.TorusGeometry(2.7, 0.01, 8, 120),
-    new THREE.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
+    new THREE.MeshBasicMaterial({ color: 0x0071e3, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
   )
   ring2.rotation.x = Math.PI / 1.6
   ring2.rotation.y = 0.6
@@ -211,13 +211,13 @@ export function createHeroScene(canvas) {
     }
 
     const introFade = reducedMotion ? 1 : Math.min(1, Math.max(0, (t - 0.4) / 0.6))
-    galaxyMat.opacity = props.particleAlpha * 0.45
-    starMat.opacity = props.particleAlpha * 0.25
-    wire.material.opacity = props.coreAlpha * 0.35 * introFade
-    shell.material.opacity = props.coreAlpha * 0.45 * introFade
-    inner.material.opacity = props.coreAlpha * 0.18 * introFade
-    ring1.material.opacity = props.coreAlpha * 0.28 * introFade
-    ring2.material.opacity = props.coreAlpha * 0.2 * introFade
+    galaxyMat.opacity = props.particleAlpha * 0.35
+    starMat.opacity = props.particleAlpha * 0.18
+    wire.material.opacity = props.coreAlpha * 0.25 * introFade
+    shell.material.opacity = props.coreAlpha * 0.32 * introFade
+    inner.material.opacity = props.coreAlpha * 0.14 * introFade
+    ring1.material.opacity = props.coreAlpha * 0.2 * introFade
+    ring2.material.opacity = props.coreAlpha * 0.14 * introFade
 
     renderer.render(scene, camera)
     // keep animating during the intro and for a short drift window after any

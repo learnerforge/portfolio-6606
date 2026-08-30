@@ -1,7 +1,10 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { portfolio } from '../data/portfolio.js'
+import { theme, themeName, toggleTheme, initTheme } from '../composables/useTheme.js'
 import IconSet from './IconSet.vue'
+
+initTheme()
 
 const p = portfolio.profile
 const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(p.email)}&su=${encodeURIComponent('Hello Ganesh — from your portfolio')}`
@@ -105,6 +108,15 @@ onBeforeUnmount(() => {
         <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-ghost nav-cta">Hire Me</a>
       </div>
 
+      <button
+        class="theme-toggle"
+        @click="toggleTheme"
+        :aria-label="`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`"
+        :title="`Theme: ${themeName}`"
+      >
+        <IconSet :name="theme === 'dark' ? 'sun' : 'moon'" :size="15" />
+      </button>
+
       <button class="nav-burger" :class="{ active: open }" @click="toggle" aria-label="Menu">
         <span></span><span></span>
       </button>
@@ -113,7 +125,7 @@ onBeforeUnmount(() => {
     <Teleport to="body">
       <Transition name="menu">
         <div v-if="open" class="nav-menu">
-          <div class="menu-label font-mono">// NAVIGATION</div>
+          <div class="menu-label">Navigation</div>
           <a
             v-for="s in sections"
             :key="s.id"
@@ -127,6 +139,10 @@ onBeforeUnmount(() => {
           <a class="menu-cta" :href="emailUrl" target="_blank" rel="noopener" @click="go()">
             <IconSet name="mail" :size="15" />Hire Me
           </a>
+          <button class="menu-theme" @click="toggleTheme">
+            <IconSet :name="theme === 'dark' ? 'sun' : 'moon'" :size="15" />
+            Switch to {{ theme === 'dark' ? 'Paper (light)' : 'Nebula (dark)' }}
+          </button>
         </div>
       </Transition>
     </Teleport>
@@ -134,11 +150,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* ---- consistent row height across logo / links / CTA / burger ---- */
+/* ---- consistent 52px row (material bar height driven by main.css) ---- */
 .nav-inner {
-  max-width: 1200px;
+  max-width: var(--content-wide);
   margin: 0 auto;
-  padding: 14px clamp(20px, 5vw, 48px);
+  height: var(--apple-nav-h);
+  padding: 0 clamp(20px, 4vw, 44px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -148,73 +165,76 @@ onBeforeUnmount(() => {
 .nav-logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
   font-size: 15px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.03em;
   line-height: 1;
-  color: var(--text);
+  color: var(--text-primary);
   text-decoration: none;
 }
 .nav-logo .glyph {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  background: var(--grad);
-  color: var(--panel);
-  font-family: var(--font-mono);
+  border-radius: var(--radius-sm);
+  background: var(--fill-sunken);
+  color: var(--accent);
+  font-family: var(--font-display);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: var(--fw-semibold);
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: 30px;
 }
 .nav-links a {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.01em;
   line-height: 1;
-  color: var(--text-dim);
+  color: var(--text-secondary);
   text-decoration: none;
-  text-transform: uppercase;
   position: relative;
   padding: 6px 0;
-  transition: color 0.3s ease;
+  transition: color var(--duration-fast) var(--ease-out);
 }
 .nav-links a::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: 4px;
-  width: 0;
-  height: 1px;
-  background: var(--grad);
-  transition: width 0.35s ease;
+  bottom: 2px;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
 }
 .nav-links a:hover,
-.nav-links a.active { color: var(--text); }
+.nav-links a.active { color: var(--text-primary); }
 .nav-links a:hover::after,
-.nav-links a.active::after { width: 100%; }
+.nav-links a.active::after { transform: scaleX(1); }
 
-/* compact CTA so it matches the link row height */
+/* compact CTA so it matches the 52px row */
 .nav-cta {
-  padding: 10px 18px;
-  font-size: 11px;
+  height: 32px;
+  padding: 0 16px;
+  font-size: 12px;
   line-height: 1;
   margin-left: 6px;
   white-space: nowrap;
 }
 @media (pointer: coarse) {
-  .nav-cta { min-height: 44px; padding: 12px 18px; }
+  .nav-cta { min-height: 44px; }
 }
 
-/* burger matches the 34px row so nav height stays constant across breakpoints */
+/* burger is 44px for touch, but the bar stays 52px */
 .nav-burger {
   display: none;
   flex-direction: column;
@@ -222,8 +242,8 @@ onBeforeUnmount(() => {
   gap: 5px;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--line-strong);
-  border-radius: 10px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
   background: transparent;
   cursor: pointer;
   padding: 0;
@@ -231,22 +251,22 @@ onBeforeUnmount(() => {
 .nav-burger span {
   width: 16px;
   height: 2px;
-  background: var(--text);
+  background: var(--text-primary);
   margin: 0 auto;
   border-radius: 2px;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-base) var(--ease-out);
 }
 .nav-burger.active span:first-child { transform: translateY(3.5px) rotate(45deg); }
 .nav-burger.active span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
 
-/* ---- mobile menu ---- */
+/* ---- mobile menu (Apple fullscreen sheet) ---- */
 .nav-menu {
   position: fixed;
   inset: 0;
   z-index: 250;
-  background: rgba(248, 249, 252, 0.97);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--canvas-raised);
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--material-sat));
+  backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--material-sat));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -256,53 +276,79 @@ onBeforeUnmount(() => {
   overflow-y: auto;
 }
 .menu-label {
-  font-size: 10px;
-  letter-spacing: 0.4em;
-  color: var(--text-faint);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
   margin-bottom: 18px;
+  text-transform: uppercase;
 }
 .nav-menu a {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 6vw, 2rem);
-  font-weight: 600;
-  color: var(--text-dim);
+  font-size: clamp(26px, 6vw, 34px);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
   text-decoration: none;
   padding: 8px 16px;
   display: inline-flex;
   align-items: baseline;
-  gap: 12px;
-  transition: color 0.3s ease, transform 0.3s ease;
+  gap: 14px;
+  transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
 }
 .nav-menu a:hover,
-.nav-menu a.active { color: var(--text); transform: translateX(6px); }
+.nav-menu a.active { color: var(--text-primary); transform: translateX(6px); }
 .menu-num {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px;
-  color: var(--cyan);
-  letter-spacing: 0.1em;
+  color: var(--accent);
+  letter-spacing: 0.04em;
 }
 .menu-divider {
   width: 120px;
   height: 1px;
-  background: var(--line-strong);
+  background: var(--separator);
   margin: 20px 0;
 }
 .menu-cta {
-  font-family: var(--font-mono) !important;
-  font-size: 12px !important;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text) !important;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  height: 44px;
   display: inline-flex !important;
   align-items: center !important;
   gap: 10px !important;
+  padding: 0 22px !important;
+  border-radius: var(--radius-pill) !important;
+  background: var(--btn-fill) !important;
+  color: var(--text-on-accent) !important;
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  font-weight: var(--fw-regular) !important;
+  letter-spacing: 0 !important;
+  border: none !important;
   margin-top: 6px;
 }
-.menu-cta:hover { border-color: var(--cyan); }
+.menu-cta:hover { background: var(--btn-fill-hover) !important; transform: none !important; }
 
-.menu-enter-active, .menu-leave-active { transition: opacity 0.3s ease; }
+.menu-theme {
+  margin-top: 16px;
+  height: 40px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--hairline);
+  background: var(--fill-sunken);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+.menu-theme:hover { color: var(--accent); background: var(--fill-hover); border-color: var(--accent-hair); }
+
+.menu-enter-active, .menu-leave-active { transition: opacity var(--duration-base) var(--ease-out); }
 .menu-enter-from, .menu-leave-to { opacity: 0; }
 
 @media (max-width: 900px) {

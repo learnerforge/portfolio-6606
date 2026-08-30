@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import IconSet from './IconSet.vue'
+import { scrollToTarget } from '../composables/useSmoothScroll.js'
 
 /**
  * FloatingDock — macOS-style dock port (Aceternity UI pattern).
@@ -40,10 +41,7 @@ function itemStyle(i) {
 
 function go(href) {
   if (href.startsWith('#')) {
-    const t = document.getElementById(href.slice(1))
-    if (!t) return
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    t.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
+    scrollToTarget(href)
   } else {
     window.open(href, '_blank', 'noopener')
   }
@@ -135,9 +133,11 @@ onBeforeUnmount(() => {
   gap: 8px;
   padding: 9px 14px;
   border-radius: 999px;
-  background: rgba(248, 249, 252, 0.92);
-  border: 1px solid var(--line-strong);
-  box-shadow: 0 22px 60px -20px rgba(0, 0, 0, 0.1);
+  background: var(--nav-material);
+  -webkit-backdrop-filter: blur(var(--blur-nav)) saturate(var(--material-sat));
+  backdrop-filter: blur(var(--blur-nav)) saturate(var(--material-sat));
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-md);
 }
 
 .dock-item {
@@ -148,9 +148,9 @@ onBeforeUnmount(() => {
   display: grid;
   place-items: center;
   cursor: pointer;
-  color: var(--text-dim);
-  animation: dock-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease, background 0.25s ease;
+  color: var(--text-secondary);
+  animation: dock-in 0.5s var(--ease-spring) backwards;
+  transition: transform 0.16s var(--ease-spring), color 0.25s ease, background 0.25s ease;
 }
 @keyframes dock-in {
   from { opacity: 0; transform: translateY(14px) scale(0.4); }
@@ -170,9 +170,9 @@ onBeforeUnmount(() => {
   border-radius: 14px;
   transition: background 0.25s ease, color 0.25s ease;
 }
-.dock-btn:hover { color: var(--text); background: rgba(0, 0, 0, 0.04); }
-.dock-item.active { color: var(--cyan); }
-.dock-item.active .dock-btn { background: rgba(8, 145, 178, 0.08); }
+.dock-btn:hover { color: var(--text-primary); background: var(--fill-hover); }
+.dock-item.active { color: var(--accent); }
+.dock-item.active .dock-btn { background: var(--accent-tint); }
 
 .dock-dot {
   position: absolute;
@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
   background: transparent;
   transition: background 0.25s ease;
 }
-.dock-item.active .dock-dot { background: var(--cyan); }
+.dock-item.active .dock-dot { background: var(--accent); }
 
 .dock-tip {
   position: absolute;
@@ -194,17 +194,18 @@ onBeforeUnmount(() => {
   transform: translateX(-50%) translateY(4px);
   opacity: 0;
   pointer-events: none;
-  background: rgba(248, 249, 252, 0.96);
-  border: 1px solid var(--line-strong);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  background: var(--canvas-raised);
+  border: 1px solid var(--hairline);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 6px 11px;
   border-radius: 8px;
   white-space: nowrap;
-  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm);
+  transition: opacity 0.2s ease, transform 0.2s var(--ease-out);
   z-index: 5;
 }
 .dock-item:hover .dock-tip {
@@ -229,7 +230,9 @@ onBeforeUnmount(() => {
     padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
     border-radius: 0;
     border: none;
-    border-top: 1px solid var(--line-strong);
+    border-top: 1px solid var(--hairline);
+    background: var(--canvas-raised);
+    box-shadow: none;
   }
   .dock-item { width: 42px; height: 42px; animation: none; }
   .dock-tip { display: none; }
