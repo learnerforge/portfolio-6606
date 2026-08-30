@@ -64,7 +64,7 @@ const edu = portfolio.education[0]
   flex-shrink: 0;
   width: 56px; height: 56px;
   border-radius: 14px;
-  background: var(--accent);
+  background: var(--btn-fill);
   display: grid;
   place-items: center;
   font-size: 1rem;

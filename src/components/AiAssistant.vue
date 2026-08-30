@@ -194,7 +194,7 @@ onBeforeUnmount(() => {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: var(--grad);
+  background: var(--btn-fill);
   color: var(--text-on-accent);
   display: grid;
   place-items: center;
@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
   border-bottom-left-radius: 4px;
 }
 .ai-msg.user .ai-bubble {
-  background: var(--grad);
+  background: var(--btn-fill);
   color: var(--text-on-accent);
   border-bottom-right-radius: 4px;
 }
@@ -321,7 +321,7 @@ onBeforeUnmount(() => {
   width: 44px; height: 44px;
   border-radius: 50%;
   border: none;
-  background: var(--grad);
+  background: var(--btn-fill);
   color: var(--text-on-accent);
   cursor: pointer;
   display: grid;
@@ -341,7 +341,7 @@ onBeforeUnmount(() => {
   height: 56px;
   border-radius: 50%;
   border: none;
-  background: var(--grad);
+  background: var(--btn-fill);
   color: var(--text-on-accent);
   cursor: pointer;
   display: grid;
