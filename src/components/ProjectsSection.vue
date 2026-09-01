@@ -12,6 +12,7 @@ const projects = portfolio.projects
 
 const active = ref(null)
 let backdrop = null
+let scrub = null
 let io = null
 
 function open(p) {
@@ -29,6 +30,31 @@ onMounted(async () => {
     started = true
     const { createParticleBackdrop } = await import('../three/particleBackdrop.js')
     backdrop = createParticleBackdrop(banner.value)
+
+    // Scrub the backdrop opacity as the banner crosses the viewport so the
+    // advertised setProgress() hook actually drives a visible effect.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) return
+    try {
+      const gmod = await import('gsap')
+      const stmod = await import('gsap/ScrollTrigger')
+      const gsap = gmod.gsap
+      gsap.registerPlugin(stmod.ScrollTrigger)
+      scrub = gsap.fromTo(backdrop, { progress: 0 }, {
+        progress: 1,
+        ease: 'none',
+        immediateRender: true,
+        scrollTrigger: {
+          trigger: banner.value,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+          onUpdate: (self) => backdrop.setProgress(self.progress)
+        }
+      })
+    } catch (err) {
+      /* GSAP unavailable — backdrop still renders with its default opacity */
+    }
   }
   if ('IntersectionObserver' in window) {
     io = new IntersectionObserver((entries) => {
@@ -41,6 +67,10 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  if (scrub) {
+    scrub.scrollTrigger && scrub.scrollTrigger.kill()
+    scrub.kill()
+  }
   if (backdrop) backdrop.dispose()
   if (io) io.disconnect()
 })

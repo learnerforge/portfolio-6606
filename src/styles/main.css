@@ -444,14 +444,12 @@ body {
   background: var(--surface-card);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
-  transition: border-color var(--duration-base) var(--ease-out),
-    transform var(--duration-base) var(--ease-out),
-    box-shadow var(--duration-base) var(--ease-out);
+  transition: border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 .glass:hover {
   border-color: var(--accent-hair);
-  box-shadow: var(--shadow-md), 0 14px 34px -20px var(--glow);
-  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ---------- buttons (gradient pill) ---------- */
@@ -681,9 +679,9 @@ body {
   border-radius: var(--radius-lg);
   border: 1px solid var(--hairline);
   background: var(--surface-card);
-  transition: border-color var(--duration-base) var(--ease-out),
-    transform var(--duration-base) var(--ease-out),
-    box-shadow var(--duration-base) var(--ease-out);
+  transition: border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
   overflow: hidden;
 }
 .project-card::before {
@@ -692,7 +690,7 @@ body {
   inset: 0;
   background: var(--grad-soft);
   opacity: 0;
-  transition: opacity var(--duration-base) var(--ease-out);
+  transition: opacity var(--duration-fast) var(--ease-out);
   pointer-events: none;
 }
 .project-card:hover {
@@ -730,8 +728,9 @@ body {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: var(--orb-c);
-  border: 1px solid var(--hairline-strong);
+  background: var(--fill-sunken);
+  border: 2px solid var(--accent-hair);
+  box-shadow: inset 0 0 0 2px var(--surface-card);
 }
 .tl-item.current::before {
   background: var(--grad);
@@ -1051,9 +1050,9 @@ body {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: color-mix(in srgb, var(--canvas) 60%, transparent);
-  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(1.2);
-  backdrop-filter: blur(var(--glass-blur-lg)) saturate(1.2);
+  background: color-mix(in srgb, var(--canvas) 72%, transparent);
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(1.1);
+  backdrop-filter: blur(var(--glass-blur-sm)) saturate(1.1);
   display: grid;
   place-items: center;
   padding: 20px;

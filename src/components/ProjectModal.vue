@@ -1,19 +1,49 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import IconSet from './IconSet.vue'
 
 const props = defineProps({ project: { type: Object, required: true } })
 const emit = defineEmits(['close'])
 const root = ref(null)
+const dialog = ref(null)
+let previousFocus = null
+
+function close() {
+  emit('close')
+  if (previousFocus && previousFocus.focus) previousFocus.focus()
+}
 
 function onKey(e) {
-  if (e.key === 'Escape') emit('close')
+  if (e.key === 'Escape') close()
+  if (e.key === 'Tab') {
+    const focusables = Array.from(
+      dialog.value.querySelectorAll('a[href], button:not([disabled])')
+    )
+    if (!focusables.length) return
+    const first = focusables[0]
+    const last = focusables[focusables.length - 1]
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
 }
-onMounted(() => document.addEventListener('keydown', onKey))
-onUnmounted(() => document.removeEventListener('keydown', onKey))
+onMounted(() => {
+  previousFocus = document.activeElement
+  document.body.style.overflow = 'hidden'
+  document.addEventListener('keydown', onKey)
+  nextTick(() => dialog.value && dialog.value.focus())
+})
+onUnmounted(() => {
+  document.body.style.overflow = ''
+  document.removeEventListener('keydown', onKey)
+})
 
 function onBackdrop(e) {
-  if (e.target === e.currentTarget) emit('close')
+  if (e.target === e.currentTarget) close()
 }
 </script>
 
@@ -23,11 +53,17 @@ function onBackdrop(e) {
       ref="root"
       class="modal-overlay"
       tabindex="-1"
-      @keydown.esc="emit('close')"
       @click.self="onBackdrop"
     >
-      <div class="modal">
-        <button class="modal-close" @click="emit('close')" aria-label="Close"><IconSet name="close" :size="15" /></button>
+      <div
+        ref="dialog"
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Case study: {{ project.title }}"
+        tabindex="0"
+      >
+        <button class="modal-close" @click="close" aria-label="Close"><IconSet name="close" :size="15" /></button>
 
         <div class="modal-tags">
           <span v-if="project.flagship" class="tag tag-hl"><IconSet name="sparkles" :size="12" />FLAGSHIP</span>
@@ -63,7 +99,7 @@ function onBackdrop(e) {
 
         <div class="modal-actions">
           <a :href="project.github" target="_blank" rel="noopener" class="btn btn-primary"><IconSet name="github" :size="15" />View on GitHub</a>
-          <button class="btn btn-ghost" @click="emit('close')">Close</button>
+          <button class="btn btn-ghost" @click="close">Close</button>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { gsap } from 'gsap'
 
 /**
- * HeroScene — a Three.js "holographic core" scene driven by a Theatre.js
+ * HeroScene — a Three.js "holographic core" scene driven by a GSAP
  * intro sequence, with continuous idle drift and mouse parallax afterwards.
  */
 

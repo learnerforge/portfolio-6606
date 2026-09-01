@@ -181,8 +181,6 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   border: none;
   background: var(--canvas-raised);
-  -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--material-sat));
-  backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--material-sat));
   box-shadow: var(--shadow-sm);
   color: var(--text-secondary);
   cursor: pointer;

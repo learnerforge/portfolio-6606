@@ -53,7 +53,7 @@ const emailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURICompo
 
       <div class="foot-bottom">
         <span>Copyright © {{ year }} Ganesh Bakkera.</span>
-        <span>Designed &amp; built with Vue 3 · Three.js · Theatre.js · GSAP</span>
+        <span>Designed &amp; built with Vue 3 · Three.js · GSAP</span>
       </div>
     </div>
   </footer>

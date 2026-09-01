@@ -1,13 +1,13 @@
 # Ganesh Bakkera — Portfolio
 
 Personal portfolio of **Ganesh Bakkera** — AI/ML Engineer & Full Stack Developer.
-A deploy-ready single-page app built with **Vue 3, Three.js, Theatre.js, and GSAP**, styled in a dark immersive "neo-orbit" theme (deep ink + cyan/violet gradient + glass + noise).
+A deploy-ready single-page app built with **Vue 3, Three.js, and GSAP**, styled in a dark immersive "neo-orbit" theme (deep ink + cyan/violet gradient + glass + noise).
 
 ![Vue](https://img.shields.io/badge/Vue-3-42b883?logo=vuedotjs) ![Three.js](https://img.shields.io/badge/Three.js-r185-000000?logo=threedotjs) ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite) ![GSAP](https://img.shields.io/badge/GSAP-3-88CE02)
 
 ## Highlights
 
-- **3D hero** — holographic core (wireframe icosahedron, particle shell, orbit rings, galaxy field) rendered with Three.js and choreographed by a Theatre.js intro sequence. Initialized after first paint so page load stays snappy
+- **3D hero** — holographic core (wireframe icosahedron, particle shell, orbit rings, galaxy field) rendered with Three.js and choreographed by a GSAP intro sequence. Initialized after first paint so page load stays snappy
 - **Particle backdrop** — lazy-initialized Three.js cloud behind the projects banner (via IntersectionObserver, constant opacity)
 - **GSAP reveals** — every section fades/slides in as it scrolls into view (`data-reveal` attributes)
 - **Cohesive icon system** — all emojis replaced by a single 24×24 / 1.6-stroke inline SVG icon set
@@ -68,7 +68,7 @@ src/
 ├── styles/main.css        # "neo-orbit" design system (tokens, glass, buttons, chips)
 ├── data/portfolio.js      # single source of truth for all content
 ├── three/
-│   ├── heroScene.js       # Three.js holographic core + Theatre.js intro sequence
+│   ├── heroScene.js       # Three.js holographic core + GSAP intro sequence
 │   └── particleBackdrop.js# scroll-scrubbed particle cloud for the projects banner
 ├── composables/
 │   └── useReveal.js       # GSAP ScrollTrigger reveal engine (data-reveal)
@@ -77,5 +77,5 @@ src/
 
 ## Built With
 
-- Vue 3 (Composition API) · Vite 8 · Three.js · Theatre.js · GSAP (ScrollTrigger)
+- Vue 3 (Composition API) · Vite 8 · Three.js · GSAP (ScrollTrigger)
 

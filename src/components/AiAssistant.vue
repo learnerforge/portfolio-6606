@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import IconSet from './IconSet.vue'
-import { ask, SUGGESTIONS, matchThemeIntent } from '../ai/assistant.js'
+import { ask, SUGGESTIONS } from '../ai/assistant.js'
 import { portfolio } from '../data/portfolio.js'
 import { theme, themeName, setTheme, initTheme } from '../composables/useTheme.js'
 import { scrollToTarget } from '../composables/useSmoothScroll.js'
@@ -122,14 +122,14 @@ onBeforeUnmount(() => {
             </button>
           </div>
 
-          <div class="ai-body" ref="list">
-            <div v-for="(m, i) in messages" :key="i" class="ai-msg" :class="m.role">
+          <transition-group name="message" tag="div" class="ai-body" ref="list">
+            <div v-for="(m, i) in messages" :key="'msg-'+i" class="ai-msg" :class="m.role">
               <div class="ai-bubble">{{ m.text }}</div>
             </div>
-            <div v-if="typing" class="ai-msg ai">
+            <div v-if="typing" key="typing" class="ai-msg ai">
               <div class="ai-bubble ai-typing"><span></span><span></span><span></span></div>
             </div>
-          </div>
+          </transition-group>
 
           <div v-if="messages.length <= 1" class="ai-suggest">
             <button v-for="s in SUGGESTIONS" :key="s" class="ai-chip" @click="send(s)">{{ s }}</button>
@@ -384,4 +384,18 @@ onBeforeUnmount(() => {
 @media (max-width: 480px) {
   .ai-assistant { right: 12px; }
 }
+
+/* Message enter / leave / move animations */
+.message-enter-active, .message-leave-active {
+  transition: opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+.message-enter-from, .message-leave-to {
+  opacity: 0;
+}
+.ai-msg.ai.message-enter-from { transform: translateX(-12px); }
+.ai-msg.user.message-enter-from { transform: translateX(12px); }
+/* Smoothly slide siblings when a message (e.g. the typing dot) is removed */
+.message-move { transition: transform var(--duration-base) var(--ease-out); }
+
 </style>
