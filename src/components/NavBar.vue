@@ -263,10 +263,8 @@ onBeforeUnmount(() => {
 .nav-menu {
   position: fixed;
   inset: 0;
-  z-index: 250;
+  z-index: var(--z-menu);
   background: var(--canvas-raised);
-  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--material-sat));
-  backdrop-filter: blur(var(--glass-blur-lg)) saturate(var(--material-sat));
   display: flex;
   flex-direction: column;
   align-items: center;

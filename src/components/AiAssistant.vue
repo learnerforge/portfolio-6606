@@ -17,6 +17,7 @@ const typing = ref(false)
 const input = ref('')
 const field = ref(null)
 const list = ref(null)
+const fab = ref(null)
 let timer = null
 
 // ---- interaction logging (console + localStorage) ----
@@ -93,6 +94,8 @@ watch(open, (v) => {
   logEntry({ i: v ? 'open' : 'close' })
   if (v) {
     nextTick(() => field.value && field.value.focus())
+  } else {
+    nextTick(() => fab.value && fab.value.focus())
   }
 })
 
@@ -155,7 +158,13 @@ onBeforeUnmount(() => {
         </div>
       </Transition>
 
-      <button class="ai-fab" :class="{ active: open }" @click="open = !open" :aria-label="open ? 'Close assistant' : 'Open AI assistant'">
+      <button
+        ref="fab"
+        class="ai-fab"
+        :class="{ active: open }"
+        @click="open = !open"
+        :aria-label="open ? 'Close assistant' : 'Open AI assistant'"
+      >
         <span class="ai-fab-icon"><IconSet name="sparkles" :size="20" /></span>
         <span class="ai-fab-dot"></span>
       </button>
@@ -164,7 +173,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.ai-assistant { position: fixed; z-index: 130; right: 24px; bottom: 24px; }
+.ai-assistant { position: fixed; z-index: var(--z-ai); right: 24px; bottom: 24px; }
 
 /* ---- panel (HIG material) ---- */
 .ai-panel {
@@ -346,12 +355,12 @@ onBeforeUnmount(() => {
   cursor: pointer;
   display: grid;
   place-items: center;
-  box-shadow: 0 18px 44px -14px var(--glow), var(--shadow-md);
+  box-shadow: var(--shadow-md);
   transition: transform var(--duration-base) var(--ease-spring),
     filter var(--duration-fast) var(--ease-out),
     box-shadow var(--duration-fast) var(--ease-out);
 }
-.ai-fab:hover { filter: brightness(1.12); transform: translateY(-3px) scale(1.04); }
+.ai-fab:hover { filter: brightness(1.12); transform: translateY(-3px) scale(1.04); box-shadow: var(--shadow-lg); }
 .ai-fab.active { transform: rotate(180deg) scale(0.94); }
 .ai-fab-dot {
   position: absolute;
@@ -362,7 +371,6 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   background: var(--sys-green);
   border: 2px solid var(--canvas);
-  animation: ai-pulse 2.4s ease-in-out infinite;
 }
 
 @keyframes ai-pulse {

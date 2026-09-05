@@ -25,12 +25,8 @@
 
   /* ---------- translucent materials ---------- */
   --nav-material:       rgba(246, 247, 251, 0.76);
-  --material-blur:      18px;
   --material-sat:       1.35;
-  --glass-tint:         rgba(255, 255, 255, 0.55);
   --glass-blur-sm:      8px;
-  --glass-blur-md:      14px;
-  --glass-blur-lg:      20px;
 
   /* ---------- glyphs ---------- */
   --text-primary:       #14152a;
@@ -77,10 +73,6 @@
   --grad-dark:          linear-gradient(115deg, #1d4ed8 0%, #6d28d9 45%, #db2777 100%);
   --grad-text:          linear-gradient(115deg, #2563eb 0%, #9333ea 55%, #ec4899 100%);
   --grad-soft:          linear-gradient(115deg, rgba(37, 99, 235, 0.10) 0%, rgba(236, 72, 153, 0.10) 100%);
-  --gradient-material:
-    radial-gradient(120% 120% at 15% 8%, rgba(59, 130, 246, 0.28) 0%, transparent 55%),
-    radial-gradient(120% 120% at 85% 15%, rgba(147, 51, 234, 0.24) 0%, transparent 55%),
-    radial-gradient(140% 140% at 50% 100%, rgba(236, 72, 153, 0.20) 0%, transparent 60%);
 
   /* ---------- aurora orbs ---------- */
   --orb-a:              rgba(59, 130, 246, 0.16);
@@ -91,9 +83,7 @@
   --btn-fill:           linear-gradient(115deg, #2563eb 0%, #7c3aed 50%, #db2777 100%);
   --btn-fill-hover:     var(--btn-fill);
   --btn-fill-press:     linear-gradient(115deg, #1d4ed8 0%, #6d28d9 50%, #be185d 100%);
-  --btn-radius:         980px;
   --btn-padding-md:     0 21px;
-  --btn-padding-sm:     0 15px;
 
   /* ---------- fonts ---------- */
   --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', Roboto, sans-serif;
@@ -126,7 +116,6 @@
 
   --track-tight:  -0.02em;
   --track-normal: 0;
-  --track-wide:   0.02em;
   --track-label:  0.04em;
 
   /* ---------- 8pt spacing ---------- */
@@ -150,7 +139,6 @@
   --radius-xl:  24px;
   --radius-2xl: 32px;
   --radius-pill: 980px;
-  --radius-round: 999px;
 
   /* ---------- focus ---------- */
   --focus-width: 3px;
@@ -171,14 +159,25 @@
   --ease-apple:     cubic-bezier(0.25, 0.1, 0.25, 1);
 
   /* ---------- blur materials ---------- */
-  --blur-nav:   20px;
-  --blur-panel: 40px;
-  --blur-glass: 80px;
+  --blur-nav: 20px;
 
   /* ---------- layout ---------- */
   --apple-nav-h: 52px;
   --content: 980px;
   --content-wide: 1200px;
+
+  /* ---------- z-index layer system (coherent stacking) ---------- */
+  --z-base:       0;
+  --z-content:    1;
+  --z-sticky:     100;   /* nav */
+  --z-progress:   105;   /* scroll progress (above nav, below modal) */
+  --z-backtop:    110;
+  --z-dock:       120;
+  --z-ai:         130;
+  --z-overlay:    200;   /* modal backdrop */
+  --z-menu:       250;   /* mobile nav sheet */
+  --z-grain:      9990;  /* film grain above all */
+  --z-cursor:     2147483000;
 
   /* ---------- legacy aliases (anti-breakage contract) ---------- */
   --bg:            var(--canvas);
@@ -212,7 +211,6 @@
   --surface-card:       rgba(20, 20, 34, 0.92);
 
   --nav-material:       rgba(7, 7, 15, 0.70);
-  --glass-tint:         rgba(16, 16, 29, 0.55);
 
   --text-primary:       #f3f1ff;
   --text-secondary:     #a5a6cf;
@@ -248,10 +246,6 @@
   --btn-fill:           linear-gradient(120deg, #0369a1 0%, #4f46e5 52%, #a21caf 100%);
   --btn-fill-hover:     var(--btn-fill);
   --btn-fill-press:     linear-gradient(120deg, #0757b0 0%, #4338ca 52%, #86198f 100%);
-  --gradient-material:
-    radial-gradient(120% 120% at 15% 6%, rgba(56, 132, 255, 0.34) 0%, transparent 55%),
-    radial-gradient(120% 120% at 85% 12%, rgba(129, 140, 248, 0.30) 0%, transparent 55%),
-    radial-gradient(140% 140% at 50% 100%, rgba(232, 121, 249, 0.24) 0%, transparent 60%);
 
   --orb-a:              rgba(56, 132, 255, 0.28);
   --orb-b:              rgba(129, 140, 248, 0.24);
@@ -323,7 +317,7 @@ body {
 .aurora {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: calc(var(--z-base) - 1);
   overflow: hidden;
   pointer-events: none;
 }
@@ -368,7 +362,7 @@ body {
 .grain {
   position: fixed;
   inset: 0;
-  z-index: 9990;
+  z-index: var(--z-grain);
   pointer-events: none;
   opacity: 0.05;
   mix-blend-mode: overlay;
@@ -433,7 +427,7 @@ body {
 }
 .section-head .sub {
   color: var(--text-secondary);
-  font-size: 17px;
+  font-size: var(--text-body);
   margin-top: 16px;
   max-width: 620px;
 }
@@ -528,7 +522,7 @@ body {
   height: auto;
   padding: 4px 0;
   border-radius: 0;
-  font-size: 17px;
+  font-size: var(--text-body);
   cursor: pointer;
 }
 .btn-plain::after {
@@ -576,16 +570,6 @@ body {
   letter-spacing: var(--track-normal);
   color: var(--text-secondary);
   white-space: nowrap;
-  transition: border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    background var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
-}
-.chip:hover {
-  border-color: var(--accent-hair);
-  color: var(--accent);
-  background: var(--accent-tint-soft);
-  box-shadow: 0 8px 20px -12px var(--glow);
 }
 
 /* ---------- marquee (infinite ticker band) ---------- */
@@ -695,8 +679,8 @@ body {
 }
 .project-card:hover {
   border-color: var(--accent-hair);
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg), 0 30px 70px -34px var(--glow);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 .project-card:hover::before { opacity: 1; }
 .project-card .num {
@@ -745,13 +729,13 @@ body {
   border-radius: var(--radius-lg);
   padding: 24px;
   background: var(--surface-card);
-  transition: border-color var(--duration-base) var(--ease-out),
-    transform var(--duration-base) var(--ease-out),
-    box-shadow var(--duration-base) var(--ease-out);
+  transition: border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 .bento-cell:hover {
   border-color: var(--accent-hair);
-  box-shadow: var(--shadow-md), 0 16px 36px -22px var(--glow);
+  box-shadow: var(--shadow-md);
   transform: translateY(-3px);
 }
 .bento-cell h4 {
@@ -777,15 +761,11 @@ body {
   color: var(--text-secondary);
   background: var(--canvas-raised);
   transition: border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
+    color var(--duration-fast) var(--ease-out);
 }
 .skill-chip:hover {
   color: var(--accent);
   border-color: var(--accent-hair);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px -14px var(--glow);
 }
 
 /* ---------- nav ---------- */
@@ -794,7 +774,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: var(--z-sticky);
   background: transparent;
   border-bottom: 1px solid transparent;
   transition: background var(--duration-base) var(--ease-out),
@@ -863,13 +843,12 @@ body {
   height: 28px;
   display: grid;
   place-items: center;
-  border-radius: 9px;
-  background: var(--btn-fill);
-  color: var(--text-on-accent);
+  border-radius: var(--radius-sm);
+  background: var(--fill-sunken);
+  color: var(--accent);
   font-family: var(--font-display);
   font-size: 12px;
   font-weight: var(--fw-semibold);
-  box-shadow: 0 6px 16px -6px var(--glow);
 }
 
 /* ---------- theme toggle (navbar) ---------- */
@@ -892,16 +871,16 @@ body {
 .theme-toggle:hover {
   color: var(--accent);
   background: var(--fill-hover);
-  transform: rotate(18deg) scale(1.06);
+  transform: scale(1.06);
   box-shadow: 0 8px 18px -10px var(--glow);
 }
 
 /* ---------- hero ---------- */
 .hero { position: relative; min-height: 100svh; overflow: hidden; }
-.hero-canvas { position: absolute; inset: 0; z-index: 0; opacity: 0.7; }
+.hero-canvas { position: absolute; inset: 0; z-index: var(--z-base); opacity: 0.7; }
 .hero-content {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-content);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -958,7 +937,7 @@ body {
   margin-top: 20px;
   max-width: 560px;
   color: var(--text-secondary);
-  font-size: 17px;
+  font-size: var(--text-body);
 }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
 .hero-scroll {
@@ -1049,7 +1028,7 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: var(--z-overlay);
   background: color-mix(in srgb, var(--canvas) 72%, transparent);
   -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(1.1);
   backdrop-filter: blur(var(--glass-blur-sm)) saturate(1.1);
@@ -1108,21 +1087,6 @@ footer {
   color: var(--text-tertiary);
   text-transform: uppercase;
 }
-.section-title {
-  font-family: var(--font-display);
-  font-weight: var(--fw-semibold);
-  font-size: clamp(2.5rem, 6vw, 3.5rem);
-  line-height: 1.04;
-  letter-spacing: var(--track-tight);
-  color: var(--text-primary);
-  margin: 16px 0 0;
-}
-.section-sub {
-  color: var(--text-secondary);
-  font-size: 17px;
-  margin-top: 16px;
-  max-width: 620px;
-}
 .pill-btn {
   display: inline-flex;
   align-items: center;
@@ -1162,13 +1126,6 @@ footer {
   transition: background var(--duration-fast) var(--ease-out);
 }
 .pill-btn-secondary:hover { background: var(--fill-hover); }
-.material {
-  background: var(--glass-tint);
-  -webkit-backdrop-filter: blur(var(--glass-blur-md)) saturate(1.3);
-  backdrop-filter: blur(var(--glass-blur-md)) saturate(1.3);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
-}
 .display {
   font-family: var(--font-display);
   font-weight: var(--fw-semibold);
@@ -1202,7 +1159,7 @@ footer {
   top: 0;
   left: 0;
   pointer-events: none;
-  z-index: 2147483000;
+  z-index: var(--z-cursor);
   mix-blend-mode: difference;
   will-change: transform;
 }
@@ -1225,8 +1182,6 @@ footer {
     /* lighter blur surfaces (compositing cost scales with blur radius) */
     --blur-nav:       10px;
     --glass-blur-sm:  6px;
-    --glass-blur-md:  10px;
-    --glass-blur-lg:  12px;
     --material-sat:   1.1;
   }
 
@@ -1236,11 +1191,6 @@ footer {
   .aurora .orb-b { width: 30vw; height: 30vw; }
   .aurora .orb-c { width: 32vw; height: 32vw; }
   .orb { filter: blur(30px); }
-
-  .material {
-    -webkit-backdrop-filter: blur(var(--glass-blur-md)) saturate(var(--material-sat));
-    backdrop-filter: blur(var(--glass-blur-md)) saturate(var(--material-sat));
-  }
 }
 
 /* ---------- reduced motion ---------- */

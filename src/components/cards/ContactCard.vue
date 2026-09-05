@@ -9,8 +9,8 @@ defineProps({
 
 <template>
   <div class="contact-card">
-    <div class="orb orb-cyan" style="width: 340px; height: 340px; top: -140px; left: -120px;"></div>
-    <div class="orb orb-violet" style="width: 380px; height: 380px; bottom: -160px; right: -100px;"></div>
+    <div class="orb orb-cyan" style="width: 260px; height: 260px; top: -120px; left: -100px;"></div>
+    <div class="orb orb-violet" style="width: 280px; height: 280px; bottom: -140px; right: -90px;"></div>
 
     <div class="contact-index" data-reveal data-delay="0"><IconSet name="send" :size="14" />Let's connect</div>
     <h2 class="contact-title font-display" data-reveal data-delay="0.08">
@@ -44,6 +44,10 @@ defineProps({
   overflow: hidden;
   background: var(--surface-card);
   box-shadow: var(--shadow-md);
+}
+.contact-card .orb {
+  opacity: 0.45;
+  filter: blur(30px);
 }
 .contact-index {
   display: flex;

@@ -12,7 +12,6 @@ defineProps({
     <h3 class="ach-title">{{ achievement.title }}</h3>
     <div class="ach-org">{{ achievement.org }}</div>
     <p class="ach-desc">{{ achievement.desc }}</p>
-    <div class="ach-corner"></div>
   </div>
 </template>
 
@@ -23,9 +22,9 @@ defineProps({
   border-radius: var(--radius-lg);
   padding: 26px;
   background: var(--surface-card);
-  transition: border-color var(--duration-base) var(--ease-out),
-    transform var(--duration-base) var(--ease-out),
-    box-shadow var(--duration-base) var(--ease-out);
+  transition: border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 .ach-card:hover {
   border-color: var(--accent-hair);

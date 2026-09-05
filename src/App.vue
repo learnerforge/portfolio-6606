@@ -168,14 +168,14 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 12px var(--glow);
   transform-origin: 0 50%;
   transform: scaleX(0);
-  z-index: 200;
+  z-index: var(--z-progress);
 }
 
 .back-top {
   position: fixed;
   left: 24px;
   bottom: 24px;
-  z-index: 110;
+  z-index: var(--z-backtop);
   width: 44px;
   height: 44px;
   border-radius: 50%;
