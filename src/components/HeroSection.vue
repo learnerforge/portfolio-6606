@@ -123,12 +123,16 @@ onMounted(async () => {
   }
 
   // Defer 3D init so the text intro paints smoothly on first load.
-  window.setTimeout(async () => {
-    if (disposed) return
-    const { createHeroScene } = await import('../three/heroScene.js')
-    if (disposed) return
-    destroyScene = createHeroScene(canvas.value)
-  }, reduced ? 0 : 400)
+  // Low-RAM devices skip the WebGL scene entirely (three.js + context + loop).
+  const lowRam = (navigator.deviceMemory || 8) <= 4
+  if (!lowRam) {
+    window.setTimeout(async () => {
+      if (disposed) return
+      const { createHeroScene } = await import('../three/heroScene.js')
+      if (disposed) return
+      destroyScene = createHeroScene(canvas.value)
+    }, reduced ? 0 : 400)
+  }
 })
 
 onBeforeUnmount(() => {

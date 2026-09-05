@@ -28,6 +28,7 @@ onMounted(async () => {
   const init = async () => {
     if (started) return
     started = true
+    if ((navigator.deviceMemory || 8) <= 4) return
     const { createParticleBackdrop } = await import('../three/particleBackdrop.js')
     backdrop = createParticleBackdrop(banner.value)
 

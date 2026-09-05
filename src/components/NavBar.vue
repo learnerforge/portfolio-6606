@@ -24,6 +24,7 @@ let spyIo = null
 let mq = null
 let scrollCleanup = null
 let scrollRaf = null
+let keyCleanup = null
 
 function onScroll() {
   if (scrollRaf) return
@@ -79,6 +80,12 @@ onMounted(() => {
     mq.addListener(onMq)
     scrollCleanup = () => mq.removeListener(onMq)
   }
+
+  const onKey = (e) => {
+    if (e.key === 'Escape' && open.value) open.value = false
+  }
+  document.addEventListener('keydown', onKey)
+  keyCleanup = () => document.removeEventListener('keydown', onKey)
 })
 
 onBeforeUnmount(() => {
@@ -86,6 +93,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll)
   if (spyIo) spyIo.disconnect()
   if (scrollCleanup) scrollCleanup()
+  if (keyCleanup) keyCleanup()
   document.body.style.overflow = ''
 })
 </script>
@@ -105,7 +113,7 @@ onBeforeUnmount(() => {
           :href="`#${s.id}`"
           :class="{ active: active === s.id }"
         >{{ s.label }}</a>
-        <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-ghost nav-cta">Hire Me</a>
+        <a :href="emailUrl" target="_blank" rel="noopener" class="btn btn-primary nav-cta">Hire Me</a>
       </div>
 
       <button
@@ -229,6 +237,7 @@ onBeforeUnmount(() => {
   line-height: 1;
   margin-left: 6px;
   white-space: nowrap;
+  border: 1px solid color-mix(in srgb, var(--text-on-accent) 45%, transparent);
 }
 @media (pointer: coarse) {
   .nav-cta { min-height: 44px; }

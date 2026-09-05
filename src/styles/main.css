@@ -478,23 +478,23 @@ body {
 .btn .icon { transition: transform var(--duration-base) var(--ease-out); }
 .btn:hover .icon { transform: translateX(3px); }
 .btn:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .btn-primary { background: var(--btn-fill); }
 .btn-primary:hover { box-shadow: 0 14px 34px -12px var(--glow); }
 .btn-primary:active { background: var(--btn-fill-press); }
 .btn-primary:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 /* secondary = glass grey pill */
 .btn-ghost {
   background: var(--fill-sunken);
   color: var(--text-primary);
-  border: 1px solid var(--hairline);
+  border: 1px solid var(--hairline-strong);
 }
 .btn-ghost:hover { background: var(--fill-hover); filter: none; box-shadow: var(--shadow-sm); color: var(--text-primary); }
 .btn-ghost:active { background: var(--fill-hover); }
@@ -1202,3 +1202,11 @@ footer {
   html { scroll-behavior: auto !important; }
   .aurora .orb { animation: none !important; }
 }
+
+/* ---------- perf-lite (low-RAM / coarse / reduced, set in App.vue) ---------- */
+.perf-lite {
+  --blur-nav: 8px;
+  --glass-blur-sm: 5px;
+}
+.perf-lite .aurora .orb { filter: blur(18px); animation: none !important; }
+.perf-lite .grain { display: none; }

@@ -1,13 +1,16 @@
 import 'lenis/dist/lenis.css'
+import { getDevice } from '../utils/device.js'
 
 /**
  * useSmoothScroll — buttery Lenis momentum scrolling wired into GSAP's ticker so
  * every ScrollTrigger scrub/reveal stays frame-locked to the smoothed scroll.
  *
  * Call once from App.vue (`await useSmoothScroll()`). Skipped automatically under
- * prefers-reduced-motion and on touch devices. Anchor links (`a[href="#…"]`) are
- * delegated globally so offset and easing stay consistent with scrollToTarget().
- * The returned cleanup tears down the ticker, listeners and the Lenis instance.
+ * prefers-reduced-motion, on touch devices, and on low-RAM machines (native
+ * scroll is smoother there than transform-based smoothing). Anchor links
+ * (`a[href="#…"]`) are delegated globally so offset and easing stay consistent
+ * with scrollToTarget(). The returned cleanup tears down the ticker, listeners
+ * and the Lenis instance.
  */
 let initPromise = null
 let anchorHandler = null
@@ -45,7 +48,7 @@ export function useSmoothScroll() {
   initPromise = (async () => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const fine = window.matchMedia('(pointer: fine)').matches
-    if (reduced || !fine) return null
+    if (reduced || !fine || getDevice().lowRam) return null
 
     const [{ default: Lenis }, { gsap, ScrollTrigger }] = await Promise.all([
       import('lenis'),

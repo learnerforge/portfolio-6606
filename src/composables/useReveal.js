@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted } from 'vue'
+import { getDevice } from '../utils/device.js'
 
 /**
  * useReveal — per-container scroll-reveal engine built on GSAP + ScrollTrigger.
@@ -33,13 +34,15 @@ export function useReveal(root) {
   let gsap = null
   let ctx = null
   const animated = new WeakSet()
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const device = getDevice()
+  const reduced = device.reduced
   const isMobile = window.matchMedia('(max-width: 768px)').matches
+  const lowRam = device.lowRam
 
   const makeFrom = (el) => {
     const dir = el.dataset.dir || 'up'
-    const dist = reduced ? 0 : isMobile ? 34 : 60
-    const blur = reduced ? 0 : isMobile ? 4 : 8
+    const dist = reduced ? 0 : lowRam ? 14 : isMobile ? 34 : 60
+    const blur = reduced || lowRam ? 0 : isMobile ? 4 : 8
     const tilt = dir === 'tilt' ? 8 : 0
     return {
       opacity: 0,

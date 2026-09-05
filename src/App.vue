@@ -18,6 +18,7 @@ import IconSet from './components/IconSet.vue'
 import { portfolio } from './data/portfolio.js'
 import { useSmoothScroll, scrollToTarget } from './composables/useSmoothScroll.js'
 import { useCursor } from './composables/useCursor.js'
+import { getDevice } from './utils/device.js'
 
 const AiAssistant = defineAsyncComponent(() => import('./components/AiAssistant.vue'))
 
@@ -48,12 +49,13 @@ let scrollRaf = null
 let smoothCleanup = null
 let cursorCleanup = null
 let magneticCleanup = null
+let perfHudCleanup = null
 
 function initMagnetic() {
   if (!gsap) return
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const fine = window.matchMedia('(pointer: fine)').matches
-  if (reduced || !fine) return
+  const device = getDevice()
+  const fine = device.fine
+  if (device.reduced || !fine || device.lowRam) return
 
   const cleanups = gsap.utils.toArray('.btn, .pill-btn').map((b) => {
     const dx = gsap.quickTo(b, 'x', { duration: 0.4, ease: 'power3.out' })
@@ -89,6 +91,14 @@ onMounted(async () => {
   window.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
 
+  const device = getDevice()
+  if (device.lowRam || device.coarse || device.reduced) {
+    document.documentElement.classList.add('perf-lite')
+  }
+  if (location.search.includes('mem=1')) {
+    import('./utils/perfHud.js').then((m) => (perfHudCleanup = m.startPerfHud())).catch(() => {})
+  }
+
   const gmod = await import('gsap')
   const stmod = await import('gsap/ScrollTrigger')
   gsap = gmod.gsap
@@ -115,6 +125,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   if (progressST) progressST.kill()
   if (scrollRaf) cancelAnimationFrame(scrollRaf)
+  if (perfHudCleanup) perfHudCleanup()
   if (onScroll) window.removeEventListener('scroll', onScroll)
   if (magneticCleanup) magneticCleanup()
   if (cursorCleanup) cursorCleanup()
