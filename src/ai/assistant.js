@@ -30,6 +30,36 @@ export const SUGGESTIONS = [
   'How can I reach you?'
 ]
 
+const FOLLOWUPS = {
+  skills: ['What projects use this stack?', 'What is he best at?', 'Show his AI / ML skills'],
+  expertise: ['Show his top project', 'What tools does he work with?', 'Show projects'],
+  experience: ['What is he working on right now?', 'What did he build?', 'Show his flagship project'],
+  current_work: ['What else is he building?', 'Show all projects', 'What stack does he use?'],
+  projects_list: ['Tell me about his flagship', 'What technologies does he use?', 'Go to projects'],
+  project_detail: ['Show all projects', 'What stack does he use?', 'Go to projects'],
+  flagship: ['Show all projects', 'What is he working on now?', 'Go to projects'],
+  profile: ['What are his skills?', 'Show experience', 'Where can I reach him?'],
+  roles: ['What is he currently working on?', 'Show his skills', 'Where can I reach him?'],
+  education: ['What certifications does he hold?', 'What does he specialize in?', 'Show achievements'],
+  certifications: ['What does he specialize in?', 'What is his background?', 'Show projects'],
+  achievements: ['What certifications does he hold?', 'What is his background?', 'Show projects'],
+  github: ['Show his projects', 'Where can I reach him?', 'What does he specialize in?'],
+  coding_profiles: ['Show his projects', 'What does he specialize in?', 'Open GitHub'],
+  notes_index: ['What notes do you have?', 'What can you do?', 'Show projects'],
+  notes: ['What other notes do you have?', 'What can you do?', 'Show projects'],
+  contact: ['Show projects', 'What does he specialize in?', 'What is his background?'],
+  hire: ['What does he specialize in?', 'Show experience', 'How can I reach him?'],
+  help: ['Show projects', 'What does he specialize in?', 'Switch to light theme'],
+  greeting: ['What does Ganesh specialize in?', 'Show your projects', 'How can I reach you?'],
+  thanks: ['Show projects', 'What does he specialize in?', 'What can you do?'],
+  theme: ['Show projects', 'What does he specialize in?', 'Switch the theme back'],
+  fallback: ['Show projects', 'What does he specialize in?', 'What can you do?']
+}
+
+export function followUps(intent) {
+  return FOLLOWUPS[intent] || []
+}
+
 const SECTIONS = [
   { id: 'about', labels: ['about', 'introduction', 'introduce', 'who is ganesh', 'about you', 'yourself'] },
   { id: 'experience', labels: ['experience', 'internship', 'work history', 'career', 'job', 'professional', 'work'] },
