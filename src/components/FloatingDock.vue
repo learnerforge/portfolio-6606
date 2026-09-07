@@ -22,18 +22,39 @@ const active = ref(props.items[0].href)
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const mobile = window.matchMedia('(max-width: 768px)')
 
+let dockLeft = 0
+let itemRects = []
+let moveRaf = null
+let pendingX = null
+
+function cacheLayout() {
+  if (!el.value) return
+  dockLeft = el.value.getBoundingClientRect().left
+  itemRects = itemEls.value.map((n) => {
+    if (!n) return null
+    return n.offsetLeft + n.offsetWidth / 2
+  })
+}
+
+function flushMove() {
+  moveRaf = null
+  if (pendingX === null) { mouseX.value = null; return }
+  mouseX.value = pendingX
+}
+
 function onMove(e) {
-  mouseX.value = e.clientX - el.value.getBoundingClientRect().left
+  pendingX = e.clientX - dockLeft
+  if (!moveRaf) moveRaf = requestAnimationFrame(flushMove)
 }
 function onLeave() {
-  mouseX.value = null
+  pendingX = null
+  if (!moveRaf) moveRaf = requestAnimationFrame(flushMove)
 }
 
 function itemStyle(i) {
   if (reduced || mouseX.value == null) return {}
-  const node = itemEls.value[i]
-  if (!node) return {}
-  const center = node.offsetLeft + node.offsetWidth / 2
+  const center = itemRects[i]
+  if (center == null) return {}
   const dist = Math.abs(mouseX.value - center)
   const scale = Math.max(1, 1.3 - dist * 0.0018)
   return { transform: `scale(${scale.toFixed(3)})`, zIndex: Math.round(scale * 10) }
@@ -72,12 +93,15 @@ onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
   mobile.addEventListener('change', onMobileChange)
   updateActive()
+  cacheLayout()
+  new ResizeObserver(cacheLayout).observe(el.value)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll)
   mobile.removeEventListener('change', onMobileChange)
   if (raf) cancelAnimationFrame(raf)
+  if (moveRaf) cancelAnimationFrame(moveRaf)
 })
 </script>
 
