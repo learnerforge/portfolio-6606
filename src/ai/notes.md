@@ -6,7 +6,7 @@
 > for keyword matching. Keep updates in here — the site reads from this file.
 
 ## Profile
-> aliases: about, who is, who are, intro, bio, yourself, summary
+> aliases: who is, who are, intro, bio, yourself, summary, introduction
 Ganesh Bakkera is an AI/ML Engineer and Full Stack Developer based in Hyderabad, Telangana, India.
 He builds AI products and full-stack systems end-to-end — from specification to deployment.
 Currently a B.Tech CS (AI & ML) student at Mahatma Gandhi Institute of Technology (MGIT), Hyderabad (2024 — 2028).

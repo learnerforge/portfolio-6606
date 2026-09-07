@@ -16,7 +16,10 @@ import raw from './notes.md?raw'
 const SECTION_RE = /^##\s+(.+)$/
 const ALIAS_RE = /^>\s*aliases?:\s*(.+)$/i
 
+let parsedCache = null
+
 export function parseNotes() {
+  if (parsedCache) return parsedCache
   const sections = []
   let cur = null
   for (const line of raw.split('\n')) {
@@ -34,11 +37,12 @@ export function parseNotes() {
     }
     cur.body.push(line)
   }
-  return sections.map((s) => ({
+  parsedCache = sections.map((s) => ({
     title: s.title,
     aliases: s.aliases,
     body: s.body.join('\n').trim()
   }))
+  return parsedCache
 }
 
 export function listNoteTitles() {
@@ -55,7 +59,7 @@ export function findNotes(text) {
   for (const n of parseNotes()) {
     let score = n.aliases.reduce((acc, a) => acc + (q.includes(` ${a} `) ? a.split(/\s+/).length : 0), 0)
     for (const w of n.title.toLowerCase().replace(/&/g, 'and').split(/\s+/)) {
-      if (w.length > 3 && tokens.some((tok) => w.startsWith(tok) || tok.startsWith(w))) score += 1
+      if (w.length > 3 && tokens.some((tok) => tok.length > 1 && (w.startsWith(tok) || tok.startsWith(w)))) score += 1
     }
     if (score > bestScore) {
       bestScore = score

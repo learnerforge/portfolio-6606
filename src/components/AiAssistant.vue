@@ -39,6 +39,7 @@ const LOG_MAX = 300
 const SESSION = Math.random().toString(36).slice(2, 10)
 const CHAT_KEY = 'portfolio-ai.session.v1'
 const CHAT_MAX = 24
+const MSG_MAX = 40
 
 function logEntry(entry) {
   const e = { t: Date.now(), s: SESSION, v: 1, ...entry }
@@ -60,6 +61,12 @@ function starter() {
 }
 
 const messages = ref([starter()])
+
+function trimHistory() {
+  if (messages.value.length > MSG_MAX) {
+    messages.value.splice(1, messages.value.length - MSG_MAX)
+  }
+}
 
 function saveChat() {
   try {
@@ -126,6 +133,7 @@ function finish(L) {
   L.msg.streaming = false
   L.msg.chips = L.chips
   L.msg.action = L.action
+  trimHistory()
   saveChat()
   logEntry({ i: L.intent, a: L.action ? L.action.type : null })
   if (L.action) execAction(L.action)
@@ -177,6 +185,7 @@ function send(raw) {
   interrupt()
   input.value = ''
   messages.value.push({ role: 'user', text })
+  trimHistory()
   hist.unshift(text)
   if (hist.length > 20) hist.length = 20
   histIdx = -1

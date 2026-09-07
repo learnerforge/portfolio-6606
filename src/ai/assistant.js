@@ -31,6 +31,7 @@ export const SUGGESTIONS = [
 ]
 
 const FOLLOWUPS = {
+  navigate: ['Show projects', 'What does he specialize in?', 'Where can I reach him?'],
   skills: ['What projects use this stack?', 'What is he best at?', 'Show his AI / ML skills'],
   expertise: ['Show his top project', 'What tools does he work with?', 'Show projects'],
   experience: ['What is he working on right now?', 'What did he build?', 'Show his flagship project'],
@@ -44,6 +45,7 @@ const FOLLOWUPS = {
   certifications: ['What does he specialize in?', 'What is his background?', 'Show projects'],
   achievements: ['What certifications does he hold?', 'What is his background?', 'Show projects'],
   github: ['Show his projects', 'Where can I reach him?', 'What does he specialize in?'],
+  linkedin: ['Open GitHub', 'Show his projects', 'How can I reach him?'],
   coding_profiles: ['Show his projects', 'What does he specialize in?', 'Open GitHub'],
   notes_index: ['What notes do you have?', 'What can you do?', 'Show projects'],
   notes: ['What other notes do you have?', 'What can you do?', 'Show projects'],
@@ -95,11 +97,14 @@ function hasAny(text, words) {
   return words.some((w) => text.includes(` ${w} `))
 }
 
+const WEAK_NAV = new Set(['about', 'introduction', 'introduce', 'yourself'])
+
 function findSection(text) {
+  let best = null
   for (const s of SECTIONS) {
-    if (s.labels.some((l) => text.includes(` ${l} `))) return s
+    if (s.labels.some((l) => text.includes(` ${l} `))) best = s
   }
-  return null
+  return best
 }
 
 function projectKeywords(q) {
@@ -209,8 +214,19 @@ export function ask(rawQuery) {
     }
   }
 
-  // 9. profile / who is he
-  if (/\b(what do you do|what does he do|current role|profile|summary|overview|who is ganesh|who are you|about him|about ganesh|bio|background)\b/.test(q)) {
+  // 9. coding profiles (before profile — a "leetcode profile" ask should not
+  //    be swallowed by the generic "profile" intent)
+  if (/\b(leetcode|geeksforgeeks|hackerrank|codechef|competitive|coding profile)\b/.test(q)) {
+    const list = portfolio.codingProfiles.map((c) => c.name).join(', ')
+    return {
+      intent: 'coding_profiles',
+      text: `Competitive / coding profiles: ${list}. I can open them for you.`,
+      action: { type: 'link', url: portfolio.codingProfiles[0].url }
+    }
+  }
+
+  // 9a. profile / who is he
+  if (/\b(what do you do|what does he do|current role|profile|summary|overview|who is ganesh|who are you|about him|about ganesh|about you|yourself|bio|background)\b/.test(q)) {
     return {
       intent: 'profile',
       text: `${p.name} is ${p.roles.join(', ')} — based in ${p.location}.\n\n${p.tagline}\n\nHe's studying B.Tech in CS (AI & ML) at MGIT and has shipped 10+ repositories including ${portfolio.projects[0].title}, his flagship AI product. Ask about his projects, skills or experience.`,
@@ -218,7 +234,7 @@ export function ask(rawQuery) {
     }
   }
 
-  // 9a. role list / open-to
+  // 9b. role list / open-to
   if (/\b(roles|job titles?|designations?|positions?)\b/.test(q)) {
     return { intent: 'roles', text: `Ganesh works as ${p.roles.join(', ')}.\n\nOpen to: ${portfolio.openTo.join(' · ')}`, action: null }
   }
@@ -262,7 +278,7 @@ export function ask(rawQuery) {
     }
   }
 
-  // 13. expertise / specialisation
+  // 12a. expertise / specialisation
   if (/\b(speciali[sz]e|specialise|expertise|strengths?|domains?|good at|knows? about|skills in|specialization)\b/.test(q)) {
     return {
       intent: 'expertise',
@@ -273,7 +289,7 @@ export function ask(rawQuery) {
     }
   }
 
-  // 14. github
+  // 13. github
   if (/\b(github|repos?|repositories?)\b/.test(q)) {
     return {
       intent: 'github',
@@ -282,7 +298,7 @@ export function ask(rawQuery) {
     }
   }
 
-  // 15. linkedin
+  // 13b. linkedin
   if (/\b(linkedin)\b/.test(q)) {
     return {
       intent: 'linkedin',
@@ -291,17 +307,7 @@ export function ask(rawQuery) {
     }
   }
 
-  // 16. coding profiles
-  if (/\b(leetcode|geeksforgeeks|hackerrank|codechef|competitive|coding profile)\b/.test(q)) {
-    const list = portfolio.codingProfiles.map((c) => c.name).join(', ')
-    return {
-      intent: 'coding_profiles',
-      text: `Competitive / coding profiles: ${list}. I can open them for you.`,
-      action: { type: 'link', url: portfolio.codingProfiles[0].url }
-    }
-  }
-
-  // 17. achievements
+  // 14. achievements
   if (/\b(achievements|awards?|accomplishments?|milestones?|wins?)\b/.test(q)) {
     return {
       intent: 'achievements',
@@ -310,8 +316,8 @@ export function ask(rawQuery) {
     }
   }
 
-  // 18. certifications
-  if (/\b(certif|certified|aws|cisco|nptel|oracle)\b/.test(q)) {
+  // 14. certifications
+  if (/\b(certifications?|certificates?|certified|aws|cisco|nptel|oracle)\b/.test(q)) {
     return {
       intent: 'certifications',
       text: portfolio.certifications.map((c) => `· ${c.name} — ${c.issuer}`).join('\n'),
@@ -319,8 +325,12 @@ export function ask(rawQuery) {
     }
   }
 
-  // 18a. project catalogue ("what projects", "list your projects", "your work")
-  if (/(projects?|builds?|products?|work samples?)$/.test(q.trim()) && !projectKeywords(q)) {
+  // 15. project catalogue ("what projects", "list your projects", "your work")
+  const wantsProjectList =
+    (/(projects?|builds?|products?|portfolio|work samples?)$/.test(q.trim()) ||
+      (nav && nav.id === 'projects' && !/\bsection\b/.test(q))) &&
+    !projectKeywords(q)
+  if (wantsProjectList) {
     const list = portfolio.projects
       .map((pr, i) => `${i + 1}. ${pr.title} — ${pr.subtitle}`)
       .join('\n')
@@ -331,16 +341,7 @@ export function ask(rawQuery) {
     }
   }
 
-  // 19. section-only reference (short mention without a nav verb)
-  if (nav) {
-    return {
-      intent: 'section',
-      text: `That's covered in the ${nav.id} section. Want me to take you there? Say "show ${nav.id}".`,
-      action: null
-    }
-  }
-
-  // 19a. assistant's own knowledge base ("what notes do you have")
+  // 16. assistant's own knowledge base ("what notes do you have")
   if (/\b(notes|cheat ?sheet|knowledge ?base)\b/.test(q)) {
     const titles = listNoteTitles()
     return {
@@ -350,13 +351,23 @@ export function ask(rawQuery) {
     }
   }
 
-  // 19b. knowledge-base fallback — best matching notes section read out loud
+  // 16a. knowledge-base fallback — best matching notes section read out loud
   const note = findNotes(q)
   if (note) {
     return { intent: 'notes', text: note.body, action: null }
   }
 
-  // 20. fallback
+  // 16b. section-only reference (short mention without a nav verb) — skipped
+  //      for weak/generic labels like "about" so "tell me about X" falls back
+  if (nav && !nav.labels.some((l) => WEAK_NAV.has(l) && q.includes(` ${l} `))) {
+    return {
+      intent: 'section',
+      text: `That's covered in the ${nav.id} section. Want me to take you there? Say "show ${nav.id}".`,
+      action: null
+    }
+  }
+
+  // 17. fallback
   return {
     intent: 'fallback',
     text: 'I can tell you about Ganesh\'s experience, skills, projects, education, certifications, achievements — or navigate the site for you. Try "show projects" or "what does he specialize in?".',
