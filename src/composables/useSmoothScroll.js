@@ -71,7 +71,7 @@ export function useSmoothScroll() {
     lenis.on('scroll', ScrollTrigger.update)
     const tickerFn = (time) => lenis.raf(time * 1000)
     gsap.ticker.add(tickerFn)
-    gsap.ticker.lagSmoothing(0)
+    gsap.ticker.lagSmoothing(500, 33)
 
     anchorHandler = (e) => {
       if (e.defaultPrevented || e.button !== 0 || !e.target.closest) return

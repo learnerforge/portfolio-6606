@@ -447,7 +447,7 @@ export function createHeroScene(canvas) {
     lastMove = performance.now()
     requestFrame()
   }
-  window.addEventListener('mousemove', onMouse)
+  window.addEventListener('mousemove', onMouse, { passive: true })
 
   // ---------- intro sequence (GSAP timeline) ----------
   const props = { cameraZ: 14, camY: 0, spin: 0, scale: 0, particleAlpha: 0, coreAlpha: 0 }
@@ -513,7 +513,7 @@ export function createHeroScene(canvas) {
     S.ring2Prog.uniforms.uOpacity.value = props.coreAlpha * 0.14 * introFade
 
     renderer.render({ scene: S.scene, camera })
-    const active = t < 5 || (performance.now() - lastMove) < 2000
+    const active = t < 3 || (performance.now() - lastMove) < 1000
     if (active) requestFrame()
   }
 

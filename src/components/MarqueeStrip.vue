@@ -32,6 +32,8 @@ let tweenB = null
 let io = null
 let boostT = null
 let inView = false
+let onScrollBoost = null
+let onVisChange = null
 
 onMounted(async () => {
   const mod = await import('gsap')
@@ -62,15 +64,16 @@ onMounted(async () => {
   }, { rootMargin: '120px' })
   io.observe(trackA.value.parentElement.closest('.marquee'))
 
-  const onVisChange = () => { if (document.hidden) pause(); else play() }
-  window.addEventListener('scroll', () => {
+  onVisChange = () => { if (document.hidden) pause(); else play() }
+  onScrollBoost = () => {
     if (!tweenA) return
     speed(tweenA, 2.6); speed(tweenB, 2.6)
     clearTimeout(boostT)
     boostT = setTimeout(() => {
       speed(tweenA, 1); speed(tweenB, 1)
     }, 340)
-  }, { passive: true })
+  }
+  window.addEventListener('scroll', onScrollBoost, { passive: true })
   document.addEventListener('visibilitychange', onVisChange)
 
   play()
@@ -80,6 +83,8 @@ onBeforeUnmount(() => {
   if (tweenB) tweenB.kill()
   if (io) io.disconnect()
   if (boostT) clearTimeout(boostT)
+  if (onScrollBoost) window.removeEventListener('scroll', onScrollBoost)
+  if (onVisChange) document.removeEventListener('visibilitychange', onVisChange)
 })
 </script>
 

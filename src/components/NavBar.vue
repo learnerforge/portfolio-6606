@@ -3,6 +3,7 @@ import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { portfolio } from '../data/portfolio.js'
 import { theme, themeName, toggleTheme, initTheme } from '../composables/useTheme.js'
 import IconSet from './IconSet.vue'
+import LiveLogo from './LiveLogo.vue'
 
 initTheme()
 
@@ -102,7 +103,7 @@ onBeforeUnmount(() => {
   <nav class="nav" :class="{ scrolled }">
     <div class="nav-inner">
       <a class="nav-logo" href="#top">
-        <span class="glyph">{{ p.monogram }}</span>
+        <LiveLogo :monogram="p.monogram" />
         <span>BAKKERA<span class="text-gradient">.DEV</span></span>
       </a>
 
@@ -181,18 +182,6 @@ onBeforeUnmount(() => {
   line-height: 1;
   color: var(--text-primary);
   text-decoration: none;
-}
-.nav-logo .glyph {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-sm);
-  background: var(--fill-sunken);
-  color: var(--accent);
-  font-family: var(--font-display);
-  font-size: 12px;
-  font-weight: var(--fw-semibold);
 }
 
 .nav-links {
