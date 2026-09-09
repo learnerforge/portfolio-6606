@@ -77,6 +77,21 @@ export default function useWindowManager() {
     )
   }, [])
 
+  const resize = useCallback((appId, dw, dh) => {
+    setWindows((list) =>
+      list.map((w) => {
+        if (w.app.id !== appId) return w
+        const vw = window.innerWidth
+        const vh = window.innerHeight
+        return {
+          ...w,
+          w: clamp(w.w + dw, 420, Math.max(420, vw - 36)),
+          h: clamp(w.h + dh, 320, Math.max(320, vh - 120))
+        }
+      })
+    )
+  }, [])
+
   const toggle = useCallback(
     (appId) => {
       const w = windowsRef.current.find((x) => x.app.id === appId)
@@ -101,7 +116,7 @@ export default function useWindowManager() {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape' && activeId) close(activeId)
+      if (e.key === 'Escape' && activeId && !document.documentElement.hasAttribute('data-modal')) close(activeId)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -122,6 +137,7 @@ export default function useWindowManager() {
     minimize,
     focus,
     move,
+    resize,
     toggle,
     navigate,
     hash,

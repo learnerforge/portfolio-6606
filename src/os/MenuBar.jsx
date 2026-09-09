@@ -4,14 +4,13 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Logo from './ui/Logo'
 import Icon from './ui/Icon'
-import { useTheme, useClock } from './wm/useOs'
+import { useClock } from './wm/useOs'
 import { APPS } from './apps'
 import { portfolio } from '../content/portfolio'
 
 const NAV_APPS = ['about', 'projects', 'ai-lab', 'credentials', 'contact']
 
-export default function MenuBar({ os }) {
-  const { theme, toggle } = useTheme()
+export default function MenuBar({ os, theme, onToggleTheme, onOpenPalette }) {
   const time = useClock()
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -22,7 +21,7 @@ export default function MenuBar({ os }) {
   }
 
   return (
-    <header className="os-bar relative z-40 flex h-10 shrink-0 items-center justify-between gap-4 border-b px-3">
+    <header className="os-bar relative z-40 flex h-10 shrink-0 items-center justify-between gap-3 border-b px-3">
       <button
         onClick={() => pick('welcome')}
         className="flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-surface-2"
@@ -52,7 +51,25 @@ export default function MenuBar({ os }) {
         ))}
       </nav>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
+        <button
+          onClick={onOpenPalette}
+          aria-label="Open command palette"
+          className="hidden h-8 items-center gap-2 rounded-lg border border-line px-2 text-faint transition-colors hover:text-ink sm:flex"
+        >
+          <Icon name="search" size={13} />
+          <span className="text-xs">Search</span>
+          <span className="kbd">⌘K</span>
+        </button>
+
+        <button
+          onClick={onOpenPalette}
+          aria-label="Search"
+          className="grid h-8 w-8 place-items-center rounded-lg text-mute transition-colors hover:bg-surface-2 hover:text-ink sm:hidden"
+        >
+          <Icon name="search" size={15} />
+        </button>
+
         <div className="relative">
           <button
             onClick={() => setMenuOpen((v) => !v)}
@@ -94,14 +111,14 @@ export default function MenuBar({ os }) {
         </div>
 
         <button
-          onClick={toggle}
+          onClick={onToggleTheme}
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
           className="grid h-8 w-8 place-items-center rounded-lg text-mute transition-colors hover:bg-surface-2 hover:text-ink"
         >
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} />
         </button>
 
-        <span className="hidden rounded-lg px-2 py-1 font-mono text-xs text-mute sm:inline">{time}</span>
+        <span className="hidden rounded-lg px-2 py-1 font-mono text-xs text-mute lg:inline">{time}</span>
 
         <button
           onClick={() => window.location.reload()}

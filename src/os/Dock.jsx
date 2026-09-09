@@ -15,31 +15,47 @@ export default function Dock({ os, isMobile }) {
       <motion.button
         key={app.id}
         onClick={() => os.toggle(app.id)}
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9 + i * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, y: 28, scale: 0.6 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.6 }}
+        transition={{ delay: 0.15 + i * 0.045, type: 'spring', stiffness: 380, damping: 26 }}
         aria-label={`${app.title}${isActive ? ' (open)' : ''}`}
-        className={`group relative grid h-10 w-10 shrink-0 place-items-center rounded-xl border transition-all duration-200 ${
+        className={`group relative grid h-11 w-11 shrink-0 place-items-center rounded-2xl transition-transform duration-200 ${
           isActive
-            ? 'border-accent-3/50 bg-surface-2 text-ink shadow-glow'
+            ? 'scale-[1.18] text-ink'
             : isOpen
-              ? 'border-line bg-surface text-mute'
-              : 'border-transparent text-faint hover:border-line hover:bg-surface hover:text-ink'
+              ? 'text-mute'
+              : 'text-faint hover:text-ink'
         }`}
         title={`${app.title}${win?.minimized ? ' (minimized)' : ''}`}
       >
-        {app.id === 'welcome' ? <Logo size={22} /> : <Icon name={app.icon} size={19} />}
-
-        <motion.span
-          className={`absolute left-1/2 -top-2 h-1 w-1 -translate-x-1/2 rounded-full transition-colors ${
-            isActive ? 'bg-gradient-to-r from-indigo-400 to-fuchsia-400' : 'bg-faint'
+        <span
+          className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-white/15 to-white/5 ring-1 ring-line transition-opacity duration-200 ${
+            isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
           }`}
-          initial={false}
-          animate={{ opacity: isOpen || isActive ? 1 : 0 }}
+        />
+        {isActive && (
+          <span
+            className="absolute -inset-1.5 rounded-[20px] bg-accent/15 blur-lg transition-opacity"
+            aria-hidden="true"
+          />
+        )}
+        <span className="relative">
+          {app.id === 'welcome' ? <Logo size={23} /> : <Icon name={app.icon} size={20} />}
+        </span>
+
+        <span
+          className={`absolute -bottom-2.5 left-1/2 h-1 -translate-x-1/2 rounded-full transition-all duration-200 ${
+            isActive ? 'w-4 bg-gradient-to-r from-indigo-400 to-fuchsia-400' : 'w-0 bg-faint'
+          }`}
+          style={{ opacity: isOpen || isActive ? 1 : 0 }}
         />
 
-        <span className="pointer-events-none absolute -top-11 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg border border-line os-bar px-2.5 py-1.5 text-xs font-medium text-ink opacity-0 shadow-card transition-opacity duration-200 group-hover:opacity-100">
-          {app.title}
+        <span className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg glass px-2.5 py-1.5 text-xs font-medium text-ink shadow-card opacity-0 backdrop-blur-xl transition-all duration-200 group-hover:-top-12 group-hover:opacity-100">
+          <span className="flex items-center gap-1.5">
+            {app.title}
+            {win?.minimized && <span className="rounded bg-accent/20 px-1 font-mono text-[9px] text-accent">min</span>}
+          </span>
         </span>
       </motion.button>
     )
@@ -48,7 +64,7 @@ export default function Dock({ os, isMobile }) {
   return (
     <div className="absolute inset-x-0 bottom-0 z-40 flex justify-center pb-3">
       <div
-        className={`os-bar relative flex max-w-full items-end gap-1.5 rounded-2xl border px-3 py-2 shadow-window ${
+        className={`os-bar relative flex max-w-full items-center gap-1.5 rounded-[22px] px-3 py-2 ${
           isMobile ? 'overflow-x-auto' : 'overflow-visible'
         }`}
       >

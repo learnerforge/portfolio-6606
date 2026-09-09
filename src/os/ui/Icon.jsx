@@ -120,6 +120,12 @@ const paths = {
       <rect x="14" y="14" width="7" height="7" rx="1.5" {...STROKE} />
       <rect x="3" y="14" width="7" height="7" rx="1.5" {...STROKE} />
     </>
+  ),
+  search: (
+    <>
+      <circle cx="11" cy="11" r="7" {...STROKE} />
+      <path d="m21 21-4.3-4.3" {...STROKE} />
+    </>
   )
 }
 

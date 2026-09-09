@@ -22,7 +22,12 @@
   --shadow-card: 0 18px 50px -24px rgba(0, 0, 0, 0.6);
   --shadow-card-hover: 0 28px 70px -26px rgba(0, 0, 0, 0.75);
   --shadow-glow: 0 18px 60px -18px rgba(139, 92, 246, 0.45);
-  --shadow-window: 0 40px 120px -20px rgba(0, 0, 0, 0.8);
+  --shadow-window: 0 24px 70px -22px rgba(0, 0, 0, 0.72),
+    0 60px 160px -40px rgba(0, 0, 0, 0.85);
+  --shadow-window-active: 0 28px 80px -20px rgba(0, 0, 0, 0.82),
+    0 80px 200px -40px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(167, 139, 250, 0.12),
+    0 0 48px -12px rgba(139, 92, 246, 0.28);
 }
 
 [data-theme='light'] {
@@ -36,7 +41,12 @@
   --color-line: rgba(17, 20, 60, 0.12);
   --shadow-card: 0 18px 50px -26px rgba(30, 35, 100, 0.24);
   --shadow-card-hover: 0 28px 70px -28px rgba(30, 35, 100, 0.32);
-  --shadow-window: 0 40px 100px -24px rgba(30, 35, 100, 0.35);
+  --shadow-window: 0 24px 60px -16px rgba(30, 35, 100, 0.3),
+    0 60px 140px -40px rgba(30, 35, 100, 0.28);
+  --shadow-window-active: 0 30px 80px -20px rgba(30, 35, 100, 0.38),
+    0 80px 180px -40px rgba(30, 35, 100, 0.34),
+    0 0 0 1px rgba(99, 102, 241, 0.2),
+    0 0 48px -12px rgba(99, 102, 241, 0.3);
 }
 
 @layer base {
@@ -149,21 +159,73 @@
     color: var(--color-accent);
   }
 
+  /* ---- Glass system ---- */
+
+  .glass {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface-2) 55%, transparent),
+      color-mix(in srgb, var(--color-surface) 62%, transparent)
+    );
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent);
+    box-shadow: var(--shadow-window), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
   .os-bar {
-    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-color: var(--color-line);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface-2) 66%, transparent),
+      color-mix(in srgb, var(--color-surface) 72%, transparent)
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-color: color-mix(in srgb, var(--color-line) 70%, transparent);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
   }
 
   .os-window {
-    background: var(--color-surface);
-    border: 1px solid var(--color-line);
-    box-shadow: var(--shadow-window);
-    border-radius: 12px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface-2) 58%, transparent),
+      color-mix(in srgb, var(--color-surface) 76%, transparent)
+    );
+    backdrop-filter: blur(28px) saturate(150%);
+    -webkit-backdrop-filter: blur(28px) saturate(150%);
+    border: 1px solid color-mix(in srgb, var(--color-line) 75%, transparent);
+    box-shadow: var(--shadow-window), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    border-radius: 18px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    position: relative;
+  }
+
+  .os-window.os-window--inactive {
+    filter: saturate(0.92) brightness(0.96);
+  }
+
+  [data-theme='light'] .os-window {
+    box-shadow: var(--shadow-window), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  }
+  [data-theme='light'] .os-window.os-window--inactive {
+    filter: saturate(0.85) brightness(0.99);
+  }
+
+  .os-window--active::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--color-accent) 60%, transparent),
+      transparent
+    );
+    z-index: 2;
+    pointer-events: none;
   }
 
   .os-scroll {
@@ -171,13 +233,13 @@
     overflow-x: hidden;
     overscroll-behavior: contain;
     scrollbar-width: thin;
-    scrollbar-color: var(--color-line) transparent;
+    scrollbar-color: color-mix(in srgb, var(--color-faint) 45%, transparent) transparent;
   }
   .os-scroll::-webkit-scrollbar {
     width: 8px;
   }
   .os-scroll::-webkit-scrollbar-thumb {
-    background: var(--color-line);
+    background: color-mix(in srgb, var(--color-faint) 45%, transparent);
     border-radius: 999px;
   }
 
@@ -196,12 +258,84 @@
     border-radius: 50%;
     filter: blur(90px);
     pointer-events: none;
+    will-change: transform;
+  }
+
+  /* Traffic-light window controls */
+  .tl {
+    display: grid;
+    width: 0.75rem;
+    height: 0.75rem;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    opacity: 0.9;
+    transition: opacity 0.15s ease;
+  }
+  .tl svg {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .group\/tl:hover .tl svg,
+  .tl:hover svg {
+    opacity: 1;
+  }
+  .tl-close {
+    background: #ff5f57;
+  }
+  .tl-min {
+    background: #febc2e;
+  }
+  .tl-max {
+    background: #28c840;
+  }
+
+  .palette-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    caret-color: var(--color-accent);
+  }
+  .palette-input::placeholder {
+    color: var(--color-faint);
+  }
+
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.3rem;
+    border-radius: 5px;
+    border: 1px solid var(--color-line);
+    border-bottom-width: 2px;
+    background: var(--color-bg-2);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-mute);
+  }
+
+  .toast {
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-ink);
   }
 }
 
 @keyframes drift {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(16px, -20px); }
+}
+@keyframes breathe {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.7; }
+  50% { transform: translate3d(30px, -24px, 0) scale(1.14); opacity: 1; }
 }
 @keyframes float-slow {
   0%, 100% { transform: translateY(0); }
@@ -213,6 +347,10 @@
 }
 @keyframes conic-spin {
   to { transform: rotate(360deg); }
+}
+@keyframes toast-in {
+  from { transform: translateY(-14px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
