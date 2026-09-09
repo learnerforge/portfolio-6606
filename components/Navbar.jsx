@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { portfolio } from '@/content/portfolio'
+import Logo from './ui/Logo'
 
 const LINKS = [
   { href: '#about', label: 'About' },
@@ -66,11 +67,14 @@ export default function Navbar() {
         transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
       >
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-8">
-          <a href="#top" className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 text-sm font-bold text-white">
-              GB
+          <a href="#top" className="group flex items-center gap-2.5">
+            <Logo size={36} className="transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105" />
+            <span className="hidden leading-tight sm:block">
+              <span className="block font-display text-sm font-bold tracking-tight">{portfolio.profile.last}</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-faint">
+                AI · Full Stack
+              </span>
             </span>
-            <span className="font-display text-base font-semibold tracking-tight">{portfolio.profile.last}</span>
           </a>
 
           <div className="hidden items-center gap-7 md:flex">

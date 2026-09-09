@@ -5,12 +5,16 @@ import { portfolio } from '@/content/portfolio'
 
 const HEADLINE = ['I', 'build', 'AI', 'products', 'end-to-end.']
 const BADGES = [
-  { label: 'Python', className: 'left-[-6%] top-[6%]', delay: '0s' },
-  { label: 'FastAPI', className: 'right-[-4%] top-[22%]', delay: '0.6s' },
-  { label: 'React', className: 'left-[-8%] bottom-[24%]', delay: '1.2s' },
-  { label: 'PostgreSQL', className: 'right-[-6%] bottom-[6%]', delay: '1.8s' },
-  { label: 'LLM', className: 'left-[12%] top-[-10%]', delay: '2.4s' },
-  { label: 'Docker', className: 'right-[10%] top-[-12%]', delay: '3s' }
+  { label: 'Python', className: 'left-[-6%] top-[6%]', floatDelay: '0s' },
+  { label: 'FastAPI', className: 'right-[-4%] top-[22%]', floatDelay: '0.6s' },
+  { label: 'React', className: 'left-[-8%] bottom-[24%]', floatDelay: '1.2s' },
+  { label: 'PostgreSQL', className: 'right-[-6%] bottom-[6%]', floatDelay: '1.8s' },
+  { label: 'LLM', className: 'left-[12%] top-[-10%]', floatDelay: '2.4s' },
+  { label: 'Docker', className: 'right-[10%] top-[-12%]', floatDelay: '3s' }
+]
+const MARQUEE = [
+  'Python', 'FastAPI', 'React', 'Next.js', 'PostgreSQL', 'LLM Engineering',
+  'NLP', 'Agentic Workflows', 'Docker', 'TypeScript', 'Tailwind CSS', 'GSAP'
 ]
 
 export default function Hero() {
@@ -20,6 +24,7 @@ export default function Hero() {
   return (
     <section id="top" className="relative flex min-h-[100dvh] items-center overflow-hidden">
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="dot-grid absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_35%,black,transparent)]" />
         <div className="orb left-[8%] top-[12%] h-72 w-72 bg-indigo-600/25" style={{ animation: 'drift 14s ease-in-out infinite' }} />
         <div className="orb right-[6%] top-[30%] h-80 w-80 bg-fuchsia-600/20" style={{ animation: 'drift 18s ease-in-out infinite', animationDelay: '-6s' }} />
         <div className="orb bottom-[10%] left-[40%] h-72 w-72 bg-violet-600/20" style={{ animation: 'drift 16s ease-in-out infinite', animationDelay: '-3s' }} />
@@ -97,6 +102,7 @@ export default function Hero() {
           transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="absolute -inset-4 rounded-[2.4rem] bg-gradient-to-br from-indigo-500/30 via-violet-500/30 to-fuchsia-500/30 blur-2xl" aria-hidden="true" />
+          <div className="absolute -inset-5 rounded-[2.6rem] conic-ring opacity-70" aria-hidden="true" />
           <div className="relative rounded-[2rem] border border-line bg-surface shadow-card">
             <img
               src={portfolio.profile.avatar}
@@ -114,20 +120,23 @@ export default function Hero() {
             </div>
           </div>
 
-          {BADGES.map((b) => (
-            <span
+          {BADGES.map((b, i) => (
+            <motion.span
               key={b.label}
               className={`chip absolute ${b.className} hidden sm:inline-flex`}
-              style={{ animation: `float-slow 6s ease-in-out infinite`, animationDelay: b.delay }}
+              style={{ animation: 'float-slow 6s ease-in-out infinite', animationDelay: b.floatDelay }}
+              initial={{ opacity: 0, scale: 0.4 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.15 + i * 0.14, type: 'spring', stiffness: 280, damping: 20 }}
             >
               {b.label}
-            </span>
+            </motion.span>
           ))}
         </motion.div>
       </div>
 
       <motion.div
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
+        className="absolute bottom-20 left-1/2 z-10 -translate-x-1/2"
         style={{ opacity: cursorOpacity }}
         aria-hidden="true"
       >
@@ -137,6 +146,25 @@ export default function Hero() {
             animate={{ y: [0, 14, 0], opacity: [1, 0.2, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           />
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="absolute inset-x-0 bottom-0 z-10 overflow-hidden border-y border-line bg-bg/50 py-3.5 backdrop-blur-sm"
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 1.4, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="marquee-track">
+          {[...MARQUEE, ...MARQUEE].map((m, i) => (
+            <span
+              key={`${m}-${i}`}
+              className="flex items-center gap-3.5 text-xs font-semibold uppercase tracking-[0.28em] text-mute"
+            >
+              {m}
+              <span className="text-accent">✦</span>
+            </span>
+          ))}
         </div>
       </motion.div>
     </section>

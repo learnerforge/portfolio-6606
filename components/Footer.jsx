@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react'
 import { portfolio } from '@/content/portfolio'
+import Logo from './ui/Logo'
 
 export default function Footer() {
   const goTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -15,10 +16,13 @@ export default function Footer() {
       className="relative border-t border-line"
     >
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-5 py-12 md:flex-row md:justify-between md:px-8">
-        <div className="flex flex-col items-center gap-1 md:items-start">
-          <span className="font-display text-lg font-extrabold">
-            <span className="grad-text">GB</span>
-          </span>
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-2.5">
+            <Logo size={34} />
+            <span className="font-display text-lg font-extrabold">
+              <span className="grad-text">{portfolio.profile.last}</span>
+            </span>
+          </div>
           <p className="text-xs text-faint">
             © {new Date().getFullYear()} Ganesh Bakkera · Built with Next.js · Tailwind · Motion
           </p>

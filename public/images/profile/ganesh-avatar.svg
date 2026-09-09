@@ -1,27 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Ganesh Bakkera">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Ganesh Bakkera — profile card">
   <defs>
     <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#22d3ee"/>
-      <stop offset="0.55" stop-color="#8b5cf6"/>
+      <stop offset="0" stop-color="#818cf8"/>
+      <stop offset="0.5" stop-color="#c084fc"/>
       <stop offset="1" stop-color="#e879f9"/>
     </linearGradient>
-    <radialGradient id="bg" cx="0.5" cy="0.38" r="0.8">
-      <stop offset="0" stop-color="#15152b"/>
-      <stop offset="1" stop-color="#07070c"/>
+    <radialGradient id="bg" cx="0.5" cy="0.35" r="0.9">
+      <stop offset="0" stop-color="#15162e"/>
+      <stop offset="1" stop-color="#08080f"/>
     </radialGradient>
   </defs>
 
   <rect width="512" height="512" fill="url(#bg)"/>
 
-  <circle cx="256" cy="256" r="206" fill="none" stroke="url(#grad)" stroke-width="10"/>
-  <circle cx="256" cy="256" r="188" fill="none" stroke="url(#grad)" stroke-width="2" opacity="0.55"/>
-  <circle cx="256" cy="256" r="158" fill="rgba(255,255,255,0.02)"/>
-  <circle cx="256" cy="256" r="158" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+  <circle cx="256" cy="256" r="212" fill="none" stroke="rgba(139,92,246,0.22)" stroke-width="2"/>
+  <circle cx="256" cy="256" r="196" fill="none" stroke="url(#grad)" stroke-width="8" opacity="0.9"/>
+  <circle cx="256" cy="256" r="180" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
 
-  <circle cx="256" cy="50" r="5" fill="#22d3ee"/>
-  <circle cx="462" cy="256" r="5" fill="#e879f9"/>
-  <circle cx="256" cy="462" r="5" fill="#8b5cf6"/>
-  <circle cx="50" cy="256" r="5" fill="#22d3ee"/>
+  <circle cx="404" cy="108" r="5" fill="url(#grad)"/>
+  <circle cx="444" cy="330" r="4" fill="url(#grad)" opacity="0.8"/>
+  <circle cx="118" cy="390" r="5" fill="url(#grad)"/>
+  <circle cx="92" cy="150" r="4" fill="url(#grad)" opacity="0.8"/>
 
-  <text x="256" y="264" font-family="Arial, Helvetica, sans-serif" font-size="148" font-weight="700" letter-spacing="2" text-anchor="middle" dominant-baseline="central" fill="url(#grad)">GB</text>
+  <g>
+    <rect x="118" y="112" width="276" height="288" rx="18" fill="#0e1026" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+    <rect x="130" y="124" width="252" height="24" rx="7" fill="rgba(255,255,255,0.05)"/>
+    <circle cx="140" cy="136" r="5" fill="#ff5f57"/>
+    <circle cx="156" cy="136" r="5" fill="#febc2e"/>
+    <circle cx="172" cy="136" r="5" fill="#28c840"/>
+    <text x="235" y="141" font-family="ui-monospace, Consolas, monospace" font-size="13" font-weight="600" text-anchor="middle" fill="rgba(255,255,255,0.55)">ganesh@portfolio — zsh</text>
+
+    <text x="150" y="196" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#34d399">$</text>
+    <text x="176" y="196" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#e2e8f0">whoami</text>
+    <text x="150" y="230" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#818cf8">AI / ML Engineer</text>
+
+    <text x="150" y="268" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#34d399">$</text>
+    <text x="176" y="268" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#e2e8f0">./flagship</text>
+    <text x="150" y="302" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#e879f9">PathForge AI</text>
+    <text x="286" y="302" font-family="ui-monospace, Consolas, monospace" font-size="15" fill="rgba(255,255,255,0.45)">✓ 9,444 topics</text>
+
+    <text x="150" y="340" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#34d399">$</text>
+    <text x="176" y="340" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#e2e8f0">stats --shipped</text>
+    <text x="150" y="374" font-family="ui-monospace, Consolas, monospace" font-size="19" fill="#38bdf8">6</text>
+    <text x="184" y="374" font-family="ui-monospace, Consolas, monospace" font-size="17" fill="rgba(255,255,255,0.6)">production builds · v3.0.0</text>
+  </g>
+
+  <circle cx="256" cy="420" r="34" fill="url(#grad)" opacity="0.92"/>
+  <text x="256" y="431" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" text-anchor="middle" dominant-baseline="central" fill="#ffffff">GB</text>
+  <circle cx="238" cy="404" r="7" fill="rgba(255,255,255,0.85)"/>
 </svg>
