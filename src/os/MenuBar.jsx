@@ -123,7 +123,7 @@ export default function MenuBar({ os, theme, onToggleTheme, onOpenPalette }) {
         <button
           onClick={() => window.location.reload()}
           aria-label="Restart GANESH OS"
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-mute transition-colors hover:bg-red-500/15 hover:text-red-400"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-mute transition-colors hover:bg-red-500 hover:text-white"
         >
           <Icon name="power" size={15} />
         </button>

@@ -64,7 +64,7 @@ export default function ContextMenu({ state, onClose, os, onRestart }) {
               key={it.label}
               role="menuitem"
               onClick={it.run}
-              className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors hover:bg-accent/15 hover:text-ink ${
+              className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors hover:bg-surface-2 hover:text-ink ${
                 it.danger ? 'text-red-400' : 'text-mute'
               }`}
             >

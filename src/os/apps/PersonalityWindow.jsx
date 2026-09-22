@@ -18,7 +18,7 @@ export default function PersonalityWindow({ os }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.08 }}
-        className="rounded-xl border border-line bg-bg/30 p-5"
+        className="rounded-xl border border-line bg-bg p-5"
       >
         <div className="mb-3 flex items-center gap-2.5">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -42,7 +42,7 @@ export default function PersonalityWindow({ os }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.14 + i * 0.06 }}
-            className={`rounded-xl border border-line bg-bg/30 p-4 ${i % 2 ? 'sm:translate-y-3' : ''}`}
+            className={`rounded-xl border border-line bg-bg p-4 ${i % 2 ? 'sm:translate-y-3' : ''}`}
           >
             <span className={`block h-2 w-2 rounded-full ${i % 2 ? 'bg-fuchsia-400' : 'bg-sky-400'}`} />
             <p className="mt-3 font-display text-sm font-bold">{l}</p>
@@ -55,7 +55,7 @@ export default function PersonalityWindow({ os }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.34 }}
-        className="mt-auto rounded-xl border border-accent-3/30 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 p-4"
+        className="mt-auto rounded-xl border border-accent-3/30 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_16%,var(--color-surface-2)),color-mix(in_srgb,var(--color-accent-2)_10%,var(--color-surface-2)))] p-4"
       >
         <p className="font-mono text-xs leading-relaxed text-mute">
           <span aria-hidden="true" className="text-violet-400">➜</span> Try the interactive version in the{' '}

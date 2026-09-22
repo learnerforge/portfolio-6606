@@ -6,7 +6,7 @@ import { portfolio } from '../../content/portfolio'
 
 function Stat({ value, suffix = '', label }) {
   return (
-    <div className="rounded-xl border border-line bg-bg/40 p-4">
+    <div className="rounded-xl border border-line bg-bg p-4">
       <p className="font-display text-3xl font-extrabold">
         <span className="grad-text">
           {value}
@@ -46,7 +46,7 @@ export default function WelcomeWindow({ os }) {
             <p className="mt-0.5 text-xs text-faint">{profile.location}</p>
           </div>
         </div>
-        <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-500">
+        <span className="shrink-0 rounded-full bg-emerald-500 px-3 py-1 text-[11px] font-semibold text-white">
           open to work
         </span>
       </motion.div>

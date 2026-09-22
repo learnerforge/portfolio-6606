@@ -151,7 +151,7 @@ export default function CommandPalette({ open, onClose, os, actions }) {
                         onMouseEnter={() => setIndex(i)}
                         onClick={it.run}
                         className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2.5 text-left text-sm transition-colors ${
-                          i === index ? 'bg-accent/15 text-ink' : 'text-mute'
+                          i === index ? 'bg-surface-2 text-ink ring-1 ring-accent-3/40' : 'text-mute'
                         }`}
                       >
                         <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-bg-2 text-accent ring-1 ring-line">

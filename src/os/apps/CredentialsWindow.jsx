@@ -22,7 +22,7 @@ export default function CredentialsWindow() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.08 + i * 0.05 }}
-            className="rounded-xl border border-line bg-bg/30 p-4"
+            className="rounded-xl border border-line bg-bg p-4"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 text-white">
@@ -48,7 +48,7 @@ export default function CredentialsWindow() {
           </h3>
           <div className="space-y-2">
             {certifications.map((c) => (
-              <div key={c.name} className="flex items-center gap-3 rounded-lg border border-line bg-bg/30 px-3 py-2.5">
+              <div key={c.name} className="flex items-center gap-3 rounded-lg border border-line bg-bg px-3 py-2.5">
                 <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line font-display text-xs font-bold text-accent">
                   {c.issuer.slice(0, 1)}
                 </span>
@@ -76,7 +76,7 @@ export default function CredentialsWindow() {
                 href={p.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between rounded-lg border border-line bg-bg/30 px-3 py-2.5 transition-colors hover:border-accent-3/40"
+                className="group flex items-center justify-between rounded-lg border border-line bg-bg px-3 py-2.5 transition-colors hover:border-accent-3/40"
               >
                 <span className="truncate text-xs font-semibold">{p.name}</span>
                 <Icon name="link" size={13} className="shrink-0 text-faint transition-colors group-hover:text-accent" />

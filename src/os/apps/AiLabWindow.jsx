@@ -46,7 +46,7 @@ export default function AiLabWindow() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 + i * 0.07 }}
-            className="group rounded-xl border border-line bg-bg/30 p-4 transition-colors hover:border-accent-3/40"
+            className="group rounded-xl border border-line bg-bg p-4 transition-colors hover:border-accent-3/40"
           >
             <div className="flex items-center justify-between gap-3">
               <h3 className="text-sm font-semibold">{e.title}</h3>
@@ -63,7 +63,7 @@ export default function AiLabWindow() {
             <p className="mt-1.5 text-xs leading-relaxed text-mute">{e.body}</p>
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {e.tags.map((t) => (
-                <span key={t} className="rounded-md bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-accent">
+                <span key={t} className="rounded-md bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-accent">
                   {t}
                 </span>
               ))}
@@ -76,7 +76,7 @@ export default function AiLabWindow() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.36 }}
-        className="rounded-xl border border-line bg-bg/30 p-4"
+        className="rounded-xl border border-line bg-bg p-4"
       >
         <h3 className="mb-3 text-[13px] font-semibold uppercase tracking-[0.18em] text-faint">
           Depth map

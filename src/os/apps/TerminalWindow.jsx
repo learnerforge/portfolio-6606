@@ -275,7 +275,6 @@ export default function TerminalWindow({ os }) {
 
     if (!matches || matches.length === 0) {
       completion.current = null
-      setInput((v) => v + '\t')
       return
     }
 
@@ -288,7 +287,10 @@ export default function TerminalWindow({ os }) {
   }
 
   const onKeyDown = (e) => {
-    if (e.key === 'Tab') {
+    if (e.ctrlKey && (e.key.toLowerCase() === 'l')) {
+      e.preventDefault()
+      setLines([])
+    } else if (e.key === 'Tab') {
       e.preventDefault()
       complete()
     } else if (e.key === 'ArrowUp') {
@@ -354,6 +356,7 @@ export default function TerminalWindow({ os }) {
             autoFocus
             spellCheck={false}
             autoComplete="off"
+            enterKeyHint="send"
             aria-label="Terminal input"
             className="prompt-input w-full"
           />

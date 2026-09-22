@@ -92,7 +92,7 @@ export default function GitHubWindow() {
             href={r.html_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-start justify-between gap-3 rounded-xl border border-line bg-bg/30 p-4 transition-colors hover:border-accent-3/40"
+            className="group flex items-start justify-between gap-3 rounded-xl border border-line bg-bg p-4 transition-colors hover:border-accent-3/40"
           >
             <div className="min-w-0">
               <div className="flex items-center gap-2">
@@ -103,7 +103,7 @@ export default function GitHubWindow() {
                   </span>
                 )}
                 {r.language && (
-                  <span className="shrink-0 rounded-md bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-accent">
+                  <span className="shrink-0 rounded-md bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-accent">
                     {r.language}
                   </span>
                 )}

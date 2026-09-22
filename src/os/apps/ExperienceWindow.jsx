@@ -22,7 +22,7 @@ export default function ExperienceWindow() {
         <h3 className="mb-3 text-[13px] font-semibold uppercase tracking-[0.18em] text-faint">
           Education
         </h3>
-        <div className="rounded-xl border border-line bg-bg/30 p-5">
+        <div className="rounded-xl border border-line bg-bg p-5">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-md bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-2.5 py-0.5 text-[11px] font-bold text-white">
               {education[0].period}
@@ -50,7 +50,7 @@ export default function ExperienceWindow() {
           Experience
         </h3>
         {experience.map((x) => (
-          <div key={x.company} className="rounded-xl border border-line bg-bg/30 p-5">
+          <div key={x.company} className="rounded-xl border border-line bg-bg p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3">
                 <span aria-hidden="true" className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 font-display text-sm font-bold text-white">

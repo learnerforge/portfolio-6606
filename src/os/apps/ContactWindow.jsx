@@ -46,7 +46,7 @@ export default function ContactWindow() {
             href={s.url}
             target={s.name === 'Email' ? undefined : '_blank'}
             rel="noopener noreferrer"
-            className="group flex items-center justify-between rounded-xl border border-line bg-bg/30 px-4 py-3.5 transition-colors hover:border-accent-3/40"
+            className="group flex items-center justify-between rounded-xl border border-line bg-bg px-4 py-3.5 transition-colors hover:border-accent-3/40"
           >
             <span className="flex items-center gap-3">
               <span className="grid h-9 w-9 place-items-center rounded-lg bg-surface-2 text-accent">

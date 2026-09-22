@@ -44,7 +44,7 @@ export default function Dock({ os, isMobile }) {
         title={`${app.title}${win?.minimized ? ' (minimized)' : ''}`}
       >
         <span
-          className={`absolute inset-0 rounded-2xl bg-gradient-to-br from-white/15 to-white/5 ring-1 ring-line transition-opacity duration-200 ${
+          className={`absolute inset-0 rounded-2xl bg-bg ring-1 ring-line transition-opacity duration-200 ${
             isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
           }`}
         />
@@ -68,7 +68,7 @@ export default function Dock({ os, isMobile }) {
         <span className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg glass px-2.5 py-1.5 text-xs font-medium text-ink shadow-card opacity-0 backdrop-blur-xl transition-all duration-200 group-hover:-top-12 group-hover:opacity-100">
           <span className="flex items-center gap-1.5">
             {app.title}
-            {win?.minimized && <span className="rounded bg-accent/20 px-1 font-mono text-[9px] text-accent">min</span>}
+            {win?.minimized && <span className="rounded bg-[#2c2852] px-1 font-mono text-[9px] text-[#a78bfa]">min</span>}
           </span>
         </span>
       </motion.button>

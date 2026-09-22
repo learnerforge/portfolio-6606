@@ -46,7 +46,7 @@ export default function SkillsWindow() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
-            className="rounded-xl border border-line bg-bg/30 p-4"
+            className="rounded-xl border border-line bg-bg p-4"
           >
             <div className="mb-3 flex items-center gap-2.5">
               <span className={`h-2 w-2 rounded-full bg-gradient-to-br ${c.dot}`} />
@@ -66,7 +66,7 @@ export default function SkillsWindow() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.35 }}
-          className="rounded-xl border border-accent-3/30 bg-gradient-to-br from-indigo-500/10 via-violet-500/10 to-fuchsia-500/10 p-4 sm:col-span-2"
+          className="rounded-xl border border-accent-3/30 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_18%,var(--color-surface-2)),color-mix(in_srgb,var(--color-accent-2)_12%,var(--color-surface-2)))] p-4 sm:col-span-2"
         >
           <div className="mb-3 flex items-center gap-2.5">
             <span className="h-2 w-2 rounded-full bg-gradient-to-br from-indigo-400 to-fuchsia-500" />

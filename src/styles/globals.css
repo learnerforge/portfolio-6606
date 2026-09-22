@@ -159,42 +159,24 @@
     color: var(--color-accent);
   }
 
-  /* ---- Glass system ---- */
+  /* ---- Opaque surfaces ---- */
 
   .glass {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-surface-2) 55%, transparent),
-      color-mix(in srgb, var(--color-surface) 62%, transparent)
-    );
-    backdrop-filter: blur(22px) saturate(160%);
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    border: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent);
+    background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+    border: 1px solid var(--color-line);
     box-shadow: var(--shadow-window), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   .os-bar {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-surface-2) 66%, transparent),
-      color-mix(in srgb, var(--color-surface) 72%, transparent)
-    );
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-color: color-mix(in srgb, var(--color-line) 70%, transparent);
+    background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+    border-color: var(--color-line);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
   }
 
   .os-window {
     --win-accent: #a78bfa;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-surface-2) 58%, transparent),
-      color-mix(in srgb, var(--color-surface) 76%, transparent)
-    );
-    backdrop-filter: blur(28px) saturate(150%);
-    -webkit-backdrop-filter: blur(28px) saturate(150%);
-    border: 1px solid color-mix(in srgb, var(--color-line) 75%, transparent);
+    background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+    border: 1px solid var(--color-line);
     box-shadow: var(--shadow-window), inset 0 1px 0 rgba(255, 255, 255, 0.09);
     border-radius: 18px;
     overflow: hidden;
@@ -218,15 +200,15 @@
     background: transparent;
   }
   .os-window--active .os-titlebar {
-    background: color-mix(in srgb, var(--win-accent) 18%, transparent);
+    background: color-mix(in srgb, var(--win-accent) 16%, var(--color-surface));
   }
 
   .os-title-icon {
     color: var(--win-accent);
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--win-accent) 26%, transparent),
-      color-mix(in srgb, var(--win-accent) 18%, transparent)
+      color-mix(in srgb, var(--win-accent) 30%, var(--color-surface-2)),
+      color-mix(in srgb, var(--win-accent) 22%, var(--color-surface-2))
     );
   }
 
