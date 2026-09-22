@@ -21,13 +21,15 @@ export default function Starfield() {
     let h = 0
     let stars = []
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 }
+    const coarse = window.matchMedia('(pointer: coarse)').matches
 
     const build = () => {
       w = canvas.width = canvas.offsetWidth
       h = canvas.height = canvas.offsetHeight
       stars = []
+      const scale = coarse || w < 768 ? 0.5 : 1
       LAYERS.forEach((L, li) => {
-        const count = Math.floor((w * h * L.count) / 9000)
+        const count = Math.floor((w * h * L.count * scale) / 9000)
         const palette = ['255,255,255', '167,139,250', '232,121,249', '129,140,248']
         for (let i = 0; i < count; i++) {
           stars.push({
@@ -102,12 +104,12 @@ export default function Starfield() {
     draw(0)
     if (!reduced) raf = requestAnimationFrame(draw)
     window.addEventListener('resize', build)
-    window.addEventListener('pointermove', onMove, { passive: true })
+    if (!coarse) window.addEventListener('pointermove', onMove, { passive: true })
     window.addEventListener('themechange', onTheme)
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', build)
-      window.removeEventListener('pointermove', onMove)
+      if (!coarse) window.removeEventListener('pointermove', onMove)
       window.removeEventListener('themechange', onTheme)
     }
   }, [reduced])

@@ -35,7 +35,7 @@ export default function SkillsWindow() {
           A stack chosen for <span className="grad-text">shipping.</span>
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-mute">
-          Real categories, honest levels — no fake percentages. Everything here has shipped into a working product.
+          Real categories, honest levels — no fake percentages. Everything here has shipped inside a working product.
         </p>
       </motion.div>
 

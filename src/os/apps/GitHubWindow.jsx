@@ -75,7 +75,7 @@ export default function GitHubWindow() {
             href={portfolio.profile.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-ghost shrink-0 px-3.5 py-2 text-xs"
+            className="btn btn-ghost shrink-0 px-4 py-2 text-sm"
           >
             Open profile
           </a>

@@ -186,6 +186,7 @@
   }
 
   .os-window {
+    --win-accent: #a78bfa;
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-surface-2) 58%, transparent),
@@ -206,11 +207,40 @@
     filter: saturate(0.92) brightness(0.96);
   }
 
+  .os-window--active {
+    box-shadow: var(--shadow-window-active),
+      0 0 0 1px color-mix(in srgb, var(--win-accent) 25%, transparent),
+      0 0 48px -12px color-mix(in srgb, var(--win-accent) 45%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+
+  .os-titlebar {
+    background: transparent;
+  }
+  .os-window--active .os-titlebar {
+    background: color-mix(in srgb, var(--win-accent) 18%, transparent);
+  }
+
+  .os-title-icon {
+    color: var(--win-accent);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--win-accent) 26%, transparent),
+      color-mix(in srgb, var(--win-accent) 18%, transparent)
+    );
+  }
+
   [data-theme='light'] .os-window {
     box-shadow: var(--shadow-window), inset 0 1px 0 rgba(255, 255, 255, 0.65);
   }
   [data-theme='light'] .os-window.os-window--inactive {
     filter: saturate(0.85) brightness(0.99);
+  }
+  [data-theme='light'] .os-window.os-window--active {
+    box-shadow: var(--shadow-window-active),
+      0 0 0 1px color-mix(in srgb, var(--win-accent) 20%, transparent),
+      0 0 36px -14px color-mix(in srgb, var(--win-accent) 38%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.65);
   }
 
   .os-window--active::before {
@@ -221,7 +251,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      color-mix(in srgb, var(--color-accent) 60%, transparent),
+      color-mix(in srgb, var(--win-accent) 60%, transparent),
       transparent
     );
     z-index: 2;

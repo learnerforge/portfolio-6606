@@ -21,17 +21,17 @@ export default function MenuBar({ os, theme, onToggleTheme, onOpenPalette }) {
   }
 
   return (
-    <header className="os-bar relative z-40 flex h-10 shrink-0 items-center justify-between gap-3 border-b px-3">
+    <header className="os-bar relative z-40 flex h-10 shrink-0 flex-nowrap items-center justify-between gap-3 border-b px-3">
       <button
         onClick={() => pick('welcome')}
-        className="flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-surface-2"
+        className="flex min-w-0 items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-surface-2"
         aria-label="Open Welcome"
       >
         <Logo size={22} />
-        <span className="font-display text-sm font-bold tracking-tight">
+        <span className="min-w-0 truncate font-display text-sm font-bold tracking-tight">
           <span className="grad-text">GANESH OS</span>
         </span>
-        <span className="hidden rounded border border-line px-1.5 py-0.5 font-mono text-[10px] text-faint sm:inline">
+        <span className="hidden shrink-0 rounded border border-line px-1.5 py-0.5 font-mono text-[10px] text-faint sm:inline">
           {portfolio.os.version}
         </span>
       </button>
@@ -51,11 +51,11 @@ export default function MenuBar({ os, theme, onToggleTheme, onOpenPalette }) {
         ))}
       </nav>
 
-      <div className="flex items-center gap-1.5">
+      <div className="flex flex-nowrap items-center gap-1.5">
         <button
           onClick={onOpenPalette}
           aria-label="Open command palette"
-          className="hidden h-8 items-center gap-2 rounded-lg border border-line px-2 text-faint transition-colors hover:text-ink sm:flex"
+          className="hidden h-8 shrink-0 items-center gap-2 rounded-lg border border-line px-2 text-faint transition-colors hover:text-ink sm:flex"
         >
           <Icon name="search" size={13} />
           <span className="text-xs">Search</span>
@@ -65,12 +65,12 @@ export default function MenuBar({ os, theme, onToggleTheme, onOpenPalette }) {
         <button
           onClick={onOpenPalette}
           aria-label="Search"
-          className="grid h-8 w-8 place-items-center rounded-lg text-mute transition-colors hover:bg-surface-2 hover:text-ink sm:hidden"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-mute transition-colors hover:bg-surface-2 hover:text-ink sm:hidden"
         >
           <Icon name="search" size={15} />
         </button>
 
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="All apps"
@@ -113,17 +113,17 @@ export default function MenuBar({ os, theme, onToggleTheme, onOpenPalette }) {
         <button
           onClick={onToggleTheme}
           aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-          className="grid h-8 w-8 place-items-center rounded-lg text-mute transition-colors hover:bg-surface-2 hover:text-ink"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-mute transition-colors hover:bg-surface-2 hover:text-ink"
         >
           <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={15} />
         </button>
 
-        <span className="hidden rounded-lg px-2 py-1 font-mono text-xs text-mute lg:inline">{time}</span>
+        <span className="hidden shrink-0 rounded-lg px-2 py-1 font-mono text-xs text-mute lg:inline">{time}</span>
 
         <button
           onClick={() => window.location.reload()}
           aria-label="Restart GANESH OS"
-          className="grid h-8 w-8 place-items-center rounded-lg text-mute transition-colors hover:bg-red-500/15 hover:text-red-400"
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-mute transition-colors hover:bg-red-500/15 hover:text-red-400"
         >
           <Icon name="power" size={15} />
         </button>

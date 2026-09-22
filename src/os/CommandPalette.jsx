@@ -4,13 +4,30 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Icon from './ui/Icon'
 import Logo from './ui/Logo'
+import { useIsMobile, useReducedMotion } from './wm/useOs'
 import { APPS } from './apps'
 
 export default function CommandPalette({ open, onClose, os, actions }) {
+  const mobile = useIsMobile()
+  const reduced = useReducedMotion()
   const [query, setQuery] = useState('')
   const [index, setIndex] = useState(0)
   const inputRef = useRef(null)
   const listRef = useRef(null)
+
+  const sheet = {
+    initial: reduced
+      ? { opacity: 0 }
+      : mobile
+        ? { opacity: 0, y: 48 }
+        : { opacity: 0, y: -16, scale: 0.96, filter: 'blur(6px)' },
+    animate: reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+    exit: reduced
+      ? { opacity: 0 }
+      : mobile
+        ? { opacity: 0, y: 48 }
+        : { opacity: 0, y: -12, scale: 0.97, filter: 'blur(4px)' }
+  }
 
   useEffect(() => {
     if (open) {
@@ -75,7 +92,9 @@ export default function CommandPalette({ open, onClose, os, actions }) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 p-4 pt-[16vh] backdrop-blur-md"
+          className={`fixed inset-0 z-50 flex justify-center bg-black/40 p-4 backdrop-blur-md ${
+            mobile ? 'items-end pb-[max(1rem,env(safe-area-inset-bottom))]' : 'items-start pt-[16vh]'
+          }`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -88,9 +107,9 @@ export default function CommandPalette({ open, onClose, os, actions }) {
             role="dialog"
             aria-label="Command palette"
             className="os-window w-full max-w-md overflow-visible !rounded-2xl"
-            initial={{ opacity: 0, y: -16, scale: 0.96, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -12, scale: 0.97, filter: 'blur(4px)' }}
+            initial={sheet.initial}
+            animate={sheet.animate}
+            exit={sheet.exit}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -110,7 +129,10 @@ export default function CommandPalette({ open, onClose, os, actions }) {
               <span className="kbd shrink-0">esc</span>
             </div>
 
-            <div ref={listRef} className="os-scroll max-h-80 overflow-y-auto p-1.5">
+            <div
+              ref={listRef}
+              className={`os-scroll overflow-y-auto p-1.5 ${mobile ? 'max-h-[55vh]' : 'max-h-80'}`}
+            >
               {items.length === 0 ? (
                 <p className="px-3 py-6 text-center text-sm text-faint">No results for “{query}”</p>
               ) : (

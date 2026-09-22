@@ -58,7 +58,7 @@ export default function PersonalityWindow({ os }) {
         className="mt-auto rounded-xl border border-accent-3/30 bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 p-4"
       >
         <p className="font-mono text-xs leading-relaxed text-mute">
-          <span className="text-violet-400">➜</span> Try the interactive version in the{' '}
+          <span aria-hidden="true" className="text-violet-400">➜</span> Try the interactive version in the{' '}
           <button onClick={() => os.open('terminal')} className="font-semibold text-accent underline decoration-accent/40 underline-offset-2 hover:text-accent-2">
             terminal
           </button>

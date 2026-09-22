@@ -49,7 +49,7 @@ export default function CredentialsWindow() {
           <div className="space-y-2">
             {certifications.map((c) => (
               <div key={c.name} className="flex items-center gap-3 rounded-lg border border-line bg-bg/30 px-3 py-2.5">
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line font-display text-xs font-bold text-accent">
+                <span aria-hidden="true" className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line font-display text-xs font-bold text-accent">
                   {c.issuer.slice(0, 1)}
                 </span>
                 <div className="min-w-0">

@@ -14,10 +14,16 @@ export default function ContextMenu({ state, onClose, os, onRestart }) {
       if (e.key === 'Escape') onClose()
     }
     window.addEventListener('pointerdown', close)
+    window.addEventListener('touchstart', close, { passive: true })
+    window.addEventListener('scroll', close, { capture: true, passive: true })
+    window.addEventListener('resize', close)
     window.addEventListener('keydown', onKey)
     document.documentElement.addEventListener('contextmenu', close, true)
     return () => {
       window.removeEventListener('pointerdown', close)
+      window.removeEventListener('touchstart', close)
+      window.removeEventListener('scroll', close, { capture: true })
+      window.removeEventListener('resize', close)
       window.removeEventListener('keydown', onKey)
       document.documentElement.removeEventListener('contextmenu', close, true)
     }

@@ -6,11 +6,12 @@ import { portfolio } from '../../content/portfolio'
 
 export default function ContactWindow() {
   const { profile, openTo } = portfolio
+  const xUrl = portfolio.codingProfiles.find((c) => c.name === 'X')?.url
 
   const socials = [
     { name: 'GitHub', url: profile.github, icon: 'github' },
     { name: 'LinkedIn', url: profile.linkedin, icon: 'link' },
-    { name: 'X', url: 'https://x.com/ganesh_047', icon: 'link' },
+    { name: 'X', url: xUrl, icon: 'link' },
     { name: 'Email', url: `mailto:${profile.email}`, icon: 'mail' }
   ]
 
@@ -21,7 +22,7 @@ export default function ContactWindow() {
           Let's build the next <span className="grad-text">big thing.</span>
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-mute">
-          {profile.location} · open to {openTo[0].toLowerCase()} and research collaborations.
+          {profile.location} · open to {openTo[0]} and research collaborations.
         </p>
       </motion.div>
 

@@ -21,13 +21,13 @@ export function useToasts() {
 
 export default function ToastStack({ toasts, onDismiss }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-12 z-50 flex flex-col items-center gap-2 px-4">
+    <div className="pointer-events-none fixed inset-x-0 top-12 z-50 flex flex-col items-center gap-2 px-4 pt-[env(safe-area-inset-top)]">
       <AnimatePresence>
         {toasts.map((t) => (
           <motion.button
             key={t.id}
             onClick={() => onDismiss(t.id)}
-            className={`toast os-bar pointer-events-auto flex items-center gap-2.5 shadow-card`}
+            className={`toast os-bar pointer-events-auto flex max-w-[92vw] items-center gap-2.5 shadow-card`}
             initial={{ opacity: 0, y: -16, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -12, scale: 0.94 }}

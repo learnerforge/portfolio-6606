@@ -53,7 +53,7 @@ export default function ExperienceWindow() {
           <div key={x.company} className="rounded-xl border border-line bg-bg/30 p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 font-display text-sm font-bold text-white">
+                <span aria-hidden="true" className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 font-display text-sm font-bold text-white">
                   {x.company.slice(0, 2).toUpperCase()}
                 </span>
                 <div>
@@ -69,7 +69,7 @@ export default function ExperienceWindow() {
             <ul className="mt-4 space-y-1.5">
               {x.points.map((p) => (
                 <li key={p} className="flex gap-2 text-sm leading-relaxed text-mute">
-                  <span className="text-accent">▹</span>
+                  <span aria-hidden="true" className="text-accent">▹</span>
                   {p}
                 </li>
               ))}

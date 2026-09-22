@@ -94,3 +94,46 @@ export function useReducedMotion() {
   }, [])
   return reduced
 }
+
+export function useTrailCursor() {
+  const reduced = useReducedMotion()
+  const [pos, setPos] = useState({ px: 0, py: 0 })
+
+  useEffect(() => {
+    if (reduced) {
+      setPos({ px: 0, py: 0 })
+      return
+    }
+    const target = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+    const current = { x: target.x, y: target.y }
+    let raf = 0
+
+    const onMove = (e) => {
+      target.x = e.clientX
+      target.y = e.clientY
+    }
+
+    const tick = () => {
+      const dx = target.x - current.x
+      const dy = target.y - current.y
+      if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+        current.x += dx * 0.12
+        current.y += dy * 0.12
+        setPos({
+          px: (current.x / window.innerWidth) * 2 - 1,
+          py: (current.y / window.innerHeight) * 2 - 1
+        })
+      }
+      raf = requestAnimationFrame(tick)
+    }
+
+    window.addEventListener('pointermove', onMove)
+    raf = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      cancelAnimationFrame(raf)
+    }
+  }, [reduced])
+
+  return pos
+}

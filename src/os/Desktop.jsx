@@ -169,7 +169,7 @@ export default function Desktop() {
 
       <MenuBar os={os} theme={theme} onToggleTheme={toggle} onOpenPalette={() => setPaletteOpen(true)} />
 
-      <main className="relative z-10 flex-1" aria-label="Desktop windows">
+      <main className="relative z-10 min-h-0 flex-1" aria-label="Desktop windows">
         <AnimatePresence>
           {os.openWindows.map((win) => (
             <Window

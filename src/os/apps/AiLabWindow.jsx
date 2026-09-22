@@ -9,19 +9,19 @@ const EXPERIMENTS = [
     title: 'AI-guided roadmaps',
     body: 'PathForge AI imports 87 roadmaps, renders an interactive topic graph, and layers AI explanations, quizzes, and weekly plans on top.',
     tags: ['Gemini', 'Prompt chain', 'ReactFlow'],
-    github: 'https://github.com/learnerforge/Roadmaps-generator'
+    github: portfolio.projects.find((p) => p.id === 'pathforge-ai').github
   },
   {
     title: 'Self-improving audits',
     body: 'Repo Quality Analyzer scores any GitHub repo across 9 dimensions in under 30 seconds — offline NLP with a Q-learning tuner.',
     tags: ['spaCy', 'TextRank', 'Q-Learning'],
-    github: 'https://github.com/learnerforge/AI-GitHub-Repository-Analyzer'
+    github: portfolio.projects.find((p) => p.id === 'ai-github-repo-analyzer').github
   },
   {
     title: 'Agent memory',
     body: 'Active research into agent memory, tool-use, and agent-skill ecosystems alongside BrightPitch with CopilotKit.',
     tags: ['CopilotKit', 'Agents', 'Research'],
-    github: 'https://github.com/learnerforge'
+    github: portfolio.profile.github
   }
 ]
 

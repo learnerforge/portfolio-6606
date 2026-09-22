@@ -1,11 +1,22 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Icon from './ui/Icon'
 import Logo from './ui/Logo'
+import { useReducedMotion } from './wm/useOs'
 import { APPS } from './apps'
 
 export default function Dock({ os, isMobile }) {
+  const reduced = useReducedMotion()
+  const refs = useRef({})
+
+  useEffect(() => {
+    if (!isMobile || !os.topId) return
+    const el = refs.current[os.topId]
+    if (el) el.scrollIntoView({ inline: 'center', behavior: reduced ? 'auto' : 'smooth' })
+  }, [isMobile, os.topId, reduced])
+
   const cell = (app, i) => {
     const win = os.windows.find((w) => w.app.id === app.id)
     const isOpen = !!win && !win.minimized
@@ -14,6 +25,9 @@ export default function Dock({ os, isMobile }) {
     return (
       <motion.button
         key={app.id}
+        ref={(el) => {
+          refs.current[app.id] = el
+        }}
         onClick={() => os.toggle(app.id)}
         initial={{ opacity: 0, y: 28, scale: 0.6 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -62,7 +76,10 @@ export default function Dock({ os, isMobile }) {
   }
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-40 flex justify-center pb-3">
+    <div
+      className="absolute inset-x-0 bottom-0 z-40 flex justify-center"
+      style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom, 0px))' }}
+    >
       <div
         className={`os-bar relative flex max-w-full items-center gap-1.5 rounded-[22px] px-3 py-2 ${
           isMobile ? 'overflow-x-auto' : 'overflow-visible'

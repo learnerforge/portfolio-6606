@@ -36,7 +36,7 @@ export default function WelcomeWindow({ os }) {
               alt="Ganesh Bakkera avatar"
               className="h-16 w-16 rounded-2xl border border-line object-cover"
             />
-            <span className="absolute -right-1 -bottom-1 h-4 w-4 rounded-full border-2 border-surface bg-emerald-400" />
+            <span aria-hidden="true" className="absolute -right-1 -bottom-1 h-4 w-4 rounded-full border-2 border-surface bg-emerald-400" />
           </div>
           <div>
             <h2 className="font-display text-2xl font-extrabold tracking-tight">
