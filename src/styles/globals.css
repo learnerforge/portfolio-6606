@@ -357,6 +357,29 @@
     font-weight: 500;
     color: var(--color-ink);
   }
+
+  /* ---- Theme-agnostic terminal (fixed dark surface) ---- */
+
+  .term {
+    --term-ink: #e7eaff;
+    --term-mute: #99a3cc;
+    --term-faint: #677199;
+    color: var(--term-ink);
+    color-scheme: dark;
+  }
+  .term .prompt-input {
+    color: var(--term-ink);
+    caret-color: #5eead4;
+  }
+
+  /* ---- Desktop vignette (dark only) ---- */
+
+  .os-vignette {
+    opacity: 1;
+  }
+  [data-theme='light'] .os-vignette {
+    opacity: 0;
+  }
 }
 
 @keyframes drift {

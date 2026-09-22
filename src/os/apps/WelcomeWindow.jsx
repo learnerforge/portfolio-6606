@@ -27,7 +27,7 @@ export default function WelcomeWindow({ os }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex items-start justify-between gap-4"
+        className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3"
       >
         <div className="flex items-center gap-4">
           <div className="relative">

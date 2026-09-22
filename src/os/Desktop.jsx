@@ -164,7 +164,7 @@ export default function Desktop() {
           className="orb left-[38%] top-[45%] h-[20rem] w-[20rem] bg-accent-3/10"
           style={{ animation: reduced ? 'none' : 'breathe 24s ease-in-out infinite', animationDelay: '-16s' }}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.5))] dark:opacity-100" />
+        <div className="os-vignette absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.5))]" />
       </div>
 
       <MenuBar os={os} theme={theme} onToggleTheme={toggle} onOpenPalette={() => setPaletteOpen(true)} />

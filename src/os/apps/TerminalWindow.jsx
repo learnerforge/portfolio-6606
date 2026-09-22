@@ -63,9 +63,9 @@ const lineClass = (l) => {
   if (l.t === 'err') return 'text-red-400'
   if (l.t === 'cmd' || l.t === 'ok') return 'text-emerald-400'
   if (l.t === 'info') return 'text-violet-300'
-  if (l.t === 'faint') return 'text-faint'
+  if (l.t === 'faint') return 'text-[var(--term-faint)]'
   if (l.t === 'link' || l.t === 'app') return ''
-  return 'text-mute'
+  return 'text-[var(--term-mute)]'
 }
 
 export default function TerminalWindow({ os }) {
@@ -309,11 +309,11 @@ export default function TerminalWindow({ os }) {
   }
 
   return (
-    <div className="flex h-full flex-col bg-[#08080f]">
+    <div className="term flex h-full flex-col bg-[#08080f]">
       <div
         ref={scrollRef}
         onClick={() => inputRef.current?.focus()}
-        className="os-scroll flex-1 cursor-text px-5 py-4 font-mono text-[13px] leading-6"
+        className="os-scroll flex-1 cursor-text px-5 py-4 font-mono text-[11px] leading-5 sm:text-[13px] sm:leading-6"
       >
         {lines.map((l, i) => (
           <p key={i} className={lineClass(l)}>

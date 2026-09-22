@@ -30,7 +30,6 @@ export default function Starfield() {
       const scale = coarse || w < 768 ? 0.5 : 1
       LAYERS.forEach((L, li) => {
         const count = Math.floor((w * h * L.count * scale) / 9000)
-        const palette = ['255,255,255', '167,139,250', '232,121,249', '129,140,248']
         for (let i = 0; i < count; i++) {
           stars.push({
             x: Math.random() * w,
@@ -42,20 +41,24 @@ export default function Starfield() {
             a: L.a[0] + Math.random() * (L.a[1] - L.a[0]),
             tw: 2 + Math.random() * 6,
             ph: Math.random() * Math.PI * 2,
-            color:
+            ci:
               L.tint === 'basic'
-                ? palette[0]
+                ? 0
                 : L.tint === 'accent'
-                  ? palette[Math.random() < 0.6 ? 1 : 2]
-                  : palette[3]
+                  ? Math.random() < 0.6 ? 1 : 2
+                  : 3
           })
         }
       })
     }
 
+    const DARK = ['255,255,255', '167,139,250', '232,121,249', '129,140,248']
+    const LIGHT = ['58,63,110', '99,102,241', '217,70,239', '79,70,229']
+
     const draw = (t) => {
       ctx.clearRect(0, 0, w, h)
       const light = document.documentElement.getAttribute('data-theme') === 'light'
+      const palette = light ? LIGHT : DARK
       if (!light) {
         const glow = ctx.createRadialGradient(w / 2, h * 0.35, 0, w / 2, h * 0.35, Math.max(w, h) * 0.7)
         glow.addColorStop(0, 'rgba(88,58,190,0.08)')
@@ -74,18 +77,19 @@ export default function Starfield() {
         const px = s.x + pointer.x * s.depth * 26
         const py = y + pointer.y * s.depth * 26
         const tw = reduced ? 1 : 0.72 + 0.28 * Math.sin(t / s.tw + s.ph)
+        const color = palette[s.ci]
 
         ctx.beginPath()
         ctx.arc(((px % w) + w) % w, ((py % h) + h) % h, s.r, 0, Math.PI * 2)
         if (s.layer === 2) {
-          ctx.fillStyle = `rgba(${s.color},${(s.a * tw).toFixed(3)})`
+          ctx.fillStyle = `rgba(${color},${(s.a * tw).toFixed(3)})`
           ctx.fill()
           ctx.beginPath()
           ctx.arc(((px % w) + w) % w, ((py % h) + h) % h, s.r * 3.2, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(${s.color},${(s.a * tw * 0.16).toFixed(3)})`
+          ctx.fillStyle = `rgba(${color},${(s.a * tw * 0.16).toFixed(3)})`
           ctx.fill()
         } else {
-          ctx.fillStyle = `rgba(${s.color},${(s.a * tw).toFixed(3)})`
+          ctx.fillStyle = `rgba(${color},${(s.a * tw).toFixed(3)})`
           ctx.fill()
         }
       }
