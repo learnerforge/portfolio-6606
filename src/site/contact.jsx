@@ -115,7 +115,7 @@ export function Contact() {
 
   return (
     <section id="contact" className="relative z-[5] mx-auto max-w-6xl scroll-mt-24 px-5 pb-24 pt-24 sm:px-8 sm:pt-32">
-      <SectionHead index={4} label="Contact" />
+      <SectionHead index={4} label="Contact" title="Get in touch." />
 
       <div className="relative mt-12 overflow-hidden rounded-3xl border border-line-soft bg-surface/40 p-8 sm:p-14">
         <RadialConnections />

@@ -139,7 +139,7 @@ export function GradientText({ children, className = '' }) {
 export function StaggerText({ text, as: Tag = 'span', className = '', delay = 0, once = true }) {
   const [ref, inView] = useInView({ threshold: 0.3, once, rootMargin: '0px 0px -10% 0px' })
   const reduce = usePrefersReducedMotion()
-  const chars = text.split('')
+  const chars = (text ?? '').split('')
 
   return (
     <Tag ref={ref} className={className} aria-label={text}>
@@ -175,7 +175,7 @@ export function StaggerText({ text, as: Tag = 'span', className = '', delay = 0,
 export function BlockReveal({ text, accent = [], className = '', delay = 0, as: Tag = 'p' }) {
   const [ref, inView] = useInView({ threshold: 0.25, rootMargin: '0px 0px -12% 0px' })
   const reduce = usePrefersReducedMotion()
-  const words = useMemo(() => text.split(' '), [text])
+  const words = useMemo(() => (text ?? '').split(' '), [text])
   const accentSet = useMemo(() => new Set(accent), [accent])
 
   return (
@@ -575,7 +575,7 @@ export function HeroBackground({ className = '' }) {
    Marquee — infinite ticker
    ============================================================ */
 
-export function Marquee({ items, className = '', reverse = false, speed = 26 }) {
+export function Marquee({ items = [], className = '', reverse = false, speed = 26 }) {
   const row = items.map((t, i) => (
     <span key={i} className="mx-5 flex shrink-0 items-center gap-5 font-mono text-sm tracking-[0.18em] text-faint uppercase">
       {t}
