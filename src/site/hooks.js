@@ -80,6 +80,10 @@ export function useCountUp(end, { active = true, duration = 1400, start = 0 } = 
   useEffect(() => {
     if (!active) return
     if (typeof window === 'undefined') return
+    if (typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setValue(end)
+      return
+    }
     const t0 = performance.now()
     let raf = 0
     const tick = (now) => {
