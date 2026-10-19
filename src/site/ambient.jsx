@@ -286,6 +286,21 @@ const LINKS = [
 const SECTION_IDS = LINKS.map((l) => l.id)
 const NAV_H = 64
 
+/* Shared availability badge — one definition for nav + mobile panel */
+function StatusPill({ className = '' }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400 ${className}`}
+    >
+      <span
+        className="h-1.5 w-1.5 rounded-full bg-emerald-400"
+        style={{ animation: 'pulse-soft 2.2s ease-in-out infinite' }}
+      />
+      open to work
+    </span>
+  )
+}
+
 function useActiveSection() {
   const [active, setActive] = useState(null)
 
@@ -326,8 +341,25 @@ export function Nav() {
   const active = useActiveSection()
   const entered = useSiteEntered()
   const p = portfolio?.profile ?? {}
+  const [menuOpen, setMenuOpen] = useState(false)
+  const toggleRef = useRef(null)
+
+  /* Escape closes the mobile menu and returns focus to its toggle */
+  useEffect(() => {
+    if (!menuOpen) return undefined
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        toggleRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   if (!entered) return null
+
+  const closeMenu = () => setMenuOpen(false)
 
   return (
     <motion.header
@@ -340,55 +372,122 @@ export function Nav() {
           : 'border-b border-transparent bg-transparent'
       }`}
     >
-      <nav className="pointer-events-auto mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+      {/* tap-away scrim for the mobile menu (below the panel, above the page) */}
+      {menuOpen && (
+        <div
+          aria-hidden="true"
+          onClick={closeMenu}
+          className="pointer-events-auto fixed inset-0 bg-bg/60 sm:hidden"
+        />
+      )}
+
+      {/* One authoritative navbar row: brand (min-w-0 + truncate guard) left,
+          links + badge + mobile toggle right. Below sm the links move into an
+          accessible disclosure panel so they can never collide with the brand. */}
+      <nav className="pointer-events-auto relative mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-3 px-5 sm:px-8">
         <a
           href="#home"
-          className="group flex items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4"
+          onClick={closeMenu}
+          className="group flex min-w-0 items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4"
           aria-label="Home"
           aria-current={active === null ? 'page' : undefined}
           data-hover
         >
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 font-display text-sm font-bold text-white shadow-glow">
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 font-display text-sm font-bold text-white shadow-glow">
             {p.monogram ?? ''}
           </span>
-          <span className="hidden font-display text-sm font-semibold tracking-tight text-ink sm:block">
+          <span className="hidden min-w-0 truncate font-display text-sm font-semibold tracking-tight text-ink sm:block">
             {p.name ?? ''}
-            <span className="ml-2 font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-faint">
+            <span className="ml-2 hidden font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-faint lg:inline">
               /dev
             </span>
           </span>
         </a>
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          {LINKS.map((l, i) => {
-            const isActive = active === l.id
-            return (
-              <a
-                key={l.id}
-                href={`#${l.id}`}
-                data-hover
-                aria-current={isActive ? 'true' : undefined}
-                className={`group flex min-h-9 items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${
-                  isActive ? 'bg-surface-2 text-ink' : 'text-mute hover:bg-surface-2 hover:text-ink'
-                }`}
-              >
-                <span
-                  className={`font-mono text-[10px] transition-colors ${
-                    isActive ? 'text-accent' : 'text-faint'
+        <div className="flex min-w-0 items-center gap-1.5 lg:gap-2">
+          <div className="hidden items-center gap-1.5 sm:flex lg:gap-2">
+            {LINKS.map((l, i) => {
+              const isActive = active === l.id
+              return (
+                <a
+                  key={l.id}
+                  href={`#${l.id}`}
+                  data-hover
+                  aria-current={isActive ? 'true' : undefined}
+                  className={`group flex min-h-9 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[13px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:px-3 ${
+                    isActive ? 'bg-surface-2 text-ink' : 'text-mute hover:bg-surface-2 hover:text-ink'
                   }`}
                 >
-                  0{i + 1}
-                </span>
-                {l.label}
-              </a>
-            )
-          })}
-          <span className="ml-2 hidden items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400 md:inline-flex">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" style={{ animation: 'pulse-soft 2.2s ease-in-out infinite' }} />
-            open to work
-          </span>
+                  <span
+                    className={`font-mono text-[10px] transition-colors ${
+                      isActive ? 'text-accent' : 'text-faint'
+                    }`}
+                  >
+                    0{i + 1}
+                  </span>
+                  {l.label}
+                </a>
+              )
+            })}
+          </div>
+
+          <StatusPill className="ml-1 hidden shrink-0 lg:inline-flex" />
+
+          {/* mobile menu toggle — replaces the link row below sm */}
+          <button
+            ref={toggleRef}
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            className="-mr-1 grid h-10 w-10 shrink-0 place-items-center rounded-xl text-mute transition-colors hover:bg-surface-2 hover:text-ink sm:hidden"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            data-hover
+          >
+            {menuOpen ? (
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            )}
+          </button>
         </div>
       </nav>
+
+      {/* mobile disclosure panel */}
+      {menuOpen && (
+        <div
+          id="mobile-nav"
+          className="pointer-events-auto absolute inset-x-0 top-full border-b border-line-soft bg-bg/95 px-5 pb-6 pt-3 shadow-deep backdrop-blur-xl sm:hidden"
+        >
+          <div className="flex flex-col gap-1">
+            {LINKS.map((l, i) => {
+              const isActive = active === l.id
+              return (
+                <a
+                  key={l.id}
+                  href={`#${l.id}`}
+                  onClick={closeMenu}
+                  data-hover
+                  aria-current={isActive ? 'true' : undefined}
+                  className={`flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-sm transition-colors ${
+                    isActive ? 'bg-surface-2 text-ink' : 'text-mute hover:bg-surface-2 hover:text-ink'
+                  }`}
+                >
+                  <span className={`font-mono text-[10px] ${isActive ? 'text-accent' : 'text-faint'}`}>
+                    0{i + 1}
+                  </span>
+                  {l.label}
+                </a>
+              )
+            })}
+          </div>
+          <StatusPill className="mt-4" />
+        </div>
+      )}
     </motion.header>
   )
 }

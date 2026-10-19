@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, useSpring } from 'motion/react'
 import {
   useInView,
@@ -474,31 +474,49 @@ export function GradientText({ children, className = '' }) {
 export function StaggerText({ text, as: Tag = 'span', className = '', delay = 0, once = true }) {
   const [ref, inView] = useInView({ threshold: 0.3, once, rootMargin: '0px 0px -10% 0px' })
   const reduce = usePrefersReducedMotion()
-  const chars = (text ?? '').split('')
+  /* Split into WORDS first: each word is one unbreakable inline-block group
+     (so words never split mid-word), separated by real space text nodes —
+     the only soft-wrap opportunities in an inline formatting context.
+     Without them this per-character markup could never line-break, and
+     long lines would overflow their containers / overlap sibling columns. */
+  const words = useMemo(() => String(text ?? '').split(' '), [text])
+
+  let charCursor = 0
 
   return (
     <Tag ref={ref} className={className} aria-label={text} role="text">
-      {chars.map((c, i) => (
-        <span
-          key={i}
-          aria-hidden="true"
-          className="inline-block overflow-hidden align-bottom"
-          style={{ display: 'inline-block' }}
-        >
-          <motion.span
-            className="inline-block will-change-transform"
-            initial={reduce ? false : { y: '112%', opacity: 0, filter: 'blur(8px)' }}
-            animate={reduce || inView ? { y: '0%', opacity: 1, filter: 'blur(0px)' } : {}}
-            transition={{
-              duration: 0.7,
-              delay: delay + i * 0.026,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          >
-            {c === ' ' ? '\u00A0' : c}
-          </motion.span>
-        </span>
-      ))}
+      {words.map((word, wi) => {
+        const chars = Array.from(word)
+        const start = charCursor
+        charCursor += chars.length + 1
+        return (
+          <Fragment key={`${word}-${wi}`}>
+            <span aria-hidden="true" className="inline-block whitespace-nowrap align-bottom">
+              {chars.map((c, i) => (
+                <span
+                  key={i}
+                  aria-hidden="true"
+                  className="inline-block overflow-hidden align-bottom"
+                >
+                  <motion.span
+                    className="inline-block will-change-transform"
+                    initial={reduce ? false : { y: '112%', opacity: 0, filter: 'blur(8px)' }}
+                    animate={reduce || inView ? { y: '0%', opacity: 1, filter: 'blur(0px)' } : {}}
+                    transition={{
+                      duration: 0.7,
+                      delay: delay + (start + i) * 0.026,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    {c}
+                  </motion.span>
+                </span>
+              ))}
+            </span>
+            {wi < words.length - 1 ? ' ' : null}
+          </Fragment>
+        )
+      })}
     </Tag>
   )
 }
@@ -519,20 +537,25 @@ export function BlockReveal({ text, accent = [], className = '', delay = 0, as: 
         const clean = w.replace(/[^a-zA-Z]/g, '')
         const hot = accentSet.has(clean) || accentSet.has(w)
         return (
-          <span
-            key={i}
-            aria-hidden="true"
-            className="inline-block overflow-hidden align-top"
-          >
-            <motion.span
-              className={hot ? 'inline-block text-accent-2' : 'inline-block'}
-              initial={reduce ? false : { y: '118%', opacity: 0 }}
-              animate={reduce || inView ? { y: '0%', opacity: 1 } : {}}
-              transition={{ duration: 0.62, delay: delay + i * 0.011, ease: [0.16, 1, 0.3, 1] }}
+          /* Real space text nodes between word boxes give the line-breaker
+             soft-wrap opportunities; without them this markup is a single
+             unbreakable run that overflows its container. */
+          <Fragment key={i}>
+            <span
+              aria-hidden="true"
+              className="inline-block overflow-hidden align-top"
             >
-              {'\u00A0' + w}
-            </motion.span>
-          </span>
+              <motion.span
+                className={hot ? 'inline-block text-accent-2' : 'inline-block'}
+                initial={reduce ? false : { y: '118%', opacity: 0 }}
+                animate={reduce || inView ? { y: '0%', opacity: 1 } : {}}
+                transition={{ duration: 0.62, delay: delay + i * 0.011, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {w}
+              </motion.span>
+            </span>
+            {i < words.length - 1 ? ' ' : null}
+          </Fragment>
         )
       })}
     </Tag>

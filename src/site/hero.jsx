@@ -142,7 +142,11 @@ export default function Hero() {
       id="home"
       ref={sectionRef}
       onPointerMove={onMove}
-      className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-5 sm:px-8"
+      /* pt-24 reserves the fixed 64px navbar's footprint so hero content can
+         never start underneath it, even on short viewports where the content
+         exceeds 100dvh. The decorative rails live in a normal-flow row at the
+         bottom (below), so they can never intersect the content block. */
+      className="relative flex min-h-dvh flex-col overflow-hidden px-5 pt-24 sm:px-8"
     >
       <span id="top" aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px" />
 
@@ -150,13 +154,20 @@ export default function Hero() {
         <>
           <HeroBackground className="pointer-events-none" />
 
-          <motion.div style={reduce ? undefined : { x: px, y: py }} className="relative z-[5] mx-auto w-full max-w-6xl">
+          <motion.div
+            style={reduce ? undefined : { x: px, y: py }}
+            className="relative z-[5] mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center"
+          >
             <motion.div style={reduce ? undefined : { opacity: fadeOut, y: rise }}>
               <motion.p {...enterProps(reduce, 0.05)} className="eyebrow mb-6">
                 <span className="text-accent">➜</span> hello world, i'm
               </motion.p>
 
-              <h1 className="font-display text-[13.5vw] font-extrabold leading-[0.98] tracking-[-0.03em] text-ink sm:text-[7rem] lg:text-[9rem]">
+              {/* clamp() scales fluidly between breakpoints and caps at the
+                  intended 9rem desktop treatment; the two-line name stays two
+                  block lines at every width, wrapping naturally if a name ever
+                  outgrows its container. */}
+              <h1 className="max-w-full font-display text-[clamp(2.75rem,11.5vw,9rem)] font-extrabold leading-[0.98] tracking-[-0.03em] text-ink [overflow-wrap:break-word]">
                 <StaggerText text={p.first ?? ''} className="block" delay={0.15} />
                 <StaggerText text={p.last ?? ''} className="block pl-[0.14em]" delay={0.5} />
               </h1>
@@ -201,36 +212,40 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
+          {/* Bottom rail row — in normal flow (sibling of the centered content),
+              so socials (left) and scroll cue (right) sit at the hero's bottom
+              edge without ever intersecting the content, at any viewport size. */}
           <motion.div
             {...enterProps(reduce, 1.35)}
-            className="pointer-events-none absolute bottom-10 left-8 z-[5] hidden flex-col gap-4 sm:flex"
+            className="relative z-[5] mx-auto hidden w-full max-w-6xl shrink-0 items-end justify-between pb-10 pt-8 sm:flex"
           >
-            {RAIL.map((r) => (
-              <a
-                key={r.label}
-                href={r.href}
-                target={r.href.startsWith('http') ? '_blank' : undefined}
-                rel="noreferrer"
-                data-hover
-                className="group pointer-events-auto flex min-h-9 items-center gap-2 py-1.5 font-mono text-[11px] uppercase tracking-widest text-faint transition-colors hover:text-accent"
-              >
-                <span className="h-px w-6 bg-faint/50 transition-all group-hover:w-9 group-hover:bg-accent" />
-                {r.label}
-              </a>
-            ))}
-          </motion.div>
+            <div className="pointer-events-none flex flex-col gap-4">
+              {RAIL.map((r) => (
+                <a
+                  key={r.label}
+                  href={r.href}
+                  target={r.href.startsWith('http') ? '_blank' : undefined}
+                  rel="noreferrer"
+                  data-hover
+                  className="group pointer-events-auto flex min-h-9 items-center gap-2 py-1.5 font-mono text-[11px] uppercase tracking-widest text-faint transition-colors hover:text-accent"
+                >
+                  <span className="h-px w-6 bg-faint/50 transition-all group-hover:w-9 group-hover:bg-accent" />
+                  {r.label}
+                </a>
+              ))}
+            </div>
 
-          <motion.div
-            {...enterProps(reduce, 1.35)}
-            className="pointer-events-none absolute bottom-8 right-8 z-[5] flex flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-faint"
-            aria-hidden="true"
-          >
-            <span>scroll</span>
-            <motion.span
-              className="block h-10 w-px bg-gradient-to-b from-accent to-transparent"
-              animate={reduce ? undefined : { scaleY: [0.2, 1, 0.2], originY: 0 }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            />
+            <div
+              className="pointer-events-none flex flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-faint"
+              aria-hidden="true"
+            >
+              <span>scroll</span>
+              <motion.span
+                className="block h-10 w-px bg-gradient-to-b from-accent to-transparent"
+                animate={reduce ? undefined : { scaleY: [0.2, 1, 0.2], originY: 0 }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            </div>
           </motion.div>
         </>
       )}

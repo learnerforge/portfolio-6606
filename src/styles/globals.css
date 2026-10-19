@@ -1,5 +1,21 @@
 @import 'tailwindcss';
 
+/* ============================================================
+   Z-INDEX SCALE — single source of truth. Only these layers
+   exist; new UI must slot in, never exceed the scale.
+
+     0    backdrop aurora/orbs          (Backdrop)
+     5    content sections + hero       (main, sections)
+     60   navbar + scroll progress      (Nav, ScrollProgress,
+          mobile-nav panel/scrim inherit this layer)
+     70   floating pointer previews     (FloatingPreview)
+     80   vignette overlay
+     90   noise overlay
+     94/95 custom cursor dot/ring
+     100  preloader
+     110  skip-to-content link (must stay above all)
+   ============================================================ */
+
 @theme {
   --color-bg: #05050c;
   --color-bg-2: #090a16;
