@@ -4,6 +4,7 @@ import { portfolio } from '../content/portfolio'
 import { useMedia, usePrefersReducedMotion } from './hooks'
 import { useSiteEntered } from './ambient'
 import { GhostCta, HeroBackground, StaggerText, StarfieldButton } from './kit'
+import Icon from './icons'
 
 const EASE = [0.16, 1, 0.3, 1]
 
@@ -160,7 +161,7 @@ export default function Hero() {
           >
             <motion.div style={reduce ? undefined : { opacity: fadeOut, y: rise }}>
               <motion.p {...enterProps(reduce, 0.05)} className="eyebrow mb-6">
-                <span className="text-accent">➜</span> hello world, i'm
+                <Icon name="arrow-right" size={14} className="text-accent" /> hello world, i'm
               </motion.p>
 
               {/* clamp() scales fluidly between breakpoints and caps at the
